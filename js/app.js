@@ -5,7 +5,7 @@
 
 const App = {
   state: {
-    activeTab: "capacity-overview", // Default or user-selected
+    activeTab: "executive-summary", // Default is Executive Summary
     capacitySheet: "sheet-2", // "sheet-2" (Dashboard), "sheet-3" (Comparison), "sheet-4" (Detailed Matrix)
     selectedGeography: "all",
     selectedWeek: "wk23",
@@ -150,14 +150,14 @@ const App = {
   switchTab(tabId) {
     this.state.activeTab = tabId;
 
-    // Update sidebar UI
+    // Update sidebar UI: strictly toggle .active class and text colors
     document.querySelectorAll(".nav-item").forEach(item => {
       if (item.getAttribute("data-tab") === tabId) {
-        item.classList.add("bg-blue-900/60", "text-white", "border-l-4", "border-cyan-400");
-        item.classList.remove("text-slate-400", "hover:bg-slate-800");
+        item.classList.add("active", "text-white");
+        item.classList.remove("text-slate-400");
       } else {
-        item.classList.remove("bg-blue-900/60", "text-white", "border-l-4", "border-cyan-400");
-        item.classList.add("text-slate-400", "hover:bg-slate-800");
+        item.classList.remove("active", "text-white");
+        item.classList.add("text-slate-400");
       }
     });
 

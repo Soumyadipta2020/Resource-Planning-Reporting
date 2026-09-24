@@ -60,10 +60,15 @@ body {
 }
 
 .nav-item.active {
-  background-color: rgba(30, 58, 138, 0.6);
-  color: #ffffff;
-  border-left-color: #38bdf8;
-  font-weight: 600;
+  background-color: rgba(30, 58, 138, 0.6) !important;
+  color: #ffffff !important;
+  border-left-color: #38bdf8 !important;
+  font-weight: 600 !important;
+}
+
+.nav-item:not(.active) {
+  border-left-color: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Card Styling */
