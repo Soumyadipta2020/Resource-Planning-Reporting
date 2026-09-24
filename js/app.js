@@ -176,6 +176,16 @@ const App = {
       if (titleEl) titleEl.textContent = "Forecast Performance (Lead/Lag)";
     }
 
+    // Show/hide capacity views sub-navigation bar
+    const capTabs = document.getElementById("capacity-nav-tabs");
+    if (capTabs) {
+      if (tabId === "capacity-overview") {
+        capTabs.classList.remove("hidden");
+      } else {
+        capTabs.classList.add("hidden");
+      }
+    }
+
     // Update visible view container
     document.querySelectorAll(".tab-view-container").forEach(view => {
       if (view.id === `view-${tabId}`) {
@@ -200,10 +210,10 @@ const App = {
     document.querySelectorAll(".sheet-toggle-btn").forEach(btn => {
       if (btn.getAttribute("data-sheet") === sheetId) {
         btn.classList.add("bg-blue-700", "text-white", "shadow-sm");
-        btn.classList.remove("bg-white", "text-slate-700", "hover:bg-slate-100");
+        btn.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
       } else {
         btn.classList.remove("bg-blue-700", "text-white", "shadow-sm");
-        btn.classList.add("bg-white", "text-slate-700", "hover:bg-slate-100");
+        btn.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
       }
     });
 

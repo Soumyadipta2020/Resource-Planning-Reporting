@@ -155,10 +155,29 @@
           </svg>
         </button>
       </div>
+
+      <!-- Capacity Sub-Navigation Views Bar (Eliminates dead whitespace) -->
+      <div id="capacity-nav-tabs" class="w-full flex items-center justify-between border-t border-slate-100 pt-2.5 mt-2.5">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold text-slate-500 uppercase px-1">Views:</span>
+          <button data-sheet="sheet-2" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-blue-700 text-white shadow-sm transition-all">
+            Operational Dashboard
+          </button>
+          <button data-sheet="sheet-3" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+            Weekly Comparison Matrix
+          </button>
+          <button data-sheet="sheet-4" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+            Forecast vs Actuals Matrix
+          </button>
+        </div>
+        <div class="text-xs text-slate-500 font-medium hidden sm:block">
+          Capacity & Resource Allocation Management
+        </div>
+      </div>
     </header>
 
     <!-- Inner View Area -->
-    <div class="p-5 flex-1 space-y-5">
+    <div class="px-6 py-4 flex-1 space-y-4">
 
       <!-- ============================================================== -->
       <!-- TAB 1: EXECUTIVE SUMMARY (Image 4)                             -->
@@ -385,24 +404,6 @@
       <!-- TAB 2: CAPACITY OVERVIEW (Sheets 2, 3, 4)                       -->
       <!-- ============================================================== -->
       <section id="view-capacity-overview" class="tab-view-container space-y-4">
-        <!-- Sub-Sheet Toggle Navigation Bar -->
-        <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span class="text-xs font-bold text-slate-500 uppercase px-2">Views:</span>
-            <button data-sheet="sheet-2" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-blue-700 text-white shadow-sm transition-all">
-              Operational Dashboard
-            </button>
-            <button data-sheet="sheet-3" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-700 hover:bg-slate-100 transition-all">
-              Weekly Comparison Matrix
-            </button>
-            <button data-sheet="sheet-4" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-700 hover:bg-slate-100 transition-all">
-              Forecast vs Actuals Matrix
-            </button>
-          </div>
-          <div class="text-xs text-slate-500 font-medium hidden sm:block">
-            Capacity & Resource Allocation Management
-          </div>
-        </div>
 
         <!-- ------------------------------------------------------------ -->
         <!-- CAPACITY SHEET 2: OPERATIONAL DASHBOARD (Image 3)            -->
