@@ -18,6 +18,7 @@ const App = {
   init() {
     this.populateFilterDropdowns();
     this.bindEvents();
+    this.switchTab(this.state.activeTab);
     this.updateAllViews();
     this.renderLastRefreshed();
   },
@@ -176,12 +177,14 @@ const App = {
       if (titleEl) titleEl.textContent = "Forecast Performance (Lead/Lag)";
     }
 
-    // Show/hide capacity views sub-navigation bar
+    // Show/hide capacity views sub-navigation bar (ONLY for capacity overview tab!)
     const capTabs = document.getElementById("capacity-nav-tabs");
     if (capTabs) {
       if (tabId === "capacity-overview") {
+        capTabs.style.setProperty("display", "flex", "important");
         capTabs.classList.remove("hidden");
       } else {
+        capTabs.style.setProperty("display", "none", "important");
         capTabs.classList.add("hidden");
       }
     }

@@ -126,6 +126,11 @@ select.filter-select {
   transform: scaleX(1.01);
 }
 
+/* Capacity Views Tab Display Control */
+#capacity-nav-tabs.hidden {
+  display: none !important;
+}
+
 /* Print Optimization */
 @media print {
   .sidebar,
