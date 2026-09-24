@@ -290,10 +290,10 @@ const DASHBOARD_DATA = {
     footnote: "Note: pp - Percentage Points"
   },
 
-  // 4. Capacity Detailed Actual vs Forecast Matrix (Sheet 4)
+  // 4. Capacity Detailed Actual vs Forecast Matrix
   capacitySheet4: {
     title: "Capacity Overview",
-    sheetSubtitle: "Sheet - 4",
+    viewName: "Forecast vs Actuals Matrix",
     chartTitle: "ES Weekly Actual vs Forecast",
     activeBusinessUnit: "all",
     chartMetric: "grossHrs",

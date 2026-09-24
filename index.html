@@ -120,8 +120,6 @@
     <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-20 shadow-sm no-print">
       <div class="flex items-center space-x-3">
         <h2 id="top-view-title" class="text-xl font-bold text-slate-900 tracking-tight">Capacity Overview</h2>
-        <span class="text-slate-300">|</span>
-        <span id="top-view-sheet" class="text-sm font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">Sheet - 2</span>
       </div>
 
       <!-- Top Global Filters -->
@@ -167,12 +165,9 @@
       <!-- ============================================================== -->
       <section id="view-executive-summary" class="tab-view-container hidden space-y-4">
         <!-- Sub-header -->
-        <div class="flex justify-between items-center pb-1 border-b border-slate-200">
-          <div>
-            <h2 class="text-lg font-bold text-slate-900 tracking-tight">EXECUTIVE COMMAND CENTRE</h2>
-            <p class="text-xs text-slate-500">Real-time overview of operational performance</p>
-          </div>
-          <span class="text-xs font-semibold px-2 py-1 rounded bg-slate-200 text-slate-700">Sheet - 2</span>
+        <div class="pb-1 border-b border-slate-200">
+          <h2 class="text-lg font-bold text-slate-900 tracking-tight">EXECUTIVE COMMAND CENTRE</h2>
+          <p class="text-xs text-slate-500">Real-time overview of operational performance</p>
         </div>
 
         <!-- 6 KPI Cards -->
@@ -400,14 +395,14 @@
         <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <span class="text-xs font-bold text-slate-500 uppercase px-2">Views:</span>
-            <button data-sheet="sheet-2" class="sheet-toggle-btn px-3 py-1.5 text-xs font-semibold rounded-md bg-blue-700 text-white shadow-sm transition-all">
-              Sheet 2: Operational Dashboard
+            <button data-sheet="sheet-2" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-blue-700 text-white shadow-sm transition-all">
+              Operational Dashboard
             </button>
-            <button data-sheet="sheet-3" class="sheet-toggle-btn px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-700 hover:bg-slate-100 transition-all">
-              Sheet 3: Weekly Comparison Matrix
+            <button data-sheet="sheet-3" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-700 hover:bg-slate-100 transition-all">
+              Weekly Comparison Matrix
             </button>
-            <button data-sheet="sheet-4" class="sheet-toggle-btn px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-700 hover:bg-slate-100 transition-all">
-              Sheet 4: Forecast vs Actuals Matrix
+            <button data-sheet="sheet-4" class="sheet-toggle-btn px-3.5 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-700 hover:bg-slate-100 transition-all">
+              Forecast vs Actuals Matrix
             </button>
           </div>
           <div class="text-xs text-slate-500 font-medium hidden sm:block">
@@ -419,13 +414,10 @@
         <!-- CAPACITY SHEET 2: OPERATIONAL DASHBOARD (Image 3)            -->
         <!-- ------------------------------------------------------------ -->
         <div id="capacity-sheet-2" class="capacity-sheet-content space-y-4">
-          <!-- Sheet Header -->
-          <div class="flex justify-between items-center pb-1 border-b border-slate-200">
-            <div>
-              <h2 class="text-lg font-bold text-slate-900 tracking-tight">CAPACITY OVERVIEW</h2>
-              <p class="text-xs text-slate-500">Monitor capacity, availability and workforce productivity</p>
-            </div>
-            <span class="text-xs font-semibold px-2 py-1 rounded bg-slate-200 text-slate-700">Sheet - 2</span>
+          <!-- Capacity Header -->
+          <div class="pb-1 border-b border-slate-200">
+            <h2 class="text-lg font-bold text-slate-900 tracking-tight">CAPACITY OVERVIEW</h2>
+            <p class="text-xs text-slate-500">Monitor capacity, availability and workforce productivity</p>
           </div>
 
           <!-- Top 6 KPI Cards -->
@@ -629,13 +621,10 @@
         <!-- ------------------------------------------------------------ -->
         <div id="capacity-sheet-3" class="capacity-sheet-content hidden space-y-4">
           <div class="dashboard-card p-5">
-            <!-- Sheet Header -->
-            <div class="border-b border-slate-200 pb-3 mb-4 flex justify-between items-center">
-              <div>
-                <h2 class="text-base font-bold text-slate-900 tracking-tight">CAPACITY OVERVIEW – COMPARISON</h2>
-                <p class="text-xs text-slate-500 font-medium">This Week vs Last Week vs Plan</p>
-              </div>
-              <span class="text-xs font-semibold px-2 py-1 rounded bg-slate-200 text-slate-700">Sheet - 3</span>
+            <!-- Header -->
+            <div class="border-b border-slate-200 pb-3 mb-4">
+              <h2 class="text-base font-bold text-slate-900 tracking-tight">CAPACITY OVERVIEW – COMPARISON</h2>
+              <p class="text-xs text-slate-500 font-medium">This Week vs Last Week vs Plan</p>
             </div>
 
             <!-- Comparison Table -->

@@ -160,31 +160,20 @@ const App = {
       }
     });
 
-    // Update top header titles
+    // Update top header title
     const titleEl = document.getElementById("top-view-title");
-    const sheetEl = document.getElementById("top-view-sheet");
     if (tabId === "executive-summary") {
       if (titleEl) titleEl.textContent = "Executive Command Centre";
-      if (sheetEl) sheetEl.textContent = "Sheet - 2";
     } else if (tabId === "capacity-overview") {
       if (titleEl) titleEl.textContent = "Capacity Overview";
-      if (sheetEl) {
-        if (this.state.capacitySheet === "sheet-2") sheetEl.textContent = "Sheet - 2";
-        else if (this.state.capacitySheet === "sheet-3") sheetEl.textContent = "Sheet - 3";
-        else if (this.state.capacitySheet === "sheet-4") sheetEl.textContent = "Sheet - 4";
-      }
     } else if (tabId === "demand") {
       if (titleEl) titleEl.textContent = "Demand & Capacity Dispatch";
-      if (sheetEl) sheetEl.textContent = "Hub View";
     } else if (tabId === "geographic-hub") {
       if (titleEl) titleEl.textContent = "Geographic Performance HUB";
-      if (sheetEl) sheetEl.textContent = "Hub View";
     } else if (tabId === "accuracy-dashboard") {
       if (titleEl) titleEl.textContent = "Accuracy Dashboard";
-      if (sheetEl) sheetEl.textContent = "Hub View";
     } else if (tabId === "forecast-leadlag") {
       if (titleEl) titleEl.textContent = "Forecast Performance (Lead/Lag)";
-      if (sheetEl) sheetEl.textContent = "Hub View";
     }
 
     // Update visible view container
@@ -203,17 +192,10 @@ const App = {
   },
 
   /**
-   * Switch Capacity Overview Sheet (Sheet 2, 3, or 4)
+   * Switch Capacity Overview View (Operational Dashboard, Comparison, or Matrix)
    */
   switchCapacitySheet(sheetId) {
     this.state.capacitySheet = sheetId;
-
-    const sheetEl = document.getElementById("top-view-sheet");
-    if (sheetEl) {
-      if (sheetId === "sheet-2") sheetEl.textContent = "Sheet - 2";
-      else if (sheetId === "sheet-3") sheetEl.textContent = "Sheet - 3";
-      else if (sheetId === "sheet-4") sheetEl.textContent = "Sheet - 4";
-    }
 
     document.querySelectorAll(".sheet-toggle-btn").forEach(btn => {
       if (btn.getAttribute("data-sheet") === sheetId) {

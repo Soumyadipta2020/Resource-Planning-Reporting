@@ -14,7 +14,7 @@ All views are backed by a structured, aligned dummy dataset defined directly in 
 
 ## 🚀 Key Features & Views
 
-### 1. Executive Command Centre (`Executive Summary - Sheet 2`)
+### 1. Executive Command Centre (`Executive Summary`)
 - **Top Executive KPIs**: Installs, Sales (£M), Leads, Active Heads, Available Hours, and Productivity per Head with Week-over-Week (WoW) and vs. Plan variance badges.
 - **Actual vs Plan Weekly Trend**: Dual-axis bar and dashed line combo chart with positive/negative variance indicators across rolling weeks (WK 14 to WK 23).
 - **Variance Analysis (Drivers) Waterfall**: Dynamic step-up and step-down waterfall chart decomposing the gap between Plan (2,415) and Actuals (2,510) across productivity, overtime, holidays, sickness, and training.
@@ -22,7 +22,7 @@ All views are backed by a structured, aligned dummy dataset defined directly in 
 
 ### 2. Capacity Overview Suite
 
-#### • Sheet 2: Operational Dashboard
+#### • Operational Dashboard
 - **Capacity KPIs**: Available Hours, Total Downtime Hours, Capacity Utilisation %, Workforce Availability %, Productivity, and Sickness %.
 - **Tiered Capacity Funnel**: Visual loss breakdown from Gross Hours through deductions (Holiday, Sickness, Training, Meetings, Other) to Available and Productive Hours.
 - **Downtime by Category**: High-contrast donut chart paired with an exact hours and percentage distribution table.
@@ -30,11 +30,11 @@ All views are backed by a structured, aligned dummy dataset defined directly in 
 - **Region Efficiency Matrix**: Interactive 2D scatter matrix mapping Productivity against Availability with quadrant dividers.
 - **Operational Health Summary**: Real-time bottom indicator strip.
 
-#### • Sheet 3: Weekly Comparison Matrix
+#### • Weekly Comparison Matrix
 - **Comparative Multi-Metric Grid**: Side-by-side comparison of **This Week (WK 23)**, **Last Week (WK 22)**, and **Plan**, complete with absolute variances and percentage variations.
 - **Percentage Points (pp) Precision**: Dedicated formatting for rate-based metrics (Workforce Availability %, Sickness %).
 
-#### • Sheet 4: Forecast vs. Actuals Plan Matrix
+#### • Forecast vs. Actuals Plan Matrix
 - **Service Line / Business Unit Switcher**: Toggle views between `Home (All Units)`, `HEC` (Home Energy Care), `KAC` (Kitchen & Appliance Care), and `NZ (EV)` (Net Zero & Electric Vehicles).
 - **ES Weekly Actual vs Forecast Chart**: Multi-metric trend visual with an interactive selector for Gross Hours, Available Hours, Productive Hours, Downtime, Productivity, Utilisation, and Sickness %.
 - **Master 11-Week Matrix**: 26-row detailed operational planning table displaying:
