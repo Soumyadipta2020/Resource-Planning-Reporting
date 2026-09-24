@@ -5,7 +5,7 @@
 
 const App = {
   state: {
-    activeTab: "executive-summary", // Default view is Executive Summary
+    activeTab: "executive-summary", // Default is Executive Summary
     capacitySheet: "sheet-2", // "sheet-2" (Dashboard), "sheet-3" (Comparison), "sheet-4" (Detailed Matrix)
     selectedGeography: "all",
     selectedWeek: "wk23",
