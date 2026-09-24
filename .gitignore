@@ -1,0 +1,19 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary and Editor Files
+*.swp
+*.bak
+*.tmp
+.vscode/
+.idea/
+
+# Node / NPM (if used later)
+node_modules/
+package-lock.json
+
+# Screenshots & Logs
+*.log
+test_screenshot*.png
