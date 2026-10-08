@@ -256,14 +256,13 @@ const App = {
     this.renderSheet4Chart();
   },
 
-  getGlobalMultiplier() {
+  getGlobalMultipliers() {
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
     const geoMult = isRegional ? DASHBOARD_DATA.regionalData[geo].multiplier : 1.0;
 
     let planMult = 1.0;
-    if (this.state.selectedPlan === "budget_2026") planMult = 0.95;
-    else if (this.state.selectedPlan === "reforecast_q3") planMult = 1.04;
+    if (this.state.selectedPlan === "gff2_2026") planMult = 1.15;
 
     let weekMult = 1.0;
     if (this.state.selectedWeek) {
@@ -273,7 +272,14 @@ const App = {
            weekMult = 1 + ((wkNum - 23) * 0.015);
        }
     }
-    return geoMult * planMult * weekMult;
+    return {
+       base: geoMult * weekMult,
+       plan: geoMult * weekMult * planMult
+    };
+  },
+  
+  getGlobalMultiplier() {
+    return this.getGlobalMultipliers().base; // Fallback for things that just need a quick scale
   },
 
   /**
@@ -328,12 +334,17 @@ const App = {
     this.renderKpiCard("exec-kpi-productivity", kpiData.productivity.formatted, kpiData.productivity.wow, kpiData.productivity.vsPlan);
 
     // Installs Weekly Combo Chart
-    let weeklyData = DASHBOARD_DATA.executiveSummary.weeklyInstalls.map(d => ({
-      week: d.week,
-      actual: d.actual === null ? null : Math.round(d.actual * mult),
-      plan: d.plan === null ? null : Math.round(d.plan * mult),
-      variance: d.variance === null ? null : Math.round(d.variance * mult)
-    }));
+    const mults = this.getGlobalMultipliers();
+    let weeklyData = DASHBOARD_DATA.executiveSummary.weeklyInstalls.map(d => {
+      const a = d.actual === null ? null : Math.round(d.actual * mults.base);
+      const p = d.plan === null ? null : Math.round(d.plan * mults.plan);
+      return {
+        week: d.week,
+        actual: a,
+        plan: p,
+        variance: (a === null || p === null) ? null : (a - p)
+      };
+    });
     ChartManager.renderWeeklyInstallsChart("chart-weekly-installs", weeklyData);
 
     // Waterfall Chart Drivers
@@ -569,14 +580,15 @@ const App = {
     const rawSeries = DASHBOARD_DATA.capacitySheet4.weeklySeries;
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
-    const geoMult = this.getGlobalMultiplier();
+    const mults = this.getGlobalMultipliers();
 
     let buMult = 1.0;
     if (this.state.selectedBusinessUnit === "hec") buMult = 0.58;
     else if (this.state.selectedBusinessUnit === "kac") buMult = 0.28;
     else if (this.state.selectedBusinessUnit === "nzev") buMult = 0.14;
 
-    const totalMult = geoMult * buMult;
+    const actualMult = mults.base * buMult;
+    const forecastMult = mults.plan * buMult;
 
     // Create scaled series
     const series = {
@@ -590,11 +602,14 @@ const App = {
       const isPercentOrRatio = metric.unit === "%" || key === "productivity";
       const scale = isPercentOrRatio ? 1.0 : totalMult;
 
+      const actScale = isPercentOrRatio ? 1.0 : actualMult;
+      const fcScale = isPercentOrRatio ? 1.0 : forecastMult;
+
       series.metrics[key] = {
         label: metric.label,
         unit: metric.unit,
-        actuals: metric.actuals.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * scale))),
-        forecast: metric.forecast.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * scale)))
+        actuals: metric.actuals.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * actScale))),
+        forecast: metric.forecast.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * fcScale)))
       };
     });
 
@@ -609,15 +624,16 @@ const App = {
     const bu = this.state.selectedBusinessUnit;
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
-    const geoMult = this.getGlobalMultiplier();
+    const mults = this.getGlobalMultipliers();
 
     let buMult = 1.0;
     if (bu === "hec") buMult = 0.58;
     else if (bu === "kac") buMult = 0.28;
     else if (bu === "nzev") buMult = 0.14;
 
-    const mult = geoMult * buMult;
-    const isScaled = mult !== 1.0;
+    const actMult = mults.base * buMult;
+    const fcMult = mults.plan * buMult;
+    const isScaled = actMult !== 1.0 || fcMult !== 1.0;
 
     const selectedWeekObj = DASHBOARD_DATA.metadata.reportingWeeks.find(w => w.id === this.state.selectedWeek) || { date: "22 Jun 2026" };
     const currentWeekLabel = selectedWeekObj.date;
@@ -633,7 +649,7 @@ const App = {
               <th class="py-2 px-2 bg-cyan-700 border-r border-cyan-600">Forecast</th>
               <th class="py-2 px-2 bg-cyan-700 border-r border-cyan-600">Actual</th>
               <th class="py-2 px-2 bg-cyan-700 border-r border-cyan-600">Variance</th>
-              <th colspan="5" class="py-2 px-2 bg-slate-500 border-l border-slate-400">Forecast - GFF1 2026</th>
+              <th colspan="5" class="py-2 px-2 bg-slate-500 border-l border-slate-400">Forecast - ${this.state.selectedPlan === 'gff2_2026' ? 'GFF2 2026' : 'GFF1 2026'}</th>
             </tr>
             <!-- Sub-Header Date Row -->
             <tr class="bg-slate-100 text-slate-700 text-center font-semibold border-b border-slate-300">
@@ -661,7 +677,7 @@ const App = {
       row.actuals.forEach(val => {
         let displayVal = val;
         if (isScaled && !row.metric.includes("%") && !row.metric.includes("Productivity")) {
-          const num = parseInt(val.replace(/,/g, "")) * mult;
+          const num = parseInt(val.replace(/,/g, "")) * actMult;
           displayVal = Math.round(num).toLocaleString();
         }
         html += `<td class="py-1.5 px-2 text-right ${textWeight}">${displayVal}</td>`;
@@ -672,8 +688,8 @@ const App = {
       let curActual = row.currentActual;
       let variance = row.variance;
       if (isScaled && !row.metric.includes("%") && !row.metric.includes("Productivity")) {
-        const numFc = parseInt(curForecast.replace(/,/g, "")) * mult;
-        const numAct = parseInt(curActual.replace(/,/g, "")) * mult;
+        const numFc = parseInt(curForecast.replace(/,/g, "")) * fcMult;
+        const numAct = parseInt(curActual.replace(/,/g, "")) * actMult;
         curForecast = Math.round(numFc).toLocaleString();
         curActual = Math.round(numAct).toLocaleString();
         const diff = Math.round(numAct - numFc);
@@ -701,7 +717,7 @@ const App = {
       row.futureForecast.forEach(val => {
         let displayVal = val;
         if (isScaled && !row.metric.includes("%") && !row.metric.includes("Productivity")) {
-          const num = parseInt(val.replace(/,/g, "")) * mult;
+          const num = parseInt(val.replace(/,/g, "")) * actMult;
           displayVal = Math.round(num).toLocaleString();
         }
 
