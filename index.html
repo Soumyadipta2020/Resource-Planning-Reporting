@@ -652,47 +652,6 @@
         <div id="capacity-sheet-4" class="capacity-sheet-content hidden space-y-4">
           <!-- Top Controls & Mini Bar -->
           <div class="dashboard-card p-4 space-y-4">
-            <!-- Header & Business Unit Switcher Buttons -->
-            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
-              <div class="flex items-center space-x-2">
-                <button data-bu="all" class="bu-toggle-btn p-2 rounded-md bg-emerald-600 text-white border border-emerald-600 transition-colors" title="All Units / Home">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                </button>
-                <button data-bu="hec" class="bu-toggle-btn px-4 py-1.5 text-xs font-bold rounded-md bg-white text-emerald-700 border border-emerald-500 hover:bg-emerald-50 transition-colors">
-                  HEC
-                </button>
-                <button data-bu="kac" class="bu-toggle-btn px-4 py-1.5 text-xs font-bold rounded-md bg-white text-emerald-700 border border-emerald-500 hover:bg-emerald-50 transition-colors">
-                  KAC
-                </button>
-                <button data-bu="nzev" class="bu-toggle-btn px-4 py-1.5 text-xs font-bold rounded-md bg-white text-emerald-700 border border-emerald-500 hover:bg-emerald-50 transition-colors">
-                  NZ (EV)
-                </button>
-              </div>
-
-              <!-- Sheet 4 Specific Dropdowns -->
-              <div class="flex flex-wrap items-center gap-3 text-xs">
-                <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-300 rounded px-2.5 py-1">
-                  <label class="text-slate-500 font-medium">Select geography:</label>
-                  <select class="geo-selector filter-select bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer">
-                    <!-- Populated dynamically -->
-                  </select>
-                </div>
-
-                <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-300 rounded px-2.5 py-1">
-                  <label class="text-slate-500 font-medium">Select Plan:</label>
-                  <select class="plan-selector filter-select bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer">
-                    <!-- Populated dynamically -->
-                  </select>
-                </div>
-
-                <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-300 rounded px-2.5 py-1">
-                  <label class="text-slate-500 font-medium">Select Reporting Week:</label>
-                  <select class="week-selector filter-select bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer">
-                    <!-- Populated dynamically -->
-                  </select>
-                </div>
-              </div>
-            </div>
 
             <!-- Top Line Chart: ES Weekly Actual vs Forecast -->
             <div class="flex flex-col">
