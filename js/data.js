@@ -649,7 +649,7 @@ const DASHBOARD_DATA = {
         varDir: "down",
         varType: "negative",
         futureForecast: ["40.5%", "40.6%", "40.0%", "38.4%", "36.4%"],
-        hasSparkbar: true
+        hasSparkbar: false
       }
     ]
   },
