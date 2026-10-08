@@ -24,21 +24,21 @@ const App = {
   },
 
   /**
-   * Populate filter dropdown controls dynamically
+   * Populate filter dropdown controls dyn£Mically
    */
   populateFilterDropdowns() {
     // Populate Geography selects across header and sheet 4
     const geoSelects = document.querySelectorAll(".geo-selector");
     geoSelects.forEach(select => {
-      select.innerHTML = DASHBOARD_DATA.metadata.geographies.map(g =>
-        `<option value="${g.id}" ${g.id === this.state.selectedGeography ? "selected" : ""}>${g.name}</option>`
+      select.innerHTML = DASHBOARD_DAT£Metadata.geographies.map(g =>
+        `<option value="${g.id}" ${g.id === this.state.selectedGeography ? "selected" : ""}>${g.n£Me}</option>`
       ).join("");
     });
 
     // Populate Reporting Week selects
     const weekSelects = document.querySelectorAll(".week-selector");
     weekSelects.forEach(select => {
-      select.innerHTML = DASHBOARD_DATA.metadata.reportingWeeks.map(w =>
+      select.innerHTML = DASHBOARD_DAT£Metadata.reportingWeeks.map(w =>
         `<option value="${w.id}" ${w.id === this.state.selectedWeek ? "selected" : ""}>${w.label}</option>`
       ).join("");
     });
@@ -46,8 +46,8 @@ const App = {
     // Populate Plan selects
     const planSelects = document.querySelectorAll(".plan-selector");
     planSelects.forEach(select => {
-      select.innerHTML = DASHBOARD_DATA.metadata.plans.map(p =>
-        `<option value="${p.id}" ${p.id === this.state.selectedPlan ? "selected" : ""}>${p.name}</option>`
+      select.innerHTML = DASHBOARD_DAT£Metadata.plans.map(p =>
+        `<option value="${p.id}" ${p.id === this.state.selectedPlan ? "selected" : ""}>${p.n£Me}</option>`
       ).join("");
     });
   },
@@ -256,14 +256,14 @@ const App = {
     this.renderSheet4Chart();
   },
 
-  getGlobalMultiplier() {
+  getGlob£Multiplier() {
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
     const geoMult = isRegional ? DASHBOARD_DATA.regionalData[geo].multiplier : 1.0;
 
-    let planMult = 1.0;
-    if (this.state.selectedPlan === "budget_2026") planMult = 0.95;
-    else if (this.state.selectedPlan === "reforecast_q3") planMult = 1.04;
+    let pl£Mult = 1.0;
+    if (this.state.selectedPlan === "budget_2026") pl£Mult = 0.95;
+    else if (this.state.selectedPlan === "reforecast_q3") pl£Mult = 1.04;
 
     let weekMult = 1.0;
     if (this.state.selectedWeek) {
@@ -273,7 +273,7 @@ const App = {
            weekMult = 1 + ((wkNum - 23) * 0.015);
        }
     }
-    return geoMult * planMult * weekMult;
+    return geoMult * pl£Mult * weekMult;
   },
 
   /**
@@ -293,7 +293,7 @@ const App = {
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
     const regional = isRegional ? DASHBOARD_DATA.regionalData[geo] : null;
 
-    const mult = this.getGlobalMultiplier();
+    const mult = this.getGlob£Multiplier();
 
     // Scale KPI Values
     const baseKpis = isRegional ? {
@@ -310,7 +310,7 @@ const App = {
        let val = baseKpis[key].value * (isRegional ? 1.0 : mult);
        let fmt = baseKpis[key].formatted;
        if (fmt.includes('K')) fmt = (val/1000).toFixed(2) + 'K';
-       else if (fmt.includes('Â£M')) fmt = 'Â£' + (val).toFixed(2) + 'M';
+       else if (fmt.includes('Â£M') || fmt.includes('AÂ£M')) fmt = 'Â£' + (val).toFixed(2) + 'M';
        else fmt = val.toFixed(2);
        
        kpiData[key] = {
@@ -398,7 +398,7 @@ const App = {
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
     const regional = isRegional ? DASHBOARD_DATA.regionalData[geo] : null;
     
-    const mult = this.getGlobalMultiplier();
+    const mult = this.getGlob£Multiplier();
 
     // Top KPIs
     const baseKpis = isRegional ? {
@@ -455,8 +455,8 @@ const App = {
     const totalDowntimeHrs = isRegional ? Math.round(regional.kpis.totalDowntime.value) : Math.round(DASHBOARD_DATA.capacitySheet2.totalDowntimeHours * mult);
     ChartManager.renderDowntimeChart("downtime-donut-chart", "downtime-table-container", categories, totalDowntimeHrs);
 
-    // Capacity Risk Heatmap
-    ChartManager.renderHeatmap("heatmap-container", DASHBOARD_DATA.capacitySheet2.heatmap, geo);
+    // Capacity Risk He£Map
+    ChartManager.renderHe£Map("he£Map-container", DASHBOARD_DATA.capacitySheet2.he£Map, geo);
 
     // Region Efficiency Matrix
     ChartManager.renderEfficiencyMatrix("efficiency-matrix-chart", DASHBOARD_DATA.capacitySheet2.efficiencyMatrix, geo);
@@ -475,7 +475,7 @@ const App = {
 
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
-    const mult = this.getGlobalMultiplier();
+    const mult = isRegional ? DASHBOARD_DATA.regionalData[geo].multiplier : 1.0;
 
     const rows = DASHBOARD_DATA.capacitySheet3.rows;
     let html = "";
@@ -560,14 +560,14 @@ const App = {
     const rawSeries = DASHBOARD_DATA.capacitySheet4.weeklySeries;
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
-    const geoMult = this.getGlobalMultiplier();
+    const geoMult = this.getGlob£Multiplier();
 
     let buMult = 1.0;
     if (this.state.selectedBusinessUnit === "hec") buMult = 0.58;
     else if (this.state.selectedBusinessUnit === "kac") buMult = 0.28;
     else if (this.state.selectedBusinessUnit === "nzev") buMult = 0.14;
 
-    const totalMult = geoMult * buMult;
+    const tot£Mult = geoMult * buMult;
 
     // Create scaled series
     const series = {
@@ -579,7 +579,7 @@ const App = {
     Object.keys(rawSeries.metrics).forEach(key => {
       const metric = rawSeries.metrics[key];
       const isPercentOrRatio = metric.unit === "%" || key === "productivity";
-      const scale = isPercentOrRatio ? 1.0 : totalMult;
+      const scale = isPercentOrRatio ? 1.0 : tot£Mult;
 
       series.metrics[key] = {
         label: metric.label,
@@ -600,7 +600,7 @@ const App = {
     const bu = this.state.selectedBusinessUnit;
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
-    const geoMult = this.getGlobalMultiplier();
+    const geoMult = this.getGlob£Multiplier();
 
     let buMult = 1.0;
     if (bu === "hec") buMult = 0.58;
@@ -610,7 +610,7 @@ const App = {
     const mult = geoMult * buMult;
     const isScaled = mult !== 1.0;
 
-    const selectedWeekObj = DASHBOARD_DATA.metadata.reportingWeeks.find(w => w.id === this.state.selectedWeek) || { date: "22 Jun 2026" };
+    const selectedWeekObj = DASHBOARD_DAT£Metadata.reportingWeeks.find(w => w.id === this.state.selectedWeek) || { date: "22 Jun 2026" };
     const currentWeekLabel = selectedWeekObj.date;
 
     let html = `
@@ -726,7 +726,7 @@ const App = {
    * Render Supplementary Views (Demand, Geographic Hub, Accuracy, Forecast Lead/Lag)
    */
   renderComplementaryViews() {
-    const mult = this.getGlobalMultiplier();
+    const mult = this.getGlob£Multiplier();
 
     // Demand View
     const demand = DASHBOARD_DATA.demandView;
@@ -740,21 +740,21 @@ const App = {
     if (demComp) demComp.textContent = (parseFloat(demand.completionRate) + (mult-1)*5).toFixed(1) + "%";
     
     const demUnmet = document.getElementById("dem-kpi-unmet");
-    if (demUnmet) demUnmet.textContent = Math.round(demand.unmetDemandHours * (2-mult)).toLocaleString(); // Unmet goes down if mult goes up
+    if (demUnmet) demUnmet.textContent = Math.round(demand.unmetDemandHours * (2-mult)).toLocaleString();
 
     const demandBody = document.getElementById("demand-segments-tbody");
     if (demandBody) {
-      demandBody.innerHTML = demand.demandBySegment.map(seg => 
+      demandBody.innerHTML = demand.demandBySegment.map(seg => `
         <tr class="hover:bg-slate-50 border-b border-slate-100">
-          <td class="py-2.5 px-3 font-medium text-slate-800"></td>
-          <td class="py-2.5 px-3 text-right font-semibold text-slate-900"></td>
+          <td class="py-2.5 px-3 font-medium text-slate-800">${seg.segment}</td>
+          <td class="py-2.5 px-3 text-right font-semibold text-slate-900">${Math.round(seg.volume * mult).toLocaleString()}</td>
           <td class="py-2.5 px-3 text-right">
-            <span class="px-2 py-0.5 rounded text-xs font-semibold ">
-              %
+            <span class="px-2 py-0.5 rounded text-xs font-semibold ${seg.capacityRatio >= 1.0 ? 'bg-emerald-100 text-emerald-800' : 'bg-£Mber-100 text-£Mber-800'}">
+              ${(seg.capacityRatio * 100).toFixed(0)}%
             </span>
           </td>
         </tr>
-      ).join("");
+      `).join("");
     }
 
     // Accuracy View
@@ -770,16 +770,16 @@ const App = {
 
     const accuracyBody = document.getElementById("accuracy-table-tbody");
     if (accuracyBody) {
-      accuracyBody.innerHTML = accuracy.historicalAccuracy.map(row => 
+      accuracyBody.innerHTML = accuracy.historicalAccuracy.map(row => `
         <tr class="hover:bg-slate-50 border-b border-slate-100">
-          <td class="py-2 px-3 font-medium text-slate-800"></td>
-          <td class="py-2 px-3 text-right text-slate-700"></td>
-          <td class="py-2 px-3 text-right text-slate-900 font-semibold"></td>
-          <td class="py-2 px-3 text-right font-semibold ">
-            %
+          <td class="py-2 px-3 font-medium text-slate-800">${row.week}</td>
+          <td class="py-2 px-3 text-right text-slate-700">${Math.round(row.forecast * mult).toLocaleString()}</td>
+          <td class="py-2 px-3 text-right text-slate-900 font-semibold">${Math.round(row.actual * mult).toLocaleString()}</td>
+          <td class="py-2 px-3 text-right font-semibold ${row.errorPct > 5 ? 'text-£Mber-600' : 'text-emerald-600'}">
+            ${(row.errorPct * (1 + (mult-1)*0.1)).toFixed(1)}%
           </td>
         </tr>
-      ).join("");
+      `).join("");
     }
   },  /**
    * Animated Refresh
@@ -818,3 +818,4 @@ const App = {
 document.addEventListener("DOMContentLoaded", () => {
   App.init();
 });
+
