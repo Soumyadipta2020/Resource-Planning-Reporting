@@ -55,49 +55,42 @@ const ChartManager = {
             type: "line",
             label: "Plan",
             data: plans,
-            borderColor: "#0284c7",
-            borderDash: [5, 5],
+            borderColor: "#12239E",
             borderWidth: 2,
-            pointBackgroundColor: "#0284c7",
+            pointBackgroundColor: "#12239E",
             pointRadius: 4,
             pointHoverRadius: 6,
             fill: false,
-            tension: 0.2,
+            tension: 0,
             order: 1
           },
           {
             type: "bar",
             label: "Actuals",
             data: actuals,
-            backgroundColor: "#0f172a",
-            hoverBackgroundColor: "#1e293b",
-            borderRadius: 3,
+            backgroundColor: "#118DFF",
+            hoverBackgroundColor: "#0F75D6",
+            borderRadius: 0,
             barPercentage: 0.6,
             categoryPercentage: 0.8,
             order: 2
-          },
-          {
-            type: "bar",
-            label: "Variance",
-            data: variances,
-            backgroundColor: variances.map(v => v >= 0 ? "#16a34a" : "#dc2626"),
-            borderRadius: 2,
-            barPercentage: 0.35,
-            yAxisID: "yVariance",
-            order: 3
           }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
         plugins: {
           legend: {
             position: "top",
             labels: {
               usePointStyle: true,
-              font: { family: "Inter, sans-serif", size: 11, weight: "600" },
-              color: "#334155"
+              font: { family: "Segoe UI, sans-serif", size: 11, weight: "400" },
+              color: "#252423"
             }
           },
           tooltip: {
@@ -109,6 +102,14 @@ const ChartManager = {
                   label += context.parsed.y.toLocaleString();
                 }
                 return label;
+              },
+              afterBody: function(context) {
+                 if (context.length > 0) {
+                     const index = context[0].dataIndex;
+                     const variance = variances[index];
+                     const sign = variance > 0 ? "+" : "";
+                     return `\nVariance: ${sign}${variance.toLocaleString()}`;
+                 }
               }
             }
           }
@@ -116,25 +117,17 @@ const ChartManager = {
         scales: {
           x: {
             grid: { display: false },
-            ticks: { font: { size: 11, weight: "500" }, color: "#64748b" }
+            ticks: { font: { family: "Segoe UI", size: 11 }, color: "#605E5C" }
           },
           y: {
             position: "left",
             beginAtZero: true,
-            max: 3200,
             ticks: {
-              stepSize: 1000,
               callback: value => (value === 0 ? "0K" : (value / 1000) + "K"),
-              font: { size: 11 },
-              color: "#64748b"
+              font: { family: "Segoe UI", size: 11 },
+              color: "#605E5C"
             },
-            grid: { color: "#f1f5f9" }
-          },
-          yVariance: {
-            position: "right",
-            display: false,
-            min: -500,
-            max: 500
+            grid: { color: "#E1DFDD" }
           }
         }
       }
