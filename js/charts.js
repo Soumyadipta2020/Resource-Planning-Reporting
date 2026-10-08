@@ -474,12 +474,12 @@ const ChartManager = {
     if (!container) return;
 
     let html = `
-      <div class="overflow-x-auto">
-        <table class="w-full text-xs text-center border-collapse">
+      <div class="w-full">
+        <table class="w-full text-[10px] text-center border-collapse">
           <thead>
             <tr>
-              <th class="text-left py-1 px-2 font-semibold text-slate-600 w-24">Region</th>
-              ${heatmapData.weeks.map(w => `<th class="py-1 px-1 font-semibold text-slate-600">${w}</th>`).join('')}
+              <th class="text-left py-0.5 px-0.5 font-semibold text-slate-600 w-16 whitespace-nowrap">Region</th>
+              ${heatmapData.weeks.map(w => `<th class="py-0.5 px-0.5 font-semibold text-slate-600 whitespace-nowrap">${w}</th>`).join('')}
             </tr>
           </thead>
           <tbody>
@@ -490,7 +490,7 @@ const ChartManager = {
       const rowHighlight = isSelected ? "ring-2 ring-blue-500 font-bold" : "";
 
       html += `<tr class="border-b border-slate-100 ${rowHighlight}">`;
-      html += `<td class="text-left py-1.5 px-2 font-semibold text-slate-800">${reg.name}</td>`;
+      html += `<td class="text-left py-1 px-0.5 font-semibold text-slate-800 whitespace-nowrap">${reg.name}</td>`;
 
       reg.values.forEach(val => {
         // Color mapping from -20% (green) to 0% (yellow) to +20% (red)
@@ -516,8 +516,8 @@ const ChartManager = {
 
         const sign = val > 0 ? `+${val}%` : `${val}%`;
         html += `
-          <td class="p-1">
-            <div class="py-1 px-1.5 rounded text-xs font-semibold transition-transform hover:scale-105"
+          <td class="p-0.5">
+            <div class="py-0.5 px-0.5 rounded text-[10px] font-semibold transition-transform hover:scale-105"
                  style="background-color: ${cellBg}; color: ${textColor};" title="${reg.name}: ${sign} variance">
               ${sign}
             </div>
@@ -532,7 +532,7 @@ const ChartManager = {
           </tbody>
         </table>
         <!-- Heatmap Color Scale Legend -->
-        <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 px-1">
+        <div class="flex items-center justify-between text-[9px] text-slate-500 mt-2 px-0.5">
           <div class="flex items-center gap-1">
             <span class="w-3 h-3 rounded" style="background-color: #22c55e;"></span>
             <span>-20% (Surplus)</span>

@@ -592,24 +592,24 @@ const App = {
 
       html += `
         <tr class="hover:bg-slate-50/80 transition-colors border-b border-slate-200">
-          <td class="py-3 px-4 font-bold text-slate-900">${r.metric}</td>
-          <td class="py-3 px-3 text-right font-semibold text-slate-800">${thisWeekAct}</td>
-          <td class="py-3 px-3 text-right text-slate-700">${thisWeekPlan}</td>
-          <td class="py-3 px-3 text-right font-medium ${vsPlan === '-' ? 'text-slate-500' : (isVsPlanDown ? 'text-red-600' : 'text-emerald-600')}">
+          <td class="py-1 px-2 font-bold text-slate-900">${r.metric}</td>
+          <td class="py-1 px-1 text-right font-semibold text-slate-800">${thisWeekAct}</td>
+          <td class="py-1 px-1 text-right text-slate-700">${thisWeekPlan}</td>
+          <td class="py-1 px-1 text-right font-medium ${vsPlan === '-' ? 'text-slate-500' : (isVsPlanDown ? 'text-red-600' : 'text-emerald-600')}">
             ${vsPlan === '-' ? '' : (isVsPlanDown ? '↓' : '↑')} ${vsPlan === '-' ? '-' : vsPlan.replace('-', '')}
           </td>
-          <td class="py-3 px-3 text-right text-slate-800">${lastWeekAct}</td>
-          <td class="py-3 px-3 text-right font-medium ${isVsLWDown ? 'text-red-600' : 'text-emerald-600'}">
+          <td class="py-1 px-1 text-right text-slate-800">${lastWeekAct}</td>
+          <td class="py-1 px-1 text-right font-medium ${isVsLWDown ? 'text-red-600' : 'text-emerald-600'}">
             ${isVsLWDown ? '↓' : '↑'} ${vsLW.replace('-', '')}
           </td>
-          <td class="py-3 px-3 text-right font-semibold ${vsPlan === '-' ? 'text-slate-500' : (isVsPlanDown ? 'text-red-600' : 'text-emerald-600')}">
+          <td class="py-1 px-1 text-right font-semibold ${vsPlan === '-' ? 'text-slate-500' : (isVsPlanDown ? 'text-red-600' : 'text-emerald-600')}">
             ${vsPlan === '-' ? '' : (isVsPlanDown ? '↓' : '↑')} ${varPlanAbs === '-' ? '-' : varPlanAbs.replace('-', '')}
           </td>
-          <td class="py-3 px-3 text-right text-slate-600 font-medium">${varPlanPct}</td>
-          <td class="py-3 px-3 text-right font-semibold ${isVsLWDown ? 'text-red-600' : 'text-emerald-600'}">
+          <td class="py-1 px-1 text-right text-slate-600 font-medium">${varPlanPct}</td>
+          <td class="py-1 px-1 text-right font-semibold ${isVsLWDown ? 'text-red-600' : 'text-emerald-600'}">
             ${isVsLWDown ? '↓' : '↑'} ${varLWAbs.replace('-', '')}
           </td>
-          <td class="py-3 px-3 text-right text-slate-600 font-medium">${varLWPct}</td>
+          <td class="py-1 px-1 text-right text-slate-600 font-medium">${varLWPct}</td>
         </tr>
       `;
     });
@@ -693,26 +693,26 @@ const App = {
     const currentWeekLabel = selectedWeekObj.date;
 
     let html = `
-      <div class="overflow-x-auto shadow-sm rounded border border-slate-200">
-        <table class="w-full text-xs border-collapse">
+      <div class="w-full shadow-sm rounded border border-slate-200">
+        <table class="w-full text-[10px] border-collapse">
           <thead>
             <!-- Top Header Category Row -->
             <tr class="text-white text-center font-bold">
-              <th class="py-2 px-3 text-left bg-slate-600 sticky left-0 z-20 w-44">Metric</th>
-              <th colspan="5" class="py-2 px-2 bg-slate-500 border-l border-r border-slate-400">Actuals</th>
-              <th class="py-2 px-2 bg-cyan-700 border-r border-cyan-600">Forecast</th>
-              <th class="py-2 px-2 bg-cyan-700 border-r border-cyan-600">Actual</th>
-              <th class="py-2 px-2 bg-cyan-700 border-r border-cyan-600">Variance</th>
-              <th colspan="5" class="py-2 px-2 bg-slate-500 border-l border-slate-400">Forecast - ${this.state.selectedPlan === 'gff2_2026' ? 'GFF2 2026' : 'GFF1 2026'}</th>
+              <th class="py-1 px-1 text-left bg-slate-600 sticky left-0 z-20 w-32">Metric</th>
+              <th colspan="5" class="py-1 px-1 bg-slate-500 border-l border-r border-slate-400">Actuals</th>
+              <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Forecast</th>
+              <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Actual</th>
+              <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Variance</th>
+              <th colspan="5" class="py-1 px-1 bg-slate-500 border-l border-slate-400">Forecast - ${this.state.selectedPlan === 'gff2_2026' ? 'GFF2 2026' : 'GFF1 2026'}</th>
             </tr>
             <!-- Sub-Header Date Row -->
             <tr class="bg-slate-100 text-slate-700 text-center font-semibold border-b border-slate-300">
-              <th class="py-1 px-3 text-left sticky left-0 bg-slate-100 z-20"></th>
-              ${data.tableColumns.actualsHeaders.map(h => `<th class="py-1 px-2">${h}</th>`).join('')}
-              <th class="py-1 px-2 bg-cyan-50 text-cyan-900 border-l border-cyan-200">${currentWeekLabel}</th>
-              <th class="py-1 px-2 bg-cyan-50 text-cyan-900">${currentWeekLabel}</th>
-              <th class="py-1 px-2 bg-cyan-50 text-cyan-900 border-r border-cyan-200">${currentWeekLabel}</th>
-              ${data.tableColumns.forecastHeaders.map(h => `<th class="py-1 px-2">${h}</th>`).join('')}
+              <th class="py-1 px-1 text-left sticky left-0 bg-slate-100 z-20"></th>
+              ${data.tableColumns.actualsHeaders.map(h => `<th class="py-1 px-1">${h}</th>`).join('')}
+              <th class="py-1 px-1 bg-cyan-50 text-cyan-900 border-l border-cyan-200">${currentWeekLabel}</th>
+              <th class="py-1 px-1 bg-cyan-50 text-cyan-900">${currentWeekLabel}</th>
+              <th class="py-1 px-1 bg-cyan-50 text-cyan-900 border-r border-cyan-200">${currentWeekLabel}</th>
+              ${data.tableColumns.forecastHeaders.map(h => `<th class="py-1 px-1">${h}</th>`).join('')}
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
@@ -725,7 +725,7 @@ const App = {
 
       html += `<tr class="${isAlt} hover:bg-blue-50/50 transition-colors">`;
       // Sticky Metric column
-      html += `<td class="py-1.5 px-3 text-left sticky left-0 ${isAlt} z-10 ${textWeight} border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)]">${row.metric}</td>`;
+      html += `<td class="py-1 px-1 text-left sticky left-0 ${isAlt} z-10 ${textWeight} border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)]">${row.metric}</td>`;
 
       // 5 Actuals Columns
       row.actuals.forEach(val => {
@@ -734,7 +734,7 @@ const App = {
           const num = parseInt(val.replace(/,/g, "")) * actMult;
           displayVal = Math.round(num).toLocaleString();
         }
-        html += `<td class="py-1.5 px-2 text-right ${textWeight}">${displayVal}</td>`;
+        html += `<td class="py-1 px-1 text-right ${textWeight}">${displayVal}</td>`;
       });
 
       // Current Week: Forecast, Actual, Variance
@@ -755,8 +755,8 @@ const App = {
           variance = "-";
       }
 
-      html += `<td class="py-1.5 px-2 text-right bg-cyan-50/40 text-slate-800 ${textWeight}">${curForecast}</td>`;
-      html += `<td class="py-1.5 px-2 text-right bg-cyan-50/40 text-slate-900 ${textWeight}">${curActual}</td>`;
+      html += `<td class="py-1 px-1 text-right bg-cyan-50/40 text-slate-800 ${textWeight}">${curForecast}</td>`;
+      html += `<td class="py-1 px-1 text-right bg-cyan-50/40 text-slate-900 ${textWeight}">${curActual}</td>`;
 
       // Variance arrow and color
       const isUp = row.varDir === "up";
@@ -765,7 +765,7 @@ const App = {
       const arrowIcon = isUp ? "↑" : "↓";
 
       html += `
-        <td class="py-1.5 px-2 text-right bg-cyan-50/60 ${varColor} border-r border-cyan-200">
+        <td class="py-1 px-1 text-right bg-cyan-50/60 ${varColor} border-r border-cyan-200">
           <span class="inline-flex items-center gap-0.5 justify-end">
             ${variance} <span>${arrowIcon}</span>
           </span>
@@ -791,7 +791,7 @@ const App = {
           `;
         }
 
-        html += `<td class="py-1.5 px-2 text-right ${textWeight}">${displayVal}${sparkbarHtml}</td>`;
+        html += `<td class="py-1 px-1 text-right ${textWeight}">${displayVal}${sparkbarHtml}</td>`;
       });
 
       html += `</tr>`;

@@ -1,29 +1,16 @@
-with open("js/charts.js", "r", encoding="utf-8") as f:
-    js = f.read()
+import re
+with open('js/app.js', 'r', encoding='utf-8') as f:
+    content = f.read()
 
-old_code = """              afterBody: function(context) {
-                 if (context.length > 0) {
-                     const index = context[0].dataIndex;
-                     const variance = variances[index];
-                     const sign = variance > 0 ? "+" : "";
-                     return `\\nVariance: ${sign}${variance.toLocaleString()}`;
-                 }
-              }"""
+content = content.replace(
+    'if (!mults.isPlanActive) p = null;',
+    'if (this.state.selectedPlan === "gff2_2026" && d.actual !== null) p = null;'
+)
 
-new_code = """              afterBody: function(context) {
-                 if (context.length > 0) {
-                     const index = context[0].dataIndex;
-                     const variance = variances[index];
-                     if (variance === null || variance === undefined) return '';
-                     const sign = variance > 0 ? "+" : "";
-                     return `\\nVariance: ${sign}${variance.toLocaleString()}`;
-                 }
-              }"""
+content = content.replace(
+    'if (!mults.isPlanActive) return null;',
+    'if (this.state.selectedPlan === "gff2_2026" && metric.actuals[i] !== null) return null;'
+)
 
-if old_code in js:
-    js = js.replace(old_code, new_code)
-    with open("js/charts.js", "w", encoding="utf-8") as f:
-        f.write(js)
-    print("Fixed charts.js")
-else:
-    print("Could not find exact text in charts.js, check manually")
+with open('js/app.js', 'w', encoding='utf-8') as f:
+    f.write(content)
