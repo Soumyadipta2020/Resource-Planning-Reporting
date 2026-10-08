@@ -330,9 +330,9 @@ const App = {
     // Installs Weekly Combo Chart
     let weeklyData = DASHBOARD_DATA.executiveSummary.weeklyInstalls.map(d => ({
       week: d.week,
-      actual: Math.round(d.actual * mult),
-      plan: Math.round(d.plan * mult),
-      variance: Math.round(d.variance * mult)
+      actual: d.actual === null ? null : Math.round(d.actual * mult),
+      plan: d.plan === null ? null : Math.round(d.plan * mult),
+      variance: d.variance === null ? null : Math.round(d.variance * mult)
     }));
     ChartManager.renderWeeklyInstallsChart("chart-weekly-installs", weeklyData);
 

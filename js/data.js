@@ -29,9 +29,8 @@ const DASHBOARD_DATA = {
       { id: "wales", name: "Wales", code: "WLS", share: 0.10 }
     ],
     plans: [
-      { id: "gff1_2026", name: "GFF1 2026", isDefault: true },
-      { id: "budget_2026", name: "Budget 2026" },
-      { id: "reforecast_q3", name: "Reforecast Q3 2026" }
+      { id: "gff1_2026", name: "GFF1 2026 (Starts Mar 2026)", isDefault: true },
+      { id: "gff2_2026", name: "GFF2 2026 (Starts Sep 2026)" }
     ],
     businessUnits: [
       { id: "all", name: "All Units", label: "Home" },
@@ -64,7 +63,13 @@ const DASHBOARD_DATA = {
       { week: "WK 20", actual: 2420, plan: 2580, variance: -160 },
       { week: "WK 21", actual: 2460, plan: 2520, variance: -60 },
       { week: "WK 22", actual: 2345, plan: 2480, variance: -135 },
-      { week: "WK 23", actual: 2510, plan: 2415, variance: 95 }
+      { week: "WK 23", actual: 2510, plan: 2415, variance: 95 },
+      { week: "WK 24", actual: null, plan: 2450, variance: null },
+      { week: "WK 25", actual: null, plan: 2480, variance: null },
+      { week: "WK 26", actual: null, plan: 2500, variance: null },
+      { week: "WK 27", actual: null, plan: 2550, variance: null },
+      { week: "WK 28", actual: null, plan: 2600, variance: null },
+      { week: "WK 29", actual: null, plan: 2620, variance: null }
     ],
 
     // Variance Analysis (Drivers) - Waterfall Chart for current week

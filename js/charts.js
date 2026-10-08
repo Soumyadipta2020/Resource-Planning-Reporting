@@ -107,6 +107,7 @@ const ChartManager = {
                  if (context.length > 0) {
                      const index = context[0].dataIndex;
                      const variance = variances[index];
+                     if (variance === null || variance === undefined) return '';
                      const sign = variance > 0 ? "+" : "";
                      return `\nVariance: ${sign}${variance.toLocaleString()}`;
                  }
