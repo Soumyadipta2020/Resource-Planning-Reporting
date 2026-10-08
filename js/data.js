@@ -8,17 +8,17 @@ const DASHBOARD_DATA = {
   metadata: {
     lastUpdated: "2026-06-01T08:30:00Z",
     reportingWeeks: [
-      { id: "wk36", label: "31 Aug 2026 (WK 36)", date: "31 Aug 2026", weekNum: 36 },
-      { id: "wk37", label: "7 Sep 2026 (WK 37)", date: "7 Sep 2026", weekNum: 37 },
-      { id: "wk38", label: "14 Sep 2026 (WK 38)", date: "14 Sep 2026", weekNum: 38, isDefault: true },
-      { id: "wk39", label: "21 Sep 2026 (WK 39)", date: "21 Sep 2026", weekNum: 39 },
-      { id: "wk40", label: "28 Sep 2026 (WK 40)", date: "28 Sep 2026", weekNum: 40 },
-      { id: "wk41", label: "5 Oct 2026 (WK 41)", date: "5 Oct 2026", weekNum: 41 },
-      { id: "wk42", label: "12 Oct 2026 (WK 42)", date: "12 Oct 2026", weekNum: 42 },
-      { id: "wk43", label: "19 Oct 2026 (WK 43)", date: "19 Oct 2026", weekNum: 43 },
-      { id: "wk44", label: "26 Oct 2026 (WK 44)", date: "26 Oct 2026", weekNum: 44 },
-      { id: "wk45", label: "2 Nov 2026 (WK 45)", date: "2 Nov 2026", weekNum: 45 },
-      { id: "wk46", label: "9 Nov 2026 (WK 46)", date: "9 Nov 2026", weekNum: 46 }
+      { id: "wk36", label: "31 Aug (WK 36)", date: "31 Aug", weekNum: 36 },
+      { id: "wk37", label: "7 Sep (WK 37)", date: "7 Sep", weekNum: 37 },
+      { id: "wk38", label: "14 Sep (WK 38)", date: "14 Sep", weekNum: 38, isDefault: true },
+      { id: "wk39", label: "21 Sep (WK 39)", date: "21 Sep", weekNum: 39 },
+      { id: "wk40", label: "28 Sep (WK 40)", date: "28 Sep", weekNum: 40 },
+      { id: "wk41", label: "5 Oct (WK 41)", date: "5 Oct", weekNum: 41 },
+      { id: "wk42", label: "12 Oct (WK 42)", date: "12 Oct", weekNum: 42 },
+      { id: "wk43", label: "19 Oct (WK 43)", date: "19 Oct", weekNum: 43 },
+      { id: "wk44", label: "26 Oct (WK 44)", date: "26 Oct", weekNum: 44 },
+      { id: "wk45", label: "2 Nov (WK 45)", date: "2 Nov", weekNum: 45 },
+      { id: "wk46", label: "9 Nov (WK 46)", date: "9 Nov", weekNum: 46 }
     ],
     geographies: [
       { id: "all", name: "All / National", code: "NAT", share: 1.0 },
@@ -305,7 +305,7 @@ const DASHBOARD_DATA = {
 
     // Time series for the top line chart
     weeklySeries: {
-      weeks: ["7 Sep 2026", "14 Sep 2026", "21 Sep 2026", "28 Sep 2026", "5 Oct 2026", "12 Oct 2026", "19 Oct 2026", "26 Oct 2026", "2 Nov 2026"],
+      weeks: ["7 Sep", "14 Sep", "21 Sep", "28 Sep", "5 Oct", "12 Oct", "19 Oct", "26 Oct", "2 Nov"],
       reportingIndex: 4, // 22 Jun 2026 is current reporting week in Sheet 4
       metrics: {
         grossHrs: {
@@ -355,12 +355,12 @@ const DASHBOARD_DATA = {
 
     // Master 11-Week Table Layout and Data Rows
     tableColumns: {
-      actualsHeaders: ["31 Aug 2026", "7 Sep 2026", "14 Sep 2026", "21 Sep 2026", "28 Sep 2026"],
+      actualsHeaders: ["31 Aug", "7 Sep", "14 Sep", "21 Sep", "28 Sep"],
       currentWeek: {
-        weekLabel: "5 Oct 2026",
+        weekLabel: "5 Oct",
         subHeaders: ["Forecast", "Actual", "Variance"]
       },
-      forecastHeaders: ["12 Oct 2026", "19 Oct 2026", "26 Oct 2026", "2 Nov 2026", "9 Nov 2026"]
+      forecastHeaders: ["12 Oct", "19 Oct", "26 Oct", "2 Nov", "9 Nov"]
     },
 
     // Complete exact rows as captured from the operational presentation snip

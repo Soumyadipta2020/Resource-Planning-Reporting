@@ -474,7 +474,7 @@ const ChartManager = {
     if (!container) return;
 
     let html = `
-      <div class="w-full">
+      <div class="overflow-x-auto w-full">
         <table class="w-full text-[10px] text-center border-collapse">
           <thead>
             <tr>

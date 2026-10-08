@@ -693,7 +693,7 @@ const App = {
     const currentWeekLabel = selectedWeekObj.date;
 
     let html = `
-      <div class="w-full shadow-sm rounded border border-slate-200">
+      <div class="overflow-x-auto w-full shadow-sm rounded border border-slate-200">
         <table class="w-full text-[10px] border-collapse">
           <thead>
             <!-- Top Header Category Row -->
