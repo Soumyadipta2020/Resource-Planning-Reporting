@@ -28,7 +28,7 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=9">
+  <link rel="stylesheet" href="css/styles.css?v=11">
 </head>
 <body class="bg-slate-100 flex h-screen overflow-hidden text-slate-800">
 
@@ -100,7 +100,7 @@
     <div class="p-4 border-t border-slate-800 text-xs text-slate-400 space-y-3">
       <div>
         <p class="text-[11px] text-slate-500 uppercase font-bold tracking-wider">Data Status</p>
-        <p id="last-refreshed-time" class="text-slate-300 font-medium mt-0.5">1 Jun 2026 (WK 23)</p>
+        <p id="last-refreshed-time" class="text-slate-300 font-medium mt-0.5">14 Sep 2026 (WK 38)</p>
       </div>
       <button id="btn-refresh-data" class="w-full flex items-center justify-center gap-2 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-cyan-300 rounded font-medium transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,7 +280,7 @@
           <div class="dashboard-card p-4 flex flex-col">
             <div class="flex justify-between items-center mb-2">
               <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Actual vs Plan – Installs (Weekly)</h3>
-              <span class="text-[11px] text-slate-500 font-medium">WK 14 - WK 29</span>
+              <span class="text-[11px] text-slate-500 font-medium">WK 29 - WK 44</span>
             </div>
             <div class="relative flex-1" style="min-height: 250px;">
               <canvas id="chart-weekly-installs"></canvas>
@@ -317,8 +317,8 @@
                 <canvas id="sparkline-installs" class="w-full h-full"></canvas>
               </div>
               <div class="flex justify-between text-[10px] text-slate-500">
-                <span>WK 12</span>
-                <span>WK 23</span>
+                <span>WK 27</span>
+                <span>WK 38</span>
               </div>
             </div>
 
@@ -332,8 +332,8 @@
                 <canvas id="sparkline-sales" class="w-full h-full"></canvas>
               </div>
               <div class="flex justify-between text-[10px] text-slate-500">
-                <span>WK 12</span>
-                <span>WK 23</span>
+                <span>WK 27</span>
+                <span>WK 38</span>
               </div>
             </div>
 
@@ -347,8 +347,8 @@
                 <canvas id="sparkline-leads" class="w-full h-full"></canvas>
               </div>
               <div class="flex justify-between text-[10px] text-slate-500">
-                <span>WK 12</span>
-                <span>WK 23</span>
+                <span>WK 27</span>
+                <span>WK 38</span>
               </div>
             </div>
 
@@ -362,8 +362,8 @@
                 <canvas id="sparkline-activeHeads" class="w-full h-full"></canvas>
               </div>
               <div class="flex justify-between text-[10px] text-slate-500">
-                <span>WK 12</span>
-                <span>WK 23</span>
+                <span>WK 27</span>
+                <span>WK 38</span>
               </div>
             </div>
 
@@ -377,8 +377,8 @@
                 <canvas id="sparkline-availableHours" class="w-full h-full"></canvas>
               </div>
               <div class="flex justify-between text-[10px] text-slate-500">
-                <span>WK 12</span>
-                <span>WK 23</span>
+                <span>WK 27</span>
+                <span>WK 38</span>
               </div>
             </div>
 
@@ -392,8 +392,8 @@
                 <canvas id="sparkline-productivity" class="w-full h-full"></canvas>
               </div>
               <div class="flex justify-between text-[10px] text-slate-500">
-                <span>WK 12</span>
-                <span>WK 23</span>
+                <span>WK 27</span>
+                <span>WK 38</span>
               </div>
             </div>
           </div>
@@ -535,7 +535,7 @@
             <div class="dashboard-card p-4 flex flex-col">
               <div class="flex justify-between items-center mb-2">
                 <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Capacity Risk Heatmap (Variance to Plan %)</h3>
-                <span class="text-[11px] text-slate-500 font-medium">WK 23 - WK 28</span>
+                <span class="text-[11px] text-slate-500 font-medium">WK 38 - WK 43</span>
               </div>
               <div id="heatmap-container" class="flex-1 flex flex-col justify-center">
                 <!-- Rendered dynamically -->
@@ -616,8 +616,8 @@
                 <thead>
                   <tr class="bg-slate-100 text-slate-700 border-b border-slate-300 font-bold">
                     <th rowspan="2" class="py-3 px-4 border-r border-slate-300 w-52">Metric</th>
-                    <th colspan="3" class="py-2 px-3 text-center border-r border-slate-300 bg-slate-200/70">This Week (WK 23)</th>
-                    <th colspan="2" class="py-2 px-3 text-center border-r border-slate-300 bg-slate-100">Last Week (WK 22)</th>
+                    <th colspan="3" class="py-2 px-3 text-center border-r border-slate-300 bg-slate-200/70">This Week (WK 38)</th>
+                    <th colspan="2" class="py-2 px-3 text-center border-r border-slate-300 bg-slate-100">Last Week (WK 37)</th>
                     <th colspan="2" class="py-2 px-3 text-center border-r border-slate-300 bg-blue-50 text-blue-900">Variance (This Week vs Plan)</th>
                     <th colspan="2" class="py-2 px-3 text-center bg-slate-200/70">Variance (This Week vs LW)</th>
                   </tr>
@@ -917,9 +917,9 @@
   </main>
 
   <!-- Application Scripts -->
-  <script src="js/data.js?v=9"></script>
-  <script src="js/charts.js?v=9"></script>
-  <script src="js/app.js?v=9"></script>
+  <script src="js/data.js?v=11"></script>
+  <script src="js/charts.js?v=11"></script>
+  <script src="js/app.js?v=11"></script>
 </body>
 </html>
 

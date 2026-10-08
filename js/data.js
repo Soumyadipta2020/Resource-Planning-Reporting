@@ -8,17 +8,17 @@ const DASHBOARD_DATA = {
   metadata: {
     lastUpdated: "2026-06-01T08:30:00Z",
     reportingWeeks: [
-      { id: "wk21", label: "18 May 2026 (WK 21)", date: "18 May 2026", weekNum: 21 },
-      { id: "wk22", label: "25 May 2026 (WK 22)", date: "25 May 2026", weekNum: 22 },
-      { id: "wk23", label: "1 Jun 2026 (WK 23)", date: "1 Jun 2026", weekNum: 23, isDefault: true },
-      { id: "wk24", label: "8 Jun 2026 (WK 24)", date: "8 Jun 2026", weekNum: 24 },
-      { id: "wk25", label: "15 Jun 2026 (WK 25)", date: "15 Jun 2026", weekNum: 25 },
-      { id: "wk26", label: "22 Jun 2026 (WK 26)", date: "22 Jun 2026", weekNum: 26 },
-      { id: "wk27", label: "29 Jun 2026 (WK 27)", date: "29 Jun 2026", weekNum: 27 },
-      { id: "wk28", label: "6 Jul 2026 (WK 28)", date: "6 Jul 2026", weekNum: 28 },
-      { id: "wk29", label: "13 Jul 2026 (WK 29)", date: "13 Jul 2026", weekNum: 29 },
-      { id: "wk30", label: "20 Jul 2026 (WK 30)", date: "20 Jul 2026", weekNum: 30 },
-      { id: "wk31", label: "27 Jul 2026 (WK 31)", date: "27 Jul 2026", weekNum: 31 }
+      { id: "wk36", label: "31 Aug 2026 (WK 36)", date: "31 Aug 2026", weekNum: 36 },
+      { id: "wk37", label: "7 Sep 2026 (WK 37)", date: "7 Sep 2026", weekNum: 37 },
+      { id: "wk38", label: "14 Sep 2026 (WK 38)", date: "14 Sep 2026", weekNum: 38, isDefault: true },
+      { id: "wk39", label: "21 Sep 2026 (WK 39)", date: "21 Sep 2026", weekNum: 39 },
+      { id: "wk40", label: "28 Sep 2026 (WK 40)", date: "28 Sep 2026", weekNum: 40 },
+      { id: "wk41", label: "5 Oct 2026 (WK 41)", date: "5 Oct 2026", weekNum: 41 },
+      { id: "wk42", label: "12 Oct 2026 (WK 42)", date: "12 Oct 2026", weekNum: 42 },
+      { id: "wk43", label: "19 Oct 2026 (WK 43)", date: "19 Oct 2026", weekNum: 43 },
+      { id: "wk44", label: "26 Oct 2026 (WK 44)", date: "26 Oct 2026", weekNum: 44 },
+      { id: "wk45", label: "2 Nov 2026 (WK 45)", date: "2 Nov 2026", weekNum: 45 },
+      { id: "wk46", label: "9 Nov 2026 (WK 46)", date: "9 Nov 2026", weekNum: 46 }
     ],
     geographies: [
       { id: "all", name: "All / National", code: "NAT", share: 1.0 },
@@ -42,7 +42,7 @@ const DASHBOARD_DATA = {
 
   // 1. Executive Summary Data (Sheet 2 - Executive Command Centre)
   executiveSummary: {
-    // Aligned national figures for WK 23
+    // Aligned national figures for WK 38
     kpis: {
       installs: { value: 2510, formatted: "2.51K", wow: 7.0, vsPlan: -4.2, status: "good" },
       sales: { value: 3.94, formatted: "£3.94M", unit: "£M", wow: 6.3, vsPlan: -3.1, status: "good" },
@@ -54,22 +54,22 @@ const DASHBOARD_DATA = {
 
     // Weekly Actual vs Plan - Installs across 10 weeks
     weeklyInstalls: [
-      { week: "WK 14", actual: 2260, plan: 2410, variance: -150 },
-      { week: "WK 15", actual: 2320, plan: 2380, variance: -60 },
-      { week: "WK 16", actual: 2480, plan: 2450, variance: 30 },
-      { week: "WK 17", actual: 2550, plan: 2500, variance: 50 },
-      { week: "WK 18", actual: 2600, plan: 2750, variance: -150 },
-      { week: "WK 19", actual: 2450, plan: 2620, variance: -170 },
-      { week: "WK 20", actual: 2420, plan: 2580, variance: -160 },
-      { week: "WK 21", actual: 2460, plan: 2520, variance: -60 },
-      { week: "WK 22", actual: 2345, plan: 2480, variance: -135 },
-      { week: "WK 23", actual: 2510, plan: 2415, variance: 95 },
-      { week: "WK 24", actual: null, plan: 2450, variance: null },
-      { week: "WK 25", actual: null, plan: 2480, variance: null },
-      { week: "WK 26", actual: null, plan: 2500, variance: null },
-      { week: "WK 27", actual: null, plan: 2550, variance: null },
-      { week: "WK 28", actual: null, plan: 2600, variance: null },
-      { week: "WK 29", actual: null, plan: 2620, variance: null }
+      { week: "WK 29", actual: 2260, plan: 2410, variance: -150 },
+      { week: "WK 30", actual: 2320, plan: 2380, variance: -60 },
+      { week: "WK 31", actual: 2480, plan: 2450, variance: 30 },
+      { week: "WK 32", actual: 2550, plan: 2500, variance: 50 },
+      { week: "WK 33", actual: 2600, plan: 2750, variance: -150 },
+      { week: "WK 34", actual: 2450, plan: 2620, variance: -170 },
+      { week: "WK 35", actual: 2420, plan: 2580, variance: -160 },
+      { week: "WK 36", actual: 2460, plan: 2520, variance: -60 },
+      { week: "WK 37", actual: 2345, plan: 2480, variance: -135 },
+      { week: "WK 38", actual: 2510, plan: 2415, variance: 95 },
+      { week: "WK 39", actual: null, plan: 2450, variance: null },
+      { week: "WK 40", actual: null, plan: 2480, variance: null },
+      { week: "WK 41", actual: null, plan: 2500, variance: null },
+      { week: "WK 42", actual: null, plan: 2550, variance: null },
+      { week: "WK 43", actual: null, plan: 2600, variance: null },
+      { week: "WK 44", actual: null, plan: 2620, variance: null }
     ],
 
     // Variance Analysis (Drivers) - Waterfall Chart for current week
@@ -90,37 +90,37 @@ const DASHBOARD_DATA = {
         change: "+7.6% WoW",
         positive: true,
         data: [2100, 2180, 2240, 2300, 2260, 2320, 2480, 2550, 2600, 2450, 2345, 2510],
-        labels: ["WK 12", "WK 13", "WK 14", "WK 15", "WK 16", "WK 17", "WK 18", "WK 19", "WK 20", "WK 21", "WK 22", "WK 23"]
+        labels: ["WK 27", "WK 28", "WK 29", "WK 30", "WK 31", "WK 32", "WK 33", "WK 34", "WK 35", "WK 36", "WK 37", "WK 38"]
       },
       sales: {
         change: "+6.3% WoW",
         positive: true,
         data: [3.2, 3.3, 3.4, 3.5, 3.45, 3.55, 3.75, 3.82, 3.90, 3.70, 3.65, 3.94],
-        labels: ["WK 12", "WK 13", "WK 14", "WK 15", "WK 16", "WK 17", "WK 18", "WK 19", "WK 20", "WK 21", "WK 22", "WK 23"]
+        labels: ["WK 27", "WK 28", "WK 29", "WK 30", "WK 31", "WK 32", "WK 33", "WK 34", "WK 35", "WK 36", "WK 37", "WK 38"]
       },
       leads: {
         change: "-27.0% WoW",
         positive: false,
         data: [19.8, 19.5, 18.2, 18.9, 17.5, 18.1, 16.8, 17.2, 16.0, 15.2, 19.8, 14.65],
-        labels: ["WK 12", "WK 13", "WK 14", "WK 15", "WK 16", "WK 17", "WK 18", "WK 19", "WK 20", "WK 21", "WK 22", "WK 23"]
+        labels: ["WK 27", "WK 28", "WK 29", "WK 30", "WK 31", "WK 32", "WK 33", "WK 34", "WK 35", "WK 36", "WK 37", "WK 38"]
       },
       activeHeads: {
         change: "-2.7% WoW",
         positive: false,
         data: [2050, 2040, 2045, 2030, 2025, 2035, 2020, 2015, 2010, 2005, 2035, 1980],
-        labels: ["WK 12", "WK 13", "WK 14", "WK 15", "WK 16", "WK 17", "WK 18", "WK 19", "WK 20", "WK 21", "WK 22", "WK 23"]
+        labels: ["WK 27", "WK 28", "WK 29", "WK 30", "WK 31", "WK 32", "WK 33", "WK 34", "WK 35", "WK 36", "WK 37", "WK 38"]
       },
       availableHours: {
         change: "+2.1% WoW",
         positive: true,
         data: [45.2, 45.8, 46.0, 46.4, 46.1, 46.7, 47.0, 47.5, 47.8, 46.9, 46.3, 47.3],
-        labels: ["WK 12", "WK 13", "WK 14", "WK 15", "WK 16", "WK 17", "WK 18", "WK 19", "WK 20", "WK 21", "WK 22", "WK 23"]
+        labels: ["WK 27", "WK 28", "WK 29", "WK 30", "WK 31", "WK 32", "WK 33", "WK 34", "WK 35", "WK 36", "WK 37", "WK 38"]
       },
       productivity: {
         change: "+1.6% WoW",
         positive: true,
         data: [4.4, 4.45, 4.52, 4.58, 4.5, 4.62, 4.7, 4.78, 4.85, 4.65, 4.69, 4.75],
-        labels: ["WK 12", "WK 13", "WK 14", "WK 15", "WK 16", "WK 17", "WK 18", "WK 19", "WK 20", "WK 21", "WK 22", "WK 23"]
+        labels: ["WK 27", "WK 28", "WK 29", "WK 30", "WK 31", "WK 32", "WK 33", "WK 34", "WK 35", "WK 36", "WK 37", "WK 38"]
       }
     }
   },
@@ -160,7 +160,7 @@ const DASHBOARD_DATA = {
 
     // Capacity Risk Heatmap (Variance to Plan %)
     heatmap: {
-      weeks: ["WK 23", "WK 24", "WK 25", "WK 26", "WK 27", "WK 28"],
+      weeks: ["WK 38", "WK 39", "WK 40", "WK 41", "WK 42", "WK 43"],
       regions: [
         { name: "Scotland", values: [-18, -14, 0, 8, 16, 20] },
         { name: "North", values: [-12, -6, 4, 14, 20, 22] },
@@ -305,7 +305,7 @@ const DASHBOARD_DATA = {
 
     // Time series for the top line chart
     weeklySeries: {
-      weeks: ["25 May 2026", "1 Jun 2026", "8 Jun 2026", "15 Jun 2026", "22 Jun 2026", "29 Jun 2026", "6 Jul 2026", "13 Jul 2026", "20 Jul 2026"],
+      weeks: ["7 Sep 2026", "14 Sep 2026", "21 Sep 2026", "28 Sep 2026", "5 Oct 2026", "12 Oct 2026", "19 Oct 2026", "26 Oct 2026", "2 Nov 2026"],
       reportingIndex: 4, // 22 Jun 2026 is current reporting week in Sheet 4
       metrics: {
         grossHrs: {
@@ -355,12 +355,12 @@ const DASHBOARD_DATA = {
 
     // Master 11-Week Table Layout and Data Rows
     tableColumns: {
-      actualsHeaders: ["18 May 2026", "25 May 2026", "1 Jun 2026", "8 Jun 2026", "15 Jun 2026"],
+      actualsHeaders: ["31 Aug 2026", "7 Sep 2026", "14 Sep 2026", "21 Sep 2026", "28 Sep 2026"],
       currentWeek: {
-        weekLabel: "22 Jun 2026",
+        weekLabel: "5 Oct 2026",
         subHeaders: ["Forecast", "Actual", "Variance"]
       },
-      forecastHeaders: ["29 Jun 2026", "6 Jul 2026", "13 Jul 2026", "20 Jul 2026", "27 Jul 2026"]
+      forecastHeaders: ["12 Oct 2026", "19 Oct 2026", "26 Oct 2026", "2 Nov 2026", "9 Nov 2026"]
     },
 
     // Complete exact rows as captured from the operational presentation snip
@@ -846,12 +846,12 @@ const DASHBOARD_DATA = {
     forecastBias: "+1.2%",
     leadTimeWeeks: 4,
     historicalAccuracy: [
-      { week: "WK 18", forecast: 2750, actual: 2600, errorPct: 5.5 },
-      { week: "WK 19", forecast: 2620, actual: 2450, errorPct: 6.5 },
-      { week: "WK 20", forecast: 2580, actual: 2420, errorPct: 6.2 },
-      { week: "WK 21", forecast: 2520, actual: 2460, errorPct: 2.4 },
-      { week: "WK 22", forecast: 2480, actual: 2345, errorPct: 5.4 },
-      { week: "WK 23", forecast: 2415, actual: 2510, errorPct: 3.9 }
+      { week: "WK 33", forecast: 2750, actual: 2600, errorPct: 5.5 },
+      { week: "WK 34", forecast: 2620, actual: 2450, errorPct: 6.5 },
+      { week: "WK 35", forecast: 2580, actual: 2420, errorPct: 6.2 },
+      { week: "WK 36", forecast: 2520, actual: 2460, errorPct: 2.4 },
+      { week: "WK 37", forecast: 2480, actual: 2345, errorPct: 5.4 },
+      { week: "WK 38", forecast: 2415, actual: 2510, errorPct: 3.9 }
     ]
   }
 };

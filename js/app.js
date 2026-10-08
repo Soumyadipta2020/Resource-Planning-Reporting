@@ -8,7 +8,7 @@ const App = {
     activeTab: "executive-summary", // Default is Executive Summary
     capacitySheet: "sheet-2", // "sheet-2" (Dashboard), "sheet-3" (Comparison), "sheet-4" (Detailed Matrix)
     selectedGeography: "all",
-    selectedWeek: "wk23",
+    selectedWeek: "wk38",
     selectedPlan: "gff1_2026",
     selectedBusinessUnit: "all",
     sheet4ChartMetric: "grossHrs",
@@ -262,20 +262,22 @@ const App = {
     const geoMult = isRegional ? DASHBOARD_DATA.regionalData[geo].multiplier : 1.0;
 
     let planMult = 1.0;
-    let isPlanActive = true;
-    if (this.state.selectedPlan === "gff2_2026") {
-       planMult = 1.15;
-       isPlanActive = false; // Historic weeks are before Sep 2026
-    }
+      let isPlanActive = true;
+      let weekMult = 1.0;
+      let currentWkNum = 38;
+      
+      if (this.state.selectedWeek) {
+         const match = this.state.selectedWeek.match(/wk(\d+)/);
+         if (match) {
+             currentWkNum = parseInt(match[1]);
+             weekMult = 1 + ((currentWkNum - 38) * 0.015);
+         }
+      }
 
-    let weekMult = 1.0;
-    if (this.state.selectedWeek) {
-       const match = this.state.selectedWeek.match(/wk(\d+)/);
-       if (match) {
-           const wkNum = parseInt(match[1]);
-           weekMult = 1 + ((wkNum - 23) * 0.015);
-       }
-    }
+      if (this.state.selectedPlan === "gff2_2026") {
+         planMult = 1.15;
+         isPlanActive = currentWkNum >= 37; // Historic weeks are before Sep 2026 (WK 37)
+      }
     return {
        base: geoMult * weekMult,
        plan: geoMult * weekMult * planMult,
@@ -344,7 +346,8 @@ const App = {
     let weeklyData = DASHBOARD_DATA.executiveSummary.weeklyInstalls.map(d => {
       const a = d.actual === null ? null : Math.round(d.actual * mults.base);
       let p = d.plan === null ? null : Math.round(d.plan * mults.plan);
-      if (this.state.selectedPlan === "gff2_2026" && d.actual !== null) p = null;
+      const wkNum = parseInt(d.week.replace("WK ", ""));
+        if (this.state.selectedPlan === "gff2_2026" && wkNum < 37) p = null;
       return {
         week: d.week,
         actual: a,
@@ -655,7 +658,10 @@ const App = {
         unit: metric.unit,
         actuals: metric.actuals.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * actScale))),
         forecast: metric.forecast.map((v, i) => {
-            if (this.state.selectedPlan === "gff2_2026" && metric.actuals[i] !== null) return null;
+            const weekLabel = rawSeries.weeks[i];
+              const weekObj = DASHBOARD_DATA.metadata.reportingWeeks.find(w => w.date === weekLabel);
+              const wkNum = weekObj ? weekObj.weekNum : (37 + i);
+              if (this.state.selectedPlan === "gff2_2026" && wkNum < 37) return null;
             return v === null ? null : (isPercentOrRatio ? v : Math.round(v * fcScale));
         })
       };
@@ -683,7 +689,7 @@ const App = {
     const fcMult = mults.plan * buMult;
     const isScaled = actMult !== 1.0 || fcMult !== 1.0;
 
-    const selectedWeekObj = DASHBOARD_DATA.metadata.reportingWeeks.find(w => w.id === this.state.selectedWeek) || { date: "22 Jun 2026" };
+    const selectedWeekObj = DASHBOARD_DATA.metadata.reportingWeeks.find(w => w.id === this.state.selectedWeek) || { date: "5 Oct 2026" };
     const currentWeekLabel = selectedWeekObj.date;
 
     let html = `
@@ -880,7 +886,7 @@ const App = {
       const d = this.state.lastRefreshed;
       const hours = String(d.getHours()).padStart(2, "0");
       const mins = String(d.getMinutes()).padStart(2, "0");
-      el.textContent = `1 Jun 2026 (WK 23) • Refreshed at ${hours}:${mins}`;
+      el.textContent = `14 Sep 2026 (WK 38) • Refreshed at ${hours}:${mins}`;
     }
   },
 
