@@ -259,9 +259,9 @@ const DASHBOARD_DATA = {
         vsLW: "-0.7 pp",
         vsLWDir: "down",
         varPlanAbs: "-1.4 pp",
-        varPlanPct: "",
+        varPlanPct: "-1.9%",
         varLWAbs: "-0.7 pp",
-        varLWPct: ""
+        varLWPct: "-1.0%"
       },
       {
         metric: "Productivity (Installs per Head)",
@@ -287,9 +287,9 @@ const DASHBOARD_DATA = {
         vsLW: "+0.14 pp",
         vsLWDir: "up",
         varPlanAbs: "+0.11 pp",
-        varPlanPct: "",
+        varPlanPct: "+3.2%",
         varLWAbs: "+0.14 pp",
-        varLWPct: ""
+        varLWPct: "+4.1%"
       }
     ],
     footnote: "Note: pp - Percentage Points"
