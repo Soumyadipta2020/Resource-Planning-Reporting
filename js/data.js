@@ -29,8 +29,8 @@ const DASHBOARD_DATA = {
       { id: "wales", name: "Wales", code: "WLS", share: 0.10 }
     ],
     plans: [
-      { id: "gff1_2026", name: "GFF1 2026 (Starts Mar 2026)", isDefault: true },
-      { id: "gff2_2026", name: "GFF2 2026 (Starts Sep 2026)" }
+      { id: "gff1_2026", name: "GFF1 2026", isDefault: true },
+      { id: "gff2_2026", name: "GFF2 2026" }
     ],
     businessUnits: [
       { id: "all", name: "All Units", label: "Home" },

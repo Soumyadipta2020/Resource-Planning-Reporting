@@ -262,7 +262,11 @@ const App = {
     const geoMult = isRegional ? DASHBOARD_DATA.regionalData[geo].multiplier : 1.0;
 
     let planMult = 1.0;
-    if (this.state.selectedPlan === "gff2_2026") planMult = 1.15;
+    let isPlanActive = true;
+    if (this.state.selectedPlan === "gff2_2026") {
+       planMult = 1.15;
+       isPlanActive = false; // Historic weeks are before Sep 2026
+    }
 
     let weekMult = 1.0;
     if (this.state.selectedWeek) {
@@ -274,7 +278,8 @@ const App = {
     }
     return {
        base: geoMult * weekMult,
-       plan: geoMult * weekMult * planMult
+       plan: geoMult * weekMult * planMult,
+       isPlanActive: isPlanActive
     };
   },
   
@@ -299,7 +304,8 @@ const App = {
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
     const regional = isRegional ? DASHBOARD_DATA.regionalData[geo] : null;
 
-    const mult = this.getGlobalMultiplier();
+    const mults = this.getGlobalMultipliers();
+    const mult = mults.base;
 
     // Scale KPI Values
     const baseKpis = isRegional ? {
@@ -322,7 +328,8 @@ const App = {
        kpiData[key] = {
           ...baseKpis[key],
           formatted: fmt,
-          value: val
+          value: val,
+          vsPlan: mults.isPlanActive ? baseKpis[key].vsPlan : null
        };
     }
 
@@ -334,10 +341,10 @@ const App = {
     this.renderKpiCard("exec-kpi-productivity", kpiData.productivity.formatted, kpiData.productivity.wow, kpiData.productivity.vsPlan);
 
     // Installs Weekly Combo Chart
-    const mults = this.getGlobalMultipliers();
     let weeklyData = DASHBOARD_DATA.executiveSummary.weeklyInstalls.map(d => {
       const a = d.actual === null ? null : Math.round(d.actual * mults.base);
-      const p = d.plan === null ? null : Math.round(d.plan * mults.plan);
+      let p = d.plan === null ? null : Math.round(d.plan * mults.plan);
+      if (this.state.selectedPlan === "gff2_2026" && d.actual !== null) p = null;
       return {
         week: d.week,
         actual: a,
@@ -348,10 +355,22 @@ const App = {
     ChartManager.renderWeeklyInstallsChart("chart-weekly-installs", weeklyData);
 
     // Waterfall Chart Drivers
-    let drivers = DASHBOARD_DATA.executiveSummary.waterfallDrivers.map(d => ({
-      ...d,
-      value: Math.round(d.value * mult)
-    }));
+    let drivers = DASHBOARD_DATA.executiveSummary.waterfallDrivers.map(d => {
+      let v;
+      if (d.name === "Plan") {
+          v = Math.round(d.value * mults.plan);
+      } else {
+          v = Math.round(d.value * mults.base);
+      }
+      if (!mults.isPlanActive) {
+          if (d.name === "Plan") v = 0; // nullify plan
+          else if (d.name !== "Actuals") v = 0; // nullify drivers
+      }
+      return {
+        ...d,
+        value: v
+      };
+    });
     ChartManager.renderWaterfallChart("waterfall-chart-container", drivers);
 
     // Sparklines
@@ -370,21 +389,37 @@ const App = {
     if (valEl) valEl.textContent = valueText;
 
     if (wowEl) {
-      const isUp = wowPct >= 0;
-      wowEl.innerHTML = `
-        <span class="${isUp ? 'text-emerald-700' : 'text-red-700'} font-semibold flex items-center">
-          ${isUp ? '↑' : '↓'} ${Math.abs(wowPct)}% WoW
-        </span>
-      `;
+      if (wowPct === null || wowPct === undefined || wowPct === "N/A") {
+        wowEl.innerHTML = `
+          <span class="text-slate-500 font-semibold flex items-center">
+            - WoW
+          </span>
+        `;
+      } else {
+        const isUp = wowPct >= 0;
+        wowEl.innerHTML = `
+          <span class="${isUp ? 'text-emerald-700' : 'text-red-700'} font-semibold flex items-center">
+            ${isUp ? '↑' : '↓'} ${Math.abs(wowPct)}% WoW
+          </span>
+        `;
+      }
     }
 
     if (planEl) {
-      const isUp = vsPlanPct >= 0;
-      planEl.innerHTML = `
-        <span class="${isUp ? 'text-emerald-700' : 'text-red-700'} font-semibold flex items-center">
-          ${isUp ? '↑' : '↓'} ${Math.abs(vsPlanPct)}% vs Plan
-        </span>
-      `;
+      if (vsPlanPct === null || vsPlanPct === undefined || vsPlanPct === "N/A") {
+        planEl.innerHTML = `
+          <span class="text-slate-500 font-semibold flex items-center">
+            - vs Plan
+          </span>
+        `;
+      } else {
+        const isUp = vsPlanPct >= 0;
+        planEl.innerHTML = `
+          <span class="${isUp ? 'text-emerald-700' : 'text-red-700'} font-semibold flex items-center">
+            ${isUp ? '↑' : '↓'} ${Math.abs(vsPlanPct)}% vs Plan
+          </span>
+        `;
+      }
     }
   },
 
@@ -409,7 +444,8 @@ const App = {
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
     const regional = isRegional ? DASHBOARD_DATA.regionalData[geo] : null;
     
-    const mult = this.getGlobalMultiplier();
+    const mults = this.getGlobalMultipliers();
+    const mult = mults.base;
 
     // Top KPIs
     const baseKpis = isRegional ? {
@@ -437,7 +473,8 @@ const App = {
        kpis[key] = {
           ...baseKpis[key],
           formatted: fmt,
-          value: val
+          value: val,
+          vsPlan: mults.isPlanActive ? baseKpis[key].vsPlan : null
        };
     }
 
@@ -495,6 +532,7 @@ const App = {
 
     const geo = this.state.selectedGeography;
     const isRegional = geo !== "all" && DASHBOARD_DATA.regionalData[geo];
+    const mults = this.getGlobalMultipliers();
     const mult = isRegional ? DASHBOARD_DATA.regionalData[geo].multiplier : 1.0;
 
     const rows = DASHBOARD_DATA.capacitySheet3.rows;
@@ -512,25 +550,26 @@ const App = {
       let varLWPct = r.varLWPct;
 
       // Adjust for regional multiplier if numbers are scaled
-      if (isRegional && !r.metric.includes("%")) {
+      const doScale = isRegional || mults.base !== 1.0 || mults.plan !== 1.0;
+      if (doScale && !r.metric.includes("%")) {
         if (r.thisWeekActual.includes("K")) {
-          const raw = parseFloat(r.thisWeekActual) * 1000 * mult;
+          const raw = parseFloat(r.thisWeekActual) * 1000 * mults.base;
           thisWeekAct = (raw / 1000).toFixed(1) + "K";
-          const rawPlan = parseFloat(r.thisWeekPlan) * 1000 * mult;
+          const rawPlan = parseFloat(r.thisWeekPlan) * 1000 * mults.plan;
           thisWeekPlan = (rawPlan / 1000).toFixed(1) + "K";
           vsPlan = ((raw - rawPlan) / 1000).toFixed(1) + "K";
-          const rawLW = parseFloat(r.lastWeekActual) * 1000 * mult;
+          const rawLW = parseFloat(r.lastWeekActual) * 1000 * mults.base;
           lastWeekAct = (rawLW / 1000).toFixed(1) + "K";
           vsLW = ((raw - rawLW) / 1000).toFixed(1) + "K";
           varPlanAbs = vsPlan;
           varLWAbs = vsLW;
         } else if (!r.metric.includes("Productivity")) {
-          const raw = parseInt(r.thisWeekActual.replace(/,/g, "")) * mult;
+          const raw = parseInt(r.thisWeekActual.replace(/,/g, "")) * mults.base;
           thisWeekAct = Math.round(raw).toLocaleString();
-          const rawPlan = parseInt(r.thisWeekPlan.replace(/,/g, "")) * mult;
+          const rawPlan = parseInt(r.thisWeekPlan.replace(/,/g, "")) * mults.plan;
           thisWeekPlan = Math.round(rawPlan).toLocaleString();
           vsPlan = Math.round(raw - rawPlan).toLocaleString();
-          const rawLW = parseInt(r.lastWeekActual.replace(/,/g, "")) * mult;
+          const rawLW = parseInt(r.lastWeekActual.replace(/,/g, "")) * mults.base;
           lastWeekAct = Math.round(rawLW).toLocaleString();
           vsLW = Math.round(raw - rawLW).toLocaleString();
           varPlanAbs = vsPlan;
@@ -538,7 +577,14 @@ const App = {
         }
       }
 
-      const isVsPlanDown = vsPlan.includes("-");
+      if (!mults.isPlanActive) {
+          thisWeekPlan = "-";
+          vsPlan = "-";
+          varPlanAbs = "-";
+          varPlanPct = "-";
+      }
+
+      const isVsPlanDown = vsPlan.includes("-") && vsPlan !== "-";
       const isVsLWDown = vsLW.includes("-");
 
       html += `
@@ -546,19 +592,19 @@ const App = {
           <td class="py-3 px-4 font-bold text-slate-900">${r.metric}</td>
           <td class="py-3 px-3 text-right font-semibold text-slate-800">${thisWeekAct}</td>
           <td class="py-3 px-3 text-right text-slate-700">${thisWeekPlan}</td>
-          <td class="py-3 px-3 text-right font-medium ${isVsPlanDown ? 'text-red-600' : 'text-emerald-600'}">
-            ${isVsPlanDown ? '↓' : '↑'} ${vsPlan}
+          <td class="py-3 px-3 text-right font-medium ${vsPlan === '-' ? 'text-slate-500' : (isVsPlanDown ? 'text-red-600' : 'text-emerald-600')}">
+            ${vsPlan === '-' ? '' : (isVsPlanDown ? '↓' : '↑')} ${vsPlan === '-' ? '-' : vsPlan.replace('-', '')}
           </td>
           <td class="py-3 px-3 text-right text-slate-800">${lastWeekAct}</td>
           <td class="py-3 px-3 text-right font-medium ${isVsLWDown ? 'text-red-600' : 'text-emerald-600'}">
-            ${isVsLWDown ? '↓' : '↑'} ${vsLW}
+            ${isVsLWDown ? '↓' : '↑'} ${vsLW.replace('-', '')}
           </td>
-          <td class="py-3 px-3 text-right font-semibold ${isVsPlanDown ? 'text-red-600' : 'text-emerald-600'}">
-            ${isVsPlanDown ? '↓' : '↑'} ${varPlanAbs}
+          <td class="py-3 px-3 text-right font-semibold ${vsPlan === '-' ? 'text-slate-500' : (isVsPlanDown ? 'text-red-600' : 'text-emerald-600')}">
+            ${vsPlan === '-' ? '' : (isVsPlanDown ? '↓' : '↑')} ${varPlanAbs === '-' ? '-' : varPlanAbs.replace('-', '')}
           </td>
           <td class="py-3 px-3 text-right text-slate-600 font-medium">${varPlanPct}</td>
           <td class="py-3 px-3 text-right font-semibold ${isVsLWDown ? 'text-red-600' : 'text-emerald-600'}">
-            ${isVsLWDown ? '↓' : '↑'} ${varLWAbs}
+            ${isVsLWDown ? '↓' : '↑'} ${varLWAbs.replace('-', '')}
           </td>
           <td class="py-3 px-3 text-right text-slate-600 font-medium">${varLWPct}</td>
         </tr>
@@ -600,7 +646,6 @@ const App = {
     Object.keys(rawSeries.metrics).forEach(key => {
       const metric = rawSeries.metrics[key];
       const isPercentOrRatio = metric.unit === "%" || key === "productivity";
-      const scale = isPercentOrRatio ? 1.0 : totalMult;
 
       const actScale = isPercentOrRatio ? 1.0 : actualMult;
       const fcScale = isPercentOrRatio ? 1.0 : forecastMult;
@@ -609,7 +654,10 @@ const App = {
         label: metric.label,
         unit: metric.unit,
         actuals: metric.actuals.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * actScale))),
-        forecast: metric.forecast.map(v => v === null ? null : (isPercentOrRatio ? v : Math.round(v * fcScale)))
+        forecast: metric.forecast.map((v, i) => {
+            if (this.state.selectedPlan === "gff2_2026" && metric.actuals[i] !== null) return null;
+            return v === null ? null : (isPercentOrRatio ? v : Math.round(v * fcScale));
+        })
       };
     });
 
@@ -695,6 +743,11 @@ const App = {
         const diff = Math.round(numAct - numFc);
         variance = diff.toLocaleString();
       }
+      
+      if (!mults.isPlanActive) {
+          curForecast = "-";
+          variance = "-";
+      }
 
       html += `<td class="py-1.5 px-2 text-right bg-cyan-50/40 text-slate-800 ${textWeight}">${curForecast}</td>`;
       html += `<td class="py-1.5 px-2 text-right bg-cyan-50/40 text-slate-900 ${textWeight}">${curActual}</td>`;
@@ -717,7 +770,7 @@ const App = {
       row.futureForecast.forEach(val => {
         let displayVal = val;
         if (isScaled && !row.metric.includes("%") && !row.metric.includes("Productivity")) {
-          const num = parseInt(val.replace(/,/g, "")) * actMult;
+          const num = parseInt(val.replace(/,/g, "")) * fcMult;
           displayVal = Math.round(num).toLocaleString();
         }
 
