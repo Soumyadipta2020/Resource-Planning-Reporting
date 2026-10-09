@@ -50,3 +50,4 @@ content = content.replace('// Also update the numbers in the table if they exist
 
 with open('js/app.js', 'w', encoding='utf-8') as f:
     f.write(content)
+

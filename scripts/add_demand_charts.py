@@ -4,7 +4,7 @@ with open('js/charts.js', 'r', encoding='utf-8') as f:
     content = f.read()
 
 new_methods = """
-  ,renderDemandCapacityChart(containerId, data) {
+  renderDemandCapacityChart(containerId, data) {
     const ctx = document.getElementById(containerId);
     if (!ctx) return;
     if (this.instances[containerId]) this.instances[containerId].destroy();
@@ -39,7 +39,9 @@ new_methods = """
             data: data.capacity, // Base for filling
             borderColor: 'transparent',
             backgroundColor: 'rgba(239, 68, 68, 0.2)', // red-500 light
-            fill: '-1',
+            fill: '-1', // Fill to previous dataset (Workload) - requires some trickery, let's just do a custom fill or use filler plugin properly.
+            // Actually, filling between two lines in Chart.js 3+:
+            // set fill: '-1' on the top dataset.
             pointRadius: 0,
             order: 3
           }
@@ -72,10 +74,14 @@ new_methods = """
       }
     });
     
+    // To properly fill between two lines:
+    // Workload Forecast is dataset 0
+    // Available Capacity is dataset 1
+    // Let's modify dataset 0 to fill to dataset 1:
     this.instances[containerId].data.datasets[0].fill = {
        target: 1,
-       above: 'rgba(239, 68, 68, 0.2)',
-       below: 'transparent'
+       above: 'rgba(239, 68, 68, 0.2)',   // Red if Workload > Capacity
+       below: 'transparent'               // Transparent if Workload < Capacity
     };
     this.instances[containerId].update();
   },
@@ -220,13 +226,8 @@ new_methods = """
   }
 """
 
-# Replace the LAST occurrence of }; with new_methods + "\n};"
 if "renderDemandCapacityChart" not in content:
-    idx = content.rfind("};")
-    if idx != -1:
-        content = content[:idx] + new_methods + "\n" + content[idx:]
-        with open('js/charts.js', 'w', encoding='utf-8') as f:
-            f.write(content)
-        print("Updated js/charts.js successfully")
-    else:
-        print("Could not find };")
+    content = content.replace("};", new_methods + "\n};")
+    with open('js/charts.js', 'w', encoding='utf-8') as f:
+        f.write(content)
+
