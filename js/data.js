@@ -433,7 +433,8 @@ const DASHBOARD_DATA = {
       }
     ]
   },
-\n  regionalData: {
+
+  regionalData: {
     scotland: {
       multiplier: 0.16,
       name: "Scotland",

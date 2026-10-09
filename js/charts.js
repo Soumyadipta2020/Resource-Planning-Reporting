@@ -366,7 +366,8 @@ const ChartManager = {
       }
     });
   },
-\n};
+
+};
       });
 
       // Gradient Fill
@@ -694,7 +695,8 @@ const ChartManager = {
       }
     });
   },
-\n}; color: ${textColor
+
+}; color: ${textColor
   renderWaterfallChart(elementId, waterfallData) {
     const ctx = document.getElementById(elementId);
     if (!ctx) return;
@@ -782,7 +784,8 @@ const ChartManager = {
       }
     });
   },
-\n};" title="${reg.name}: ${sign} variance">
+
+};" title="${reg.name}: ${sign} variance">
               ${sign}
             </div>
           </td>
@@ -928,7 +931,8 @@ const ChartManager = {
       }
     });
   },
-\n};
+
+};
     });
 
     this.instances.efficiencyMatrix = new Chart(ctx, {
@@ -1178,4 +1182,5 @@ const ChartManager = {
       }
     });
   },
-\n};
+
+};
