@@ -382,7 +382,7 @@ const DASHBOARD_DATA = {
         { metric: "DL Productive Hrs", actuals: ["13,794", "13,259", "12,010", "15,999", "16,171"], currentActual: "15,303", currentForecast: "17,686", variance: "-2,383", varDir: "down", varType: "negative", futureForecast: ["17,245", "18,579", "18,579", "18,579", "18,579"], hasSparkbar: false },
         { metric: "DL Installs", actuals: ["781", "775", "726", "920", "944"], currentActual: "897", currentForecast: "1,073", variance: "-176", varDir: "down", varType: "negative", futureForecast: ["1,101", "1,217", "1,217", "1,217", "1,217"], hasSparkbar: false },
         { metric: "Total Installs", actuals: ["1,450", "1,460", "1,247", "1,696", "1,734"], currentActual: "1,689", currentForecast: "1,988", variance: "-299", varDir: "down", varType: "negative", futureForecast: ["2,160", "2,276", "2,276", "2,276", "2,276"], hasSparkbar: false },
-        { metric: "DL Planning Efficeincy %", actuals: ["89.1%", "89.2%", "83.1%", "88.2%", "88.1%"], currentActual: "89.2%", currentForecast: "93.7%", variance: "-4.5%", varDir: "down", varType: "negative", futureForecast: ["93.8%", "93.8%", "93.8%", "93.8%", "93.8%"], hasSparkbar: true }
+        { metric: "DL Planning Efficeincy %", actuals: ["89.1%", "89.2%", "83.1%", "88.2%", "88.1%"], currentActual: "89.2%", currentForecast: "93.7%", variance: "-4.5%", varDir: "down", varType: "negative", futureForecast: ["93.8%", "93.8%", "93.8%", "93.8%", "93.8%"], hasSparkbar: false }
       ]
   },
 
