@@ -1435,21 +1435,52 @@
               <div class="flex flex-wrap items-center gap-2 text-xs">
                 <div class="flex items-center space-x-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-700">
                   <span class="text-[10px] text-slate-500 font-bold uppercase">Combined Start:</span>
-                  <select class="bg-transparent text-slate-800 font-semibold focus:outline-none cursor-pointer">
-                    <option>01/01/2023</option>
-                    <option>01/06/2023</option>
-                    <option>01/01/2024</option>
+                  <select id="fo-combined-start" class="bg-white text-slate-800 font-semibold text-xs rounded border border-slate-300 px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+                    <option value="2023-01-01" selected>01/01/2023</option>
+                    <option value="2023-07-02">01/06/2023</option>
+                    <option value="2024-02-11">01/01/2024</option>
                   </select>
                 </div>
                 <div class="flex items-center space-x-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-700">
+                  <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   <span class="text-[10px] text-slate-500 font-bold uppercase">Week Commencing:</span>
-                  <span class="font-semibold text-slate-800">01/01/2023</span>
-                  <span class="text-slate-400">to</span>
-                  <span class="font-semibold text-slate-800">25/05/2025</span>
+                  <select id="fo-wc-start" class="bg-white text-slate-800 text-xs font-semibold rounded border border-slate-300 px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+                    <option value="2023-01-01" selected>01/01/2023</option>
+                    <option value="2023-02-19">19/02/2023</option>
+                    <option value="2023-04-02">02/04/2023</option>
+                    <option value="2023-05-14">14/05/2023</option>
+                    <option value="2023-07-02">02/07/2023</option>
+                    <option value="2023-08-13">13/08/2023</option>
+                    <option value="2023-10-01">01/10/2023</option>
+                    <option value="2023-11-12">12/11/2023</option>
+                    <option value="2023-12-31">31/12/2023</option>
+                    <option value="2024-02-11">11/02/2024</option>
+                    <option value="2024-03-31">31/03/2024</option>
+                    <option value="2024-05-12">12/05/2024</option>
+                    <option value="2024-06-30">30/06/2024</option>
+                    <option value="2024-08-11">11/08/2024</option>
+                    <option value="2024-09-29">29/09/2024</option>
+                    <option value="2024-11-10">10/11/2024</option>
+                    <option value="2024-12-29">29/12/2024</option>
+                    <option value="2025-02-09">09/02/2025</option>
+                    <option value="2025-03-30">30/03/2025</option>
+                  </select>
+                  <span class="text-slate-400 font-medium text-xs">to</span>
+                  <select id="fo-wc-end" class="bg-white text-slate-800 text-xs font-semibold rounded border border-slate-300 px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+                    <option value="2023-07-02">02/07/2023</option>
+                    <option value="2023-12-31">31/12/2023</option>
+                    <option value="2024-03-31">31/03/2024</option>
+                    <option value="2024-06-30">30/06/2024</option>
+                    <option value="2024-09-29">29/09/2024</option>
+                    <option value="2024-12-29">29/12/2024</option>
+                    <option value="2025-02-09">09/02/2025</option>
+                    <option value="2025-03-30">30/03/2025</option>
+                    <option value="2025-05-25" selected>25/05/2025</option>
+                  </select>
                 </div>
                 <div class="flex items-center space-x-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-700">
                   <span class="text-[10px] text-slate-500 font-bold uppercase">Model Type:</span>
-                  <select id="fo-model-select" class="bg-transparent text-slate-800 font-semibold focus:outline-none cursor-pointer">
+                  <select id="fo-model-select" class="bg-white text-slate-800 font-semibold text-xs rounded border border-slate-300 px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
                     <option value="all">All Models</option>
                     <option value="best-temp">Best Model w temp</option>
                     <option value="best-notemp">Best Model w/o temp</option>
@@ -1570,7 +1601,7 @@
                 <div class="relative w-full h-[280px]">
                   <canvas id="forecast-overview-chart"></canvas>
                 </div>
-                <div class="text-center text-[10px] text-slate-400 font-semibold mt-1">Week Commencing (Jan 2023 - May 2025)</div>
+                <div id="fo-chart-subtitle" class="text-center text-[10px] text-slate-500 font-semibold mt-1">Week Commencing: 01/01/2023 to 25/05/2025 (20 Weeks)</div>
               </div>
             </div>
 
@@ -1722,8 +1753,24 @@
 
                 <!-- Date Range -->
                 <div class="flex items-center space-x-2 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 text-xs">
+                  <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   <span class="text-slate-500 font-bold uppercase text-[10px]">Actuals Date Range:</span>
-                  <span class="font-semibold text-slate-800">01 Mar 2024 – 31 May 2025</span>
+                  <select id="fll-dr-start" class="bg-white text-slate-800 text-xs font-semibold rounded border border-slate-300 px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+                    <option value="03 Mar" selected>03 Mar 2024</option>
+                    <option value="17 Mar">17 Mar 2024</option>
+                    <option value="31 Mar">31 Mar 2024</option>
+                    <option value="14 Apr">14 Apr 2024</option>
+                    <option value="28 Apr">28 Apr 2024</option>
+                    <option value="12 May">12 May 2024</option>
+                  </select>
+                  <span class="text-slate-400 font-medium text-xs">to</span>
+                  <select id="fll-dr-end" class="bg-white text-slate-800 text-xs font-semibold rounded border border-slate-300 px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer shadow-sm">
+                    <option value="07 Apr">07 Apr 2024</option>
+                    <option value="21 Apr">21 Apr 2024</option>
+                    <option value="05 May">05 May 2024</option>
+                    <option value="19 May">19 May 2024</option>
+                    <option value="26 May" selected>26 May 2025</option>
+                  </select>
                 </div>
 
                 <!-- Models -->
@@ -1818,7 +1865,7 @@
                 <div class="relative w-full h-[270px]">
                   <canvas id="leadlag-actuals-chart"></canvas>
                 </div>
-                <div class="text-center text-[10px] text-slate-400 font-semibold mt-1">Week Commencing (03 Mar - 26 May)</div>
+                <div id="fll-chart-subtitle" class="text-center text-[10px] text-slate-500 font-semibold mt-1">Week Commencing: 03 Mar to 26 May (13 Weeks)</div>
               </div>
             </div>
 
@@ -1977,9 +2024,9 @@
   </main>
 
   <!-- Application Scripts -->
-  <script src="js/data.js?v=20"></script>
-  <script src="js/charts.js?v=20"></script>
-  <script src="js/app.js?v=20"></script>
+  <script src="js/data.js?v=21"></script>
+  <script src="js/charts.js?v=21"></script>
+  <script src="js/app.js?v=21"></script>
 </body>
 </html>
 

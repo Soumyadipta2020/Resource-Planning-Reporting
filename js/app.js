@@ -17,10 +17,14 @@ const App = {
     forecastSubtab: "overview",
     selectedCallGroup: "webchat",
     selectedForecastModel: "all",
+    forecastWcStart: "2023-01-01",
+    forecastWcEnd: "2025-05-25",
     selectedLeadLagCallGroup: "all",
     selectedLeadLagGroup: "all",
     selectedLag: "Current",
     selectedLeadLagModel: "all",
+    leadlagDrStart: "03 Mar",
+    leadlagDrEnd: "26 May",
     forecastCharts: {},
     lastRefreshed: new Date()
   },
@@ -137,6 +141,40 @@ const App = {
       });
     }
 
+    // Forecast Overview: Combined Start Date select
+    const foCombStart = document.getElementById("fo-combined-start");
+    if (foCombStart) {
+      foCombStart.addEventListener("change", (e) => {
+        const val = e.target.value;
+        this.state.forecastWcStart = val;
+        const sSelect = document.getElementById("fo-wc-start");
+        if (sSelect) sSelect.value = val;
+        this.renderForecastOverview();
+      });
+    }
+
+    // Forecast Overview: Week Commencing Start Date select
+    const foWcStart = document.getElementById("fo-wc-start");
+    if (foWcStart) {
+      foWcStart.addEventListener("change", (e) => {
+        this.state.forecastWcStart = e.target.value;
+        const foComb = document.getElementById("fo-combined-start");
+        if (foComb && ["2023-01-01", "2023-07-02", "2024-02-11"].includes(e.target.value)) {
+          foComb.value = e.target.value;
+        }
+        this.renderForecastOverview();
+      });
+    }
+
+    // Forecast Overview: Week Commencing End Date select
+    const foWcEnd = document.getElementById("fo-wc-end");
+    if (foWcEnd) {
+      foWcEnd.addEventListener("change", (e) => {
+        this.state.forecastWcEnd = e.target.value;
+        this.renderForecastOverview();
+      });
+    }
+
     // Lead/Lag: Call Group pill buttons
     document.querySelectorAll(".fll-cg-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -196,6 +234,23 @@ const App = {
         }
       });
     });
+
+    // Lead/Lag: Actuals Date Range Start & End
+    const fllDrStart = document.getElementById("fll-dr-start");
+    if (fllDrStart) {
+      fllDrStart.addEventListener("change", (e) => {
+        this.state.leadlagDrStart = e.target.value;
+        this.renderForecastLeadLag();
+      });
+    }
+
+    const fllDrEnd = document.getElementById("fll-dr-end");
+    if (fllDrEnd) {
+      fllDrEnd.addEventListener("change", (e) => {
+        this.state.leadlagDrEnd = e.target.value;
+        this.renderForecastLeadLag();
+      });
+    }
 
     // Sheet 4 Business Unit filter buttons (HEC, KAC, NZ EV, Home)
     document.querySelectorAll(".bu-toggle-btn").forEach(btn => {
@@ -1473,7 +1528,7 @@ const App = {
   },
 
   /**
-   * Sub-Sheet 1: Forecast Performance Overview
+   * Sub-Sheet 1: Forecast Performance Overview (Filtered by Week Commencing, Model, Call Group, Geo, Week, Plan)
    */
   renderForecastOverview() {
     const mults = this.getGlobalMultipliers();
@@ -1493,13 +1548,68 @@ const App = {
     const finalMult = mult * cg;
     const mapeScale = (1 + (cg - 1) * 0.15) * (1 / (mults.week || 1.0));
 
-    // 1. Update 5 KPIs
-    const fcVol = Math.round(1246312 * finalMult);
-    const actVol = Math.round(1211904 * mults.base * cg);
-    const varUnits = Math.round(fcVol - actVol);
-    const varPct = ((varUnits / actVol) * 100).toFixed(2);
-    const bestMape = (8.7 * mapeScale).toFixed(1);
+    // Raw historical and projected 20-week dataset (Jan 2023 - May 2025)
+    const RAW_OVERVIEW_WEEKS = [
+      { date: '2023-01-01', dmy: '01/01/2023', label: '01 Jan 23', year: 2023, act: 24, bestTemp: 27, bestNoTemp: 25, baseline: 23, prophet: 26, sarimax: 24, arima: 29 },
+      { date: '2023-02-19', dmy: '19/02/2023', label: '19 Feb 23', year: 2023, act: 28, bestTemp: 31, bestNoTemp: 29, baseline: 27, prophet: 30, sarimax: 28, arima: 34 },
+      { date: '2023-04-02', dmy: '02/04/2023', label: '02 Apr 23', year: 2023, act: 32, bestTemp: 35, bestNoTemp: 33, baseline: 30, prophet: 34, sarimax: 31, arima: 39 },
+      { date: '2023-05-14', dmy: '14/05/2023', label: '14 May 23', year: 2023, act: 29, bestTemp: 32, bestNoTemp: 30, baseline: 27, prophet: 31, sarimax: 28, arima: 35 },
+      { date: '2023-07-02', dmy: '02/07/2023', label: '02 Jul 23', year: 2023, act: 46, bestTemp: 49, bestNoTemp: 43, baseline: 41, prophet: 47, sarimax: 44, arima: 54 },
+      { date: '2023-08-13', dmy: '13/08/2023', label: '13 Aug 23', year: 2023, act: 34, bestTemp: 36, bestNoTemp: 33, baseline: 31, prophet: 35, sarimax: 33, arima: 41 },
+      { date: '2023-10-01', dmy: '01/10/2023', label: '01 Oct 23', year: 2023, act: 25, bestTemp: 27, bestNoTemp: 24, baseline: 23, prophet: 26, sarimax: 25, arima: 31 },
+      { date: '2023-11-12', dmy: '12/11/2023', label: '12 Nov 23', year: 2023, act: 20, bestTemp: 22, bestNoTemp: 21, baseline: 19, prophet: 21, sarimax: 20, arima: 26 },
+      { date: '2023-12-31', dmy: '31/12/2023', label: '31 Dec 23', year: 2023, act: 26, bestTemp: 29, bestNoTemp: 27, baseline: 25, prophet: 28, sarimax: 26, arima: 33 },
+      { date: '2024-02-11', dmy: '11/02/2024', label: '11 Feb 24', year: 2024, act: 36, bestTemp: 38, bestNoTemp: 35, baseline: 33, prophet: 37, sarimax: 34, arima: 43 },
+      { date: '2024-03-31', dmy: '31/03/2024', label: '31 Mar 24', year: 2024, act: 42, bestTemp: 44, bestNoTemp: 41, baseline: 39, prophet: 43, sarimax: 40, arima: 50 },
+      { date: '2024-05-12', dmy: '12/05/2024', label: '12 May 24', year: 2024, act: 35, bestTemp: 37, bestNoTemp: 34, baseline: 32, prophet: 36, sarimax: 33, arima: 42 },
+      { date: '2024-06-30', dmy: '30/06/2024', label: '30 Jun 24', year: 2024, act: 47, bestTemp: 49, bestNoTemp: 44, baseline: 42, prophet: 47, sarimax: 44, arima: 55 },
+      { date: '2024-08-11', dmy: '11/08/2024', label: '11 Aug 24', year: 2024, act: 36, bestTemp: 38, bestNoTemp: 35, baseline: 33, prophet: 37, sarimax: 34, arima: 43 },
+      { date: '2024-09-29', dmy: '29/09/2024', label: '29 Sep 24', year: 2024, act: 26, bestTemp: 28, bestNoTemp: 25, baseline: 24, prophet: 27, sarimax: 25, arima: 32 },
+      { date: '2024-11-10', dmy: '10/11/2024', label: '10 Nov 24', year: 2024, act: 22, bestTemp: 24, bestNoTemp: 22, baseline: 20, prophet: 23, sarimax: 21, arima: 28 },
+      { date: '2024-12-29', dmy: '29/12/2024', label: '29 Dec 24', year: 2024, act: 29, bestTemp: 31, bestNoTemp: 28, baseline: 26, prophet: 30, sarimax: 27, arima: 36 },
+      { date: '2025-02-09', dmy: '09/02/2025', label: '09 Feb 25', year: 2025, act: 39, bestTemp: 41, bestNoTemp: 38, baseline: 35, prophet: 40, sarimax: 36, arima: 47 },
+      { date: '2025-03-30', dmy: '30/03/2025', label: '30 Mar 25', year: 2025, act: 45, bestTemp: 47, bestNoTemp: 43, baseline: 41, prophet: 46, sarimax: 42, arima: 53 },
+      { date: '2025-05-25', dmy: '25/05/2025', label: '25 May 25', year: 2025, act: 38, bestTemp: 40, bestNoTemp: 36, baseline: 34, prophet: 39, sarimax: 35, arima: 46 }
+    ];
 
+    // Filter points by selected Week Commencing Start and End dates
+    const startDate = this.state.forecastWcStart || '2023-01-01';
+    const endDate = this.state.forecastWcEnd || '2025-05-25';
+
+    let filteredWeeks = RAW_OVERVIEW_WEEKS.filter(w => w.date >= startDate && w.date <= endDate);
+    if (filteredWeeks.length === 0) {
+      filteredWeeks = RAW_OVERVIEW_WEEKS;
+    }
+
+    // Dynamic Volume Aggregations
+    const totalFcSum = RAW_OVERVIEW_WEEKS.reduce((acc, w) => acc + w.bestTemp, 0); // 697
+    const totalActSum = RAW_OVERVIEW_WEEKS.reduce((acc, w) => acc + w.act, 0); // 649
+
+    const filteredFcSum = filteredWeeks.reduce((acc, w) => acc + w.bestTemp, 0);
+    const filteredActSum = filteredWeeks.reduce((acc, w) => acc + w.act, 0);
+
+    const fcVol = Math.round((filteredFcSum / totalFcSum) * 1246312 * finalMult);
+    const actVol = Math.round((filteredActSum / totalActSum) * 1211904 * mults.base * cg);
+    const varUnits = fcVol - actVol;
+    const varPct = actVol > 0 ? ((varUnits / actVol) * 100).toFixed(2) : "0.00";
+
+    // Dynamic MAPE calculation over filtered week window
+    const calcFilteredMape = (modelKey) => {
+      let totalErr = 0;
+      for (const w of filteredWeeks) {
+        totalErr += Math.abs(w[modelKey] - w.act) / w.act;
+      }
+      return ((totalErr / filteredWeeks.length) * 100 * mapeScale).toFixed(1);
+    };
+
+    const bestTempMape = calcFilteredMape('bestTemp');
+    const bestNoTempMape = calcFilteredMape('bestNoTemp');
+    const baselineMape = calcFilteredMape('baseline');
+    const prophetMape = calcFilteredMape('prophet');
+    const sarimaxMape = calcFilteredMape('sarimax');
+    const arimaMape = calcFilteredMape('arima');
+
+    // 1. Update 5 KPI Cards
     const fcVolEl = document.getElementById("fo-kpi-fc-vol");
     if (fcVolEl) fcVolEl.textContent = fcVol.toLocaleString();
 
@@ -1513,16 +1623,19 @@ const App = {
     if (varUnitsEl) varUnitsEl.textContent = `(${Math.abs(varUnits).toLocaleString()})`;
 
     const bestMapeEl = document.getElementById("fo-kpi-best-mape");
-    if (bestMapeEl) bestMapeEl.textContent = bestMape + "%";
+    if (bestMapeEl) bestMapeEl.textContent = bestTempMape + "%";
 
-    // 2. Model Accuracy Ranking List
+    const bestModelEl = document.getElementById("fo-kpi-best-model");
+    if (bestModelEl) bestModelEl.textContent = "Best Model w temp";
+
+    // 2. Model Accuracy Ranking List (Dynamic MAPEs & bars)
     const rankedModels = [
-      { rank: 1, name: "Best Model w temp", mape: (8.7 * mapeScale).toFixed(1), width: 41, col: "bg-emerald-600", textCol: "text-emerald-700" },
-      { rank: 2, name: "Best Model w/o temp", mape: (10.2 * mapeScale).toFixed(1), width: 48, col: "bg-emerald-500", textCol: "text-emerald-600" },
-      { rank: 3, name: "Baseline", mape: (12.6 * mapeScale).toFixed(1), width: 59, col: "bg-amber-500", textCol: "text-amber-700" },
-      { rank: 4, name: "Prophet w temp", mape: (14.8 * mapeScale).toFixed(1), width: 69, col: "bg-orange-500", textCol: "text-orange-700" },
-      { rank: 5, name: "Sarimax w temp", mape: (17.6 * mapeScale).toFixed(1), width: 83, col: "bg-rose-500", textCol: "text-rose-600" },
-      { rank: 6, name: "ARIMA w temp", mape: (21.3 * mapeScale).toFixed(1), width: 100, col: "bg-red-700", textCol: "text-red-700" }
+      { rank: 1, name: "Best Model w temp", mape: bestTempMape, width: Math.min(100, Math.round(parseFloat(bestTempMape) * 4.7)), col: "bg-emerald-600", textCol: "text-emerald-700" },
+      { rank: 2, name: "Best Model w/o temp", mape: bestNoTempMape, width: Math.min(100, Math.round(parseFloat(bestNoTempMape) * 4.7)), col: "bg-emerald-500", textCol: "text-emerald-600" },
+      { rank: 3, name: "Baseline", mape: baselineMape, width: Math.min(100, Math.round(parseFloat(baselineMape) * 4.7)), col: "bg-amber-500", textCol: "text-amber-700" },
+      { rank: 4, name: "Prophet w temp", mape: prophetMape, width: Math.min(100, Math.round(parseFloat(prophetMape) * 4.7)), col: "bg-orange-500", textCol: "text-orange-700" },
+      { rank: 5, name: "Sarimax w temp", mape: sarimaxMape, width: Math.min(100, Math.round(parseFloat(sarimaxMape) * 4.7)), col: "bg-rose-500", textCol: "text-rose-600" },
+      { rank: 6, name: "ARIMA w temp", mape: arimaMape, width: Math.min(100, Math.round(parseFloat(arimaMape) * 4.7)), col: "bg-red-700", textCol: "text-red-700" }
     ];
 
     const rankListEl = document.getElementById("fo-ranking-list");
@@ -1539,32 +1652,47 @@ const App = {
       `).join('');
     }
 
-    // 3. Model Performance Detail Table
+    // 3. Model Performance Detail Table (Filtered yearly actuals & volumes)
     const detailTbody = document.getElementById("fo-detail-tbody");
     if (detailTbody) {
-      const act23 = Math.round(412830 * mults.base * cg);
-      const act24 = Math.round(518402 * mults.base * cg);
-      const act25 = Math.round(280672 * mults.base * cg);
-      const modelVols = [1246312, 1189450, 1142890, 1265400, 1118920, 1095300];
+      const act23Weeks = filteredWeeks.filter(w => w.year === 2023);
+      const act24Weeks = filteredWeeks.filter(w => w.year === 2024);
+      const act25Weeks = filteredWeeks.filter(w => w.year === 2025);
+
+      const full23Act = RAW_OVERVIEW_WEEKS.filter(w => w.year === 2023).reduce((a, b) => a + b.act, 0); // 244
+      const full24Act = RAW_OVERVIEW_WEEKS.filter(w => w.year === 2024).reduce((a, b) => a + b.act, 0); // 283
+      const full25Act = RAW_OVERVIEW_WEEKS.filter(w => w.year === 2025).reduce((a, b) => a + b.act, 0); // 122
+
+      const act23Str = act23Weeks.length > 0 
+        ? Math.round((act23Weeks.reduce((a, b) => a + b.act, 0) / full23Act) * 412830 * mults.base * cg).toLocaleString() 
+        : "-";
+      const act24Str = act24Weeks.length > 0 
+        ? Math.round((act24Weeks.reduce((a, b) => a + b.act, 0) / full24Act) * 518402 * mults.base * cg).toLocaleString() 
+        : "-";
+      const act25Str = act25Weeks.length > 0 
+        ? Math.round((act25Weeks.reduce((a, b) => a + b.act, 0) / full25Act) * 280672 * mults.base * cg).toLocaleString() 
+        : "-";
+
+      const modelVolMultipliers = [1.0, 0.9544, 0.9170, 1.0153, 0.8978, 0.8788];
 
       detailTbody.innerHTML = rankedModels.map((m, idx) => {
-        const fc = Math.round(modelVols[idx] * finalMult);
+        const mFc = Math.round(fcVol * modelVolMultipliers[idx]);
         return `
           <tr class="hover:bg-slate-50 transition-colors">
             <td class="py-2.5 px-3 text-center font-bold text-slate-700">${m.rank}</td>
             <td class="py-2.5 px-3 font-semibold text-slate-900">${m.name}</td>
             <td class="py-2.5 px-3 text-center font-bold ${m.textCol}">${m.mape}%</td>
-            <td class="py-2.5 px-3 text-right font-bold text-slate-900">${fc.toLocaleString()}</td>
-            <td class="py-2.5 px-3 text-right text-slate-700">${act23.toLocaleString()}</td>
-            <td class="py-2.5 px-3 text-right text-slate-700">${act24.toLocaleString()}</td>
-            <td class="py-2.5 px-3 text-right text-slate-700">${act25.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right font-bold text-slate-900">${mFc.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right text-slate-700">${act23Str}</td>
+            <td class="py-2.5 px-3 text-right text-slate-700">${act24Str}</td>
+            <td class="py-2.5 px-3 text-right text-slate-700">${act25Str}</td>
             <td class="py-2.5 px-3 text-right text-slate-400 font-medium">-</td>
           </tr>
         `;
       }).join('');
     }
 
-    // 4. Render / Update Chart.js Combo Chart
+    // 4. Render / Update Chart.js Combo Chart (Filtered X-axis & series)
     if (window.Chart) {
       const canvas = document.getElementById("forecast-overview-chart");
       if (canvas) {
@@ -1572,19 +1700,19 @@ const App = {
           this.state.forecastCharts.overview.destroy();
         }
 
-        const labels = [
-          '01 Jan 23', '19 Feb 23', '02 Apr 23', '14 May 23', '02 Jul 23', '13 Aug 23',
-          '01 Oct 23', '12 Nov 23', '31 Dec 23', '11 Feb 24', '31 Mar 24', '12 May 24',
-          '30 Jun 24', '11 Aug 24', '29 Sep 24', '10 Nov 24', '29 Dec 24', '09 Feb 25',
-          '30 Mar 25', '25 May 25'
-        ];
+        const labels = filteredWeeks.map(w => w.label);
+        const actData = filteredWeeks.map(w => Math.round(w.act * 1000 * mults.base * cg));
+        const bestTempData = filteredWeeks.map(w => Math.round(w.bestTemp * 1000 * finalMult));
+        const bestNoTempData = filteredWeeks.map(w => Math.round(w.bestNoTemp * 1000 * finalMult * 0.96));
+        const baselineData = filteredWeeks.map(w => Math.round(w.baseline * 1000 * finalMult * 0.92));
+        const prophetData = filteredWeeks.map(w => Math.round(w.prophet * 1000 * finalMult * 1.02));
+        const sarimaxData = filteredWeeks.map(w => Math.round(w.sarimax * 1000 * finalMult * 0.90));
 
-        const actData = [24, 28, 32, 29, 46, 34, 25, 20, 26, 36, 42, 35, 47, 36, 26, 22, 29, 39, 45, 38].map(v => Math.round(v * 1000 * mults.base * cg));
-        const bestTempData = [27, 31, 35, 32, 49, 36, 27, 22, 29, 38, 44, 37, 49, 38, 28, 24, 31, 41, 47, 40].map(v => Math.round(v * 1000 * finalMult));
-        const bestNoTempData = [25, 29, 33, 30, 43, 33, 24, 21, 27, 35, 41, 34, 44, 35, 25, 22, 28, 38, 43, 36].map(v => Math.round(v * 1000 * finalMult * 0.96));
-        const baselineData = [23, 27, 30, 27, 41, 31, 23, 19, 25, 33, 39, 32, 42, 33, 24, 20, 26, 35, 41, 34].map(v => Math.round(v * 1000 * finalMult * 0.92));
-        const prophetData = [26, 30, 34, 31, 47, 35, 26, 21, 28, 37, 43, 36, 47, 37, 27, 23, 30, 40, 46, 39].map(v => Math.round(v * 1000 * finalMult * 1.02));
-        const sarimaxData = [24, 28, 31, 28, 44, 33, 25, 20, 26, 34, 40, 33, 44, 34, 25, 21, 27, 36, 42, 35].map(v => Math.round(v * 1000 * finalMult * 0.90));
+        // Update chart subtitle label
+        const subEl = document.getElementById("fo-chart-subtitle");
+        if (subEl) {
+          subEl.textContent = `Week Commencing: ${filteredWeeks[0].dmy} to ${filteredWeeks[filteredWeeks.length - 1].dmy} (${filteredWeeks.length} Weeks)`;
+        }
 
         const modelFilter = this.state.selectedForecastModel || "all";
 
@@ -1662,6 +1790,8 @@ const App = {
           );
         }
 
+        const maxVal = Math.max(...bestTempData, ...actData, 10000);
+
         const ctx = canvas.getContext('2d');
         this.state.forecastCharts.overview = new Chart(ctx, {
           type: 'bar',
@@ -1683,11 +1813,11 @@ const App = {
             scales: {
               x: {
                 grid: { display: false },
-                ticks: { font: { size: 9 }, color: '#64748b', maxTicksLimit: 10 }
+                ticks: { font: { size: 9 }, color: '#64748b', maxTicksLimit: 12 }
               },
               y: {
                 beginAtZero: true,
-                max: Math.round(60000 * finalMult),
+                max: Math.round(maxVal * 1.2),
                 grid: { color: '#f1f5f9' },
                 ticks: {
                   font: { size: 9 },
@@ -1703,7 +1833,7 @@ const App = {
   },
 
   /**
-   * Sub-Sheet 2: Lead / Lag Forecast Performance
+   * Sub-Sheet 2: Lead / Lag Forecast Performance (Filtered by Date Range, Call Group, Lag, Model, Geo, Week, Plan)
    */
   renderForecastLeadLag() {
     const mults = this.getGlobalMultipliers();
@@ -1820,23 +1950,54 @@ const App = {
       }).join('');
     }
 
-    // 3. Render Lead/Lag Charts
+    // 3. Render Lead/Lag Charts (Filtered by Actuals Date Range)
     if (window.Chart) {
-      // Left Chart: Actuals vs Selected Lag Forecast
       const c1 = document.getElementById("leadlag-actuals-chart");
       if (c1) {
         if (this.state.forecastCharts.leadlagActuals) {
           this.state.forecastCharts.leadlagActuals.destroy();
         }
 
-        const weeks = ['03 Mar', '10 Mar', '17 Mar', '24 Mar', '31 Mar', '07 Apr', '14 Apr', '21 Apr', '28 Apr', '05 May', '12 May', '19 May', '26 May'];
-        const actVals = [120000, 148000, 172000, 160000, 155000, 185000, 165000, 142000, 140000, 128000, 115000, 95000, 122000].map(v => Math.round(v * mults.base * llCg));
+        const allLlWeeks = [
+          { label: '03 Mar', act: 120000, base: 142000, bt: 122000, bnt: 130000 },
+          { label: '10 Mar', act: 148000, base: 172000, bt: 150000, bnt: 158000 },
+          { label: '17 Mar', act: 172000, base: 195000, bt: 175000, bnt: 182000 },
+          { label: '24 Mar', act: 160000, base: 182000, bt: 162000, bnt: 168000 },
+          { label: '31 Mar', act: 155000, base: 180000, bt: 156000, bnt: 162000 },
+          { label: '07 Apr', act: 185000, base: 218000, bt: 188000, bnt: 196000 },
+          { label: '14 Apr', act: 165000, base: 198000, bt: 168000, bnt: 175000 },
+          { label: '21 Apr', act: 142000, base: 185000, bt: 145000, bnt: 152000 },
+          { label: '28 Apr', act: 140000, base: 205000, bt: 142000, bnt: 150000 },
+          { label: '05 May', act: 128000, base: 175000, bt: 130000, bnt: 138000 },
+          { label: '12 May', act: 115000, base: 142000, bt: 118000, bnt: 125000 },
+          { label: '19 May', act: 95000,  base: 130000, bt: 98000,  bnt: 105000 },
+          { label: '26 May', act: 122000, base: 165000, bt: 125000, bnt: 132000 }
+        ];
+
+        const drStart = this.state.leadlagDrStart || '03 Mar';
+        const drEnd = this.state.leadlagDrEnd || '26 May';
+
+        const sIdx = allLlWeeks.findIndex(w => w.label === drStart);
+        const eIdx = allLlWeeks.findIndex(w => w.label === drEnd);
+        const sI = sIdx >= 0 ? sIdx : 0;
+        const eI = eIdx >= 0 && eIdx >= sI ? eIdx : allLlWeeks.length - 1;
+
+        const filteredLlWeeks = allLlWeeks.slice(sI, eI + 1);
+
+        const weeks = filteredLlWeeks.map(w => w.label);
+        const actVals = filteredLlWeeks.map(w => Math.round(w.act * mults.base * llCg));
         
         // Offset forecast curves slightly according to lag horizon
         const lagShift = 1 + (lagIdx * 0.012);
-        const baseVals = [142000, 172000, 195000, 182000, 180000, 218000, 198000, 185000, 205000, 175000, 142000, 130000, 165000].map(v => Math.round(v * llMult * lagShift));
-        const btVals = [122000, 150000, 175000, 162000, 156000, 188000, 168000, 145000, 142000, 130000, 118000, 98000, 125000].map(v => Math.round(v * llMult * (1 + (lagIdx * 0.005))));
-        const bntVals = [130000, 158000, 182000, 168000, 162000, 196000, 175000, 152000, 150000, 138000, 125000, 105000, 132000].map(v => Math.round(v * llMult * (1 + (lagIdx * 0.008))));
+        const baseVals = filteredLlWeeks.map(w => Math.round(w.base * llMult * lagShift));
+        const btVals = filteredLlWeeks.map(w => Math.round(w.bt * llMult * (1 + (lagIdx * 0.005))));
+        const bntVals = filteredLlWeeks.map(w => Math.round(w.bnt * llMult * (1 + (lagIdx * 0.008))));
+
+        // Update chart subtitle label
+        const llSubEl = document.getElementById("fll-chart-subtitle");
+        if (llSubEl) {
+          llSubEl.textContent = `Week Commencing: ${weeks[0]} to ${weeks[weeks.length - 1]} (${weeks.length} Weeks)`;
+        }
 
         const selModel = this.state.selectedLeadLagModel || "all";
 
@@ -1892,6 +2053,8 @@ const App = {
           });
         }
 
+        const maxVal = Math.max(...baseVals, ...actVals, 50000);
+
         const ctx1 = c1.getContext('2d');
         this.state.forecastCharts.leadlagActuals = new Chart(ctx1, {
           type: 'bar',
@@ -1917,7 +2080,7 @@ const App = {
               },
               y: {
                 beginAtZero: true,
-                max: Math.round(250000 * llMult),
+                max: Math.round(maxVal * 1.2),
                 grid: { color: '#f1f5f9' },
                 ticks: {
                   font: { size: 9 },
