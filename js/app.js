@@ -393,6 +393,18 @@ const App = {
       }
     }
 
+    // Show/hide top global filters (Geography, Base Plan, Reporting Week, Print) - hidden on Forecast tab
+    const topGlobalFilters = document.getElementById("top-global-filters");
+    if (topGlobalFilters) {
+      if (tabId === "forecast-leadlag") {
+        topGlobalFilters.style.setProperty("display", "none", "important");
+        topGlobalFilters.classList.add("hidden");
+      } else {
+        topGlobalFilters.style.setProperty("display", "flex", "important");
+        topGlobalFilters.classList.remove("hidden");
+      }
+    }
+
     // Update visible view container
     document.querySelectorAll(".tab-view-container").forEach(view => {
       if (view.id === `view-${tabId}`) {
@@ -1531,9 +1543,6 @@ const App = {
    * Sub-Sheet 1: Forecast Performance Overview (Filtered by Week Commencing, Model, Call Group, Geo, Week, Plan)
    */
   renderForecastOverview() {
-    const mults = this.getGlobalMultipliers();
-    const mult = mults.base * (mults.plan || 1.0);
-
     const cgMults = {
       webchat: 1.0,
       heating: 0.88,
@@ -1545,8 +1554,8 @@ const App = {
       homecare: 1.08
     };
     const cg = cgMults[this.state.selectedCallGroup] || 1.0;
-    const finalMult = mult * cg;
-    const mapeScale = (1 + (cg - 1) * 0.15) * (1 / (mults.week || 1.0));
+    const finalMult = cg;
+    const mapeScale = 1 + (cg - 1) * 0.15;
 
     // Raw historical and projected 20-week dataset (Jan 2023 - May 2025)
     const RAW_OVERVIEW_WEEKS = [
@@ -1589,7 +1598,7 @@ const App = {
     const filteredActSum = filteredWeeks.reduce((acc, w) => acc + w.act, 0);
 
     const fcVol = Math.round((filteredFcSum / totalFcSum) * 1246312 * finalMult);
-    const actVol = Math.round((filteredActSum / totalActSum) * 1211904 * mults.base * cg);
+    const actVol = Math.round((filteredActSum / totalActSum) * 1211904 * cg);
     const varUnits = fcVol - actVol;
     const varPct = actVol > 0 ? ((varUnits / actVol) * 100).toFixed(2) : "0.00";
 
@@ -1664,13 +1673,13 @@ const App = {
       const full25Act = RAW_OVERVIEW_WEEKS.filter(w => w.year === 2025).reduce((a, b) => a + b.act, 0); // 122
 
       const act23Str = act23Weeks.length > 0 
-        ? Math.round((act23Weeks.reduce((a, b) => a + b.act, 0) / full23Act) * 412830 * mults.base * cg).toLocaleString() 
+        ? Math.round((act23Weeks.reduce((a, b) => a + b.act, 0) / full23Act) * 412830 * cg).toLocaleString() 
         : "-";
       const act24Str = act24Weeks.length > 0 
-        ? Math.round((act24Weeks.reduce((a, b) => a + b.act, 0) / full24Act) * 518402 * mults.base * cg).toLocaleString() 
+        ? Math.round((act24Weeks.reduce((a, b) => a + b.act, 0) / full24Act) * 518402 * cg).toLocaleString() 
         : "-";
       const act25Str = act25Weeks.length > 0 
-        ? Math.round((act25Weeks.reduce((a, b) => a + b.act, 0) / full25Act) * 280672 * mults.base * cg).toLocaleString() 
+        ? Math.round((act25Weeks.reduce((a, b) => a + b.act, 0) / full25Act) * 280672 * cg).toLocaleString() 
         : "-";
 
       const modelVolMultipliers = [1.0, 0.9544, 0.9170, 1.0153, 0.8978, 0.8788];
@@ -1701,7 +1710,7 @@ const App = {
         }
 
         const labels = filteredWeeks.map(w => w.label);
-        const actData = filteredWeeks.map(w => Math.round(w.act * 1000 * mults.base * cg));
+        const actData = filteredWeeks.map(w => Math.round(w.act * 1000 * cg));
         const bestTempData = filteredWeeks.map(w => Math.round(w.bestTemp * 1000 * finalMult));
         const bestNoTempData = filteredWeeks.map(w => Math.round(w.bestNoTemp * 1000 * finalMult * 0.96));
         const baselineData = filteredWeeks.map(w => Math.round(w.baseline * 1000 * finalMult * 0.92));
@@ -1836,9 +1845,6 @@ const App = {
    * Sub-Sheet 2: Lead / Lag Forecast Performance (Filtered by Date Range, Call Group, Lag, Model, Geo, Week, Plan)
    */
   renderForecastLeadLag() {
-    const mults = this.getGlobalMultipliers();
-    const mult = mults.base * (mults.plan || 1.0);
-
     const llCgMults = {
       all: 1.0,
       residential: 0.86,
@@ -1847,7 +1853,7 @@ const App = {
       streetlighting: 0.76
     };
     const llCg = llCgMults[this.state.selectedLeadLagCallGroup] || 1.0;
-    const llMult = mult * llCg;
+    const llMult = llCg;
 
     const lag = this.state.selectedLag || "Current";
 
@@ -1857,7 +1863,7 @@ const App = {
     if (lagIdx === -1) lagIdx = 0;
 
     const baseMapes = [5.7, 6.1, 6.6, 7.0, 7.5, 7.9, 8.4, 8.9, 9.3, 9.8, 10.2, 10.6, 11.1];
-    const lagMapeVal = (baseMapes[lagIdx] * (1 + (llCg - 1) * 0.15) * (1 / (mults.week || 1.0))).toFixed(1);
+    const lagMapeVal = (baseMapes[lagIdx] * (1 + (llCg - 1) * 0.15)).toFixed(1);
 
     // Update 3 KPIs
     const lagKpi = document.getElementById("fll-kpi-lag");
@@ -1870,7 +1876,7 @@ const App = {
     if (mapeKpi) mapeKpi.textContent = lagMapeVal + "%";
 
     // 1. MAPE by Lag and Model (Heatmap)
-    const mapeFactor = (1 + (llCg - 1) * 0.15) * (1 / (mults.week || 1.0));
+    const mapeFactor = 1 + (llCg - 1) * 0.15;
     const mapeRows = [
       { lag: 'Current', baseVal: 9.8 * mapeFactor, bestTempVal: 5.7 * mapeFactor, bestNoTempVal: 7.2 * mapeFactor },
       { lag: '1W Before', baseVal: 10.5 * mapeFactor, bestTempVal: 6.1 * mapeFactor, bestNoTempVal: 7.7 * mapeFactor },
@@ -1985,7 +1991,7 @@ const App = {
         const filteredLlWeeks = allLlWeeks.slice(sI, eI + 1);
 
         const weeks = filteredLlWeeks.map(w => w.label);
-        const actVals = filteredLlWeeks.map(w => Math.round(w.act * mults.base * llCg));
+        const actVals = filteredLlWeeks.map(w => Math.round(w.act * llCg));
         
         // Offset forecast curves slightly according to lag horizon
         const lagShift = 1 + (lagIdx * 0.012);
