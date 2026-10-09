@@ -656,14 +656,14 @@ const ChartManager = {
     const ctx = document.getElementById(containerId);
     if (!ctx) return;
 
-    if (this.instances.weeklyForecast) {
-      this.instances.weeklyForecast.destroy();
+    if (this.instances[containerId]) {
+      this.instances[containerId].destroy();
     }
 
     const metric = seriesData.metrics[metricKey] || seriesData.metrics.grossHrs;
     const labels = seriesData.weeks;
 
-    this.instances.weeklyForecast = new Chart(ctx, {
+    this.instances[containerId] = new Chart(ctx, {
       type: "line",
       data: {
         labels: labels,

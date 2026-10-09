@@ -6,7 +6,8 @@
 const App = {
   state: {
     activeTab: "executive-summary", // Default is Executive Summary
-    capacitySheet: "sheet-2", // "sheet-2" (Dashboard), "sheet-3" (Comparison), "sheet-4" (Detailed Matrix)
+    capacitySheet: "sheet-2",
+    demandSheet: "dsheet-1", // "sheet-2" (Dashboard), "sheet-3" (Comparison), "sheet-4" (Detailed Matrix)
     selectedGeography: "all",
     selectedWeek: "wk38",
     selectedPlan: "gff1_2026",
@@ -73,6 +74,17 @@ const App = {
         const sheetId = btn.getAttribute("data-sheet");
         if (sheetId) {
           this.switchCapacitySheet(sheetId);
+        }
+      });
+    });
+
+
+    // Demand Overview Sheet sub-navigation buttons
+    document.querySelectorAll(".dsheet-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sheetId = btn.getAttribute("data-dsheet");
+        if (sheetId) {
+          this.switchDemandSheet(sheetId);
         }
       });
     });
@@ -192,6 +204,19 @@ const App = {
       }
     }
 
+
+    // Show/hide demand views sub-navigation bar
+    const demandTabs = document.getElementById("demand-nav-tabs");
+    if (demandTabs) {
+      if (tabId === "demand") {
+        demandTabs.style.setProperty("display", "flex", "important");
+        demandTabs.classList.remove("hidden");
+      } else {
+        demandTabs.style.setProperty("display", "none", "important");
+        demandTabs.classList.add("hidden");
+      }
+    }
+
     // Update visible view container
     document.querySelectorAll(".tab-view-container").forEach(view => {
       if (view.id === `view-${tabId}`) {
@@ -210,6 +235,119 @@ const App = {
   /**
    * Switch Capacity Overview View (Operational Dashboard, Comparison, or Matrix)
    */
+
+  switchDemandSheet(sheetId) {
+    this.state.demandSheet = sheetId;
+
+    document.querySelectorAll(".dsheet-toggle-btn").forEach(btn => {
+      if (btn.getAttribute("data-dsheet") === sheetId) {
+        btn.classList.add("bg-blue-700", "text-white", "shadow-sm");
+        btn.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+      } else {
+        btn.classList.remove("bg-blue-700", "text-white", "shadow-sm");
+        btn.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+      }
+    });
+
+    document.querySelectorAll(".demand-sheet-content").forEach(content => {
+      if (content.id === `demand-${sheetId}`) {
+        content.classList.remove("hidden");
+      } else {
+        content.classList.add("hidden");
+      }
+    });
+
+    setTimeout(() => {
+      this.updateDemandSheet();
+    }, 50);
+  },
+
+
+  updateDemandSheet() {
+    if (this.state.demandSheet === "dsheet-1") {
+       // Demand overview
+    } else if (this.state.demandSheet === "dsheet-3") {
+       // Render ES Weekly Workload chart
+       const series = {
+         weeks: ["25 May", "1 Jun", "8 Jun", "15 Jun", "22 Jun", "29 Jun", "6 Jul", "13 Jul", "20 Jul"],
+         metrics: {
+           workload: {
+             label: "Jobs",
+             unit: "",
+             actuals: [5944, 4804, 6090, 6099, 5671, 5478, null, null, null],
+             forecast: [5000, 5200, 5400, 5300, 5500, 5600, 5700, 5800, 5900]
+           }
+         }
+       };
+       ChartManager.renderWeeklyActualVsForecast('demand-workload-chart', series, 'workload');
+    } else if (this.state.demandSheet === "dsheet-4") {
+       const mults = this.getGlobalMultipliers();
+       const planObj = DASHBOARD_DATA.metadata.plans.find(p => p.id === this.state.selectedPlan);
+       const planName = planObj ? planObj.name : 'GFF1 2026';
+       
+       let activePlanMult = mults.isPlanActive ? mults.plan : 0;
+       
+       let baseValue = Math.round(1988 * activePlanMult);
+       let actualValue = Math.round(1689 * mults.base);
+       
+       let dlDiff = Math.round(-176 * mults.base);
+       let contrDiff = (actualValue - baseValue) - dlDiff;
+       
+       const waterfallData = [
+         { label: planName, value: baseValue, type: 'total' },
+         { label: 'DL Installs', value: dlDiff, type: dlDiff >= 0 ? 'up' : 'down' },
+         { label: 'Contr. Installs', value: contrDiff, type: contrDiff >= 0 ? 'up' : 'down' },
+         { label: 'Actuals', value: actualValue, type: 'total' }
+       ];
+       ChartManager.renderCapacityWaterfallChart('demand-waterfall-chart', waterfallData);
+       
+       const planNameEl = document.getElementById('demand-waterfall-plan-name');
+       if (planNameEl) {
+           planNameEl.textContent = planName;
+           const tbody = document.getElementById('demand-waterfall-tbody');
+       if (tbody) {
+           let dlBase = Math.round(1073 * activePlanMult);
+           let contrBase = Math.round(905 * activePlanMult);
+           let dlAct = Math.round(897 * mults.base);
+           let contrAct = Math.round(792 * mults.base);
+           
+           let dlV = dlAct - dlBase;
+           let contrV = contrAct - contrBase;
+           let totV = actualValue - baseValue;
+           
+           const formatNum = (v) => v.toLocaleString();
+           const formatVar = (v) => {
+               if (!mults.isPlanActive) return '-';
+               let icon = v >= 0 ? '↑' : '↓';
+               let color = v >= 0 ? 'text-emerald-600' : 'text-red-600';
+               return `<span class="${color} font-semibold">${v >= 0 ? '+' : ''}${formatNum(v)} <span class="ml-1">${icon}</span></span>`;
+           };
+           
+           tbody.innerHTML = `
+               <tr class="bg-slate-50">
+                 <td class="py-1.5 px-3 font-bold text-left border-r border-slate-200">${planName}</td>
+                 <td class="py-1.5 px-3 border-r border-slate-200">${mults.isPlanActive ? formatNum(dlBase) : '-'}</td>
+                 <td class="py-1.5 px-3 border-r border-slate-200">${mults.isPlanActive ? formatNum(contrBase) : '-'}</td>
+                 <td class="py-1.5 px-3 font-semibold">${mults.isPlanActive ? formatNum(baseValue) : '-'}</td>
+               </tr>
+               <tr>
+                 <td class="py-1.5 px-3 font-bold text-left border-r border-slate-200">Actuals</td>
+                 <td class="py-1.5 px-3 border-r border-slate-200">${formatNum(dlAct)}</td>
+                 <td class="py-1.5 px-3 border-r border-slate-200">${formatNum(contrAct)}</td>
+                 <td class="py-1.5 px-3 font-semibold">${formatNum(actualValue)}</td>
+               </tr>
+               <tr class="bg-slate-100">
+                 <td class="py-1.5 px-3 font-bold text-left border-r border-slate-200">Variance</td>
+                 <td class="py-1.5 px-3 border-r border-slate-200">${formatVar(dlV)}</td>
+                 <td class="py-1.5 px-3 border-r border-slate-200">${formatVar(contrV)}</td>
+                 <td class="py-1.5 px-3 font-bold">${formatVar(totV)}</td>
+               </tr>
+           `;
+       }
+       }
+    }
+  },
+  
   switchCapacitySheet(sheetId) {
     this.state.capacitySheet = sheetId;
 
@@ -296,6 +434,7 @@ const App = {
     this.renderExecutiveSummary();
     this.updateCapacitySheet();
     this.renderComplementaryViews();
+    this.updateDemandSheet();
   },
 
   /**
@@ -927,7 +1066,7 @@ const App = {
         return { ...item, label: planName, value: baseVal };
       }
       if (idx === data.waterfallData.length - 1) {
-        return { ...item, value: actVal };
+        return { ...item, label: 'Actuals', value: actVal };
       }
       
       let driverVal = 0;
@@ -1032,15 +1171,15 @@ const App = {
       const bgClass = isVariance ? 'bg-slate-100' : isAlt;
 
       html += `<tr class="${bgClass} hover:bg-blue-50/50 transition-colors">`;
-      html += `<td class="py-1.5 px-1 text-left sticky left-0 ${bgClass} z-10 font-bold text-slate-700 border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)] whitespace-nowrap">${row.rowLabel}</td>`;
+      html += `<td class="py-1.5 px-1 text-left sticky left-0 ${bgClass} z-10 font-bold text-slate-700 border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)] ">${row.rowLabel}</td>`;
       
       if (isVariance) {
         row.values.forEach(valObj => {
           if (valObj.val === "-") {
-             html += `<td class="py-1 px-1 text-right border-r border-slate-200 ${valObj.color} font-semibold whitespace-nowrap">-</td>`;
+             html += `<td class="py-1 px-1 text-right border-r border-slate-200 ${valObj.color} font-semibold ">-</td>`;
           } else {
              const arrowIcon = valObj.dir === 'up' ? '↑' : '↓';
-             html += `<td class="py-1 px-1 text-right border-r border-slate-200 ${valObj.color} font-semibold whitespace-nowrap">
+             html += `<td class="py-1 px-1 text-right border-r border-slate-200 ${valObj.color} font-semibold ">
                <span class="inline-flex items-center gap-0.5 justify-end">
                  ${valObj.val} <span>${arrowIcon}</span>
                </span>
@@ -1049,7 +1188,7 @@ const App = {
         });
       } else {
         row.values.forEach(val => {
-          html += `<td class="py-1.5 px-1 text-right border-r border-slate-200 ${textWeight} whitespace-nowrap">${val}</td>`;
+          html += `<td class="py-1.5 px-1 text-right border-r border-slate-200 ${textWeight} ">${val}</td>`;
         });
       }
       html += `</tr>`;
@@ -1068,3 +1207,4 @@ const App = {
 document.addEventListener("DOMContentLoaded", () => {
   App.init();
 });
+
