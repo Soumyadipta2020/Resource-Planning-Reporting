@@ -899,9 +899,7 @@ const App = {
   renderSheet5() {
     const data = DASHBOARD_DATA.capacitySheet5;
     if (!data) return;
-    if (window.ChartManager && typeof window.ChartManager.renderCapacityWaterfallChart === 'function') {
-      window.ChartManager.renderCapacityWaterfallChart('sheet5-waterfall-chart', data.waterfallData);
-    }
+    ChartManager.renderCapacityWaterfallChart('sheet5-waterfall-chart', data.waterfallData);
     const tableContainer = document.getElementById('sheet5-waterfall-table-container');
     if (!tableContainer) return;
     let html = `
