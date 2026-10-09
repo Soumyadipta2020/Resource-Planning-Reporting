@@ -266,7 +266,7 @@ const App = {
 
   renderDemandOverview() {
     const mults = this.getGlobalMultipliers();
-    const mult = mults.base;
+    const mult = mults.base * (mults.plan || 1.0);
 
     // 1. KPIs
     const formatValue = (val, fmt) => {
@@ -378,6 +378,10 @@ const App = {
     if (this.state.demandSheet === "dsheet-1") {
        this.renderDemandOverview();
     } else if (this.state.demandSheet === "dsheet-3") {
+       const mults = this.getGlobalMultipliers();
+       const bMult = mults.base;
+       const pMult = mults.plan || 1.0;
+       
        // Render ES Weekly Workload chart
        const series = {
          weeks: ["25 May", "1 Jun", "8 Jun", "15 Jun", "22 Jun", "29 Jun", "6 Jul", "13 Jul", "20 Jul"],
@@ -385,8 +389,8 @@ const App = {
            workload: {
              label: "Jobs",
              unit: "",
-             actuals: [5944, 4804, 6090, 6099, 5671, 5478, null, null, null],
-             forecast: [5000, 5200, 5400, 5300, 5500, 5600, 5700, 5800, 5900]
+             actuals: [5944, 4804, 6090, 6099, 5671, 5478, null, null, null].map(v => v === null ? null : Math.round(v * bMult)),
+             forecast: [5000, 5200, 5400, 5300, 5500, 5600, 5700, 5800, 5900].map(v => Math.round(v * bMult * pMult))
            }
          }
        };
@@ -557,7 +561,7 @@ const App = {
     const regional = isRegional ? DASHBOARD_DATA.regionalData[geo] : null;
 
     const mults = this.getGlobalMultipliers();
-    const mult = mults.base;
+    const mult = mults.base * (mults.plan || 1.0);
 
     // Scale KPI Values
     const baseKpis = isRegional ? {
@@ -700,7 +704,7 @@ const App = {
     const regional = isRegional ? DASHBOARD_DATA.regionalData[geo] : null;
     
     const mults = this.getGlobalMultipliers();
-    const mult = mults.base;
+    const mult = mults.base * (mults.plan || 1.0);
 
     // Top KPIs
     const baseKpis = isRegional ? {
