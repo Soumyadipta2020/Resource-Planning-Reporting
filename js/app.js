@@ -13,10 +13,14 @@ const App = {
     selectedPlan: "gff1_2026",
     selectedBusinessUnit: "all",
     sheet4ChartMetric: "grossHrs",
+    forecastSheet: "overview",
     forecastSubtab: "overview",
     selectedCallGroup: "webchat",
+    selectedForecastModel: "all",
+    selectedLeadLagCallGroup: "all",
     selectedLeadLagGroup: "all",
     selectedLag: "Current",
+    selectedLeadLagModel: "all",
     forecastCharts: {},
     lastRefreshed: new Date()
   },
@@ -90,6 +94,105 @@ const App = {
         const sheetId = btn.getAttribute("data-dsheet");
         if (sheetId) {
           this.switchDemandSheet(sheetId);
+        }
+      });
+    });
+
+    // Forecast Sub-Navigation Views buttons (in header bar, Capacity Overview style)
+    document.querySelectorAll(".fsheet-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const sheetId = btn.getAttribute("data-fsheet");
+        if (sheetId) {
+          this.switchForecastSheet(sheetId);
+        }
+      });
+    });
+
+    // Forecast Overview: Call Group pill buttons
+    document.querySelectorAll(".fo-cg-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cg = btn.getAttribute("data-cg");
+        if (cg) {
+          this.state.selectedCallGroup = cg;
+          document.querySelectorAll(".fo-cg-btn").forEach(b => {
+            if (b.getAttribute("data-cg") === cg) {
+              b.classList.add("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            } else {
+              b.classList.remove("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            }
+          });
+          this.renderForecastOverview();
+        }
+      });
+    });
+
+    // Forecast Overview: Model Type select dropdown
+    const foModelSelect = document.getElementById("fo-model-select");
+    if (foModelSelect) {
+      foModelSelect.addEventListener("change", (e) => {
+        this.state.selectedForecastModel = e.target.value;
+        this.renderForecastOverview();
+      });
+    }
+
+    // Lead/Lag: Call Group pill buttons
+    document.querySelectorAll(".fll-cg-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cg = btn.getAttribute("data-cg");
+        if (cg) {
+          this.state.selectedLeadLagCallGroup = cg;
+          document.querySelectorAll(".fll-cg-btn").forEach(b => {
+            if (b.getAttribute("data-cg") === cg) {
+              b.classList.add("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            } else {
+              b.classList.remove("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            }
+          });
+          this.renderForecastLeadLag();
+        }
+      });
+    });
+
+    // Lead/Lag: Lag Horizon pill buttons
+    document.querySelectorAll(".fll-lag-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const lag = btn.getAttribute("data-lag");
+        if (lag) {
+          this.state.selectedLag = lag;
+          document.querySelectorAll(".fll-lag-btn").forEach(b => {
+            if (b.getAttribute("data-lag") === lag) {
+              b.classList.add("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            } else {
+              b.classList.remove("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            }
+          });
+          this.renderForecastLeadLag();
+        }
+      });
+    });
+
+    // Lead/Lag: Model toggle buttons
+    document.querySelectorAll(".fll-model-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const model = btn.getAttribute("data-model");
+        if (model) {
+          this.state.selectedLeadLagModel = model;
+          document.querySelectorAll(".fll-model-btn").forEach(b => {
+            if (b.getAttribute("data-model") === model) {
+              b.classList.add("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            } else {
+              b.classList.remove("bg-blue-700", "text-white", "shadow-sm");
+              b.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
+            }
+          });
+          this.renderForecastLeadLag();
         }
       });
     });
@@ -220,6 +323,18 @@ const App = {
       } else {
         demandTabs.style.setProperty("display", "none", "important");
         demandTabs.classList.add("hidden");
+      }
+    }
+
+    // Show/hide forecast views sub-navigation bar (ONLY for forecast leadlag tab!)
+    const forecastTabs = document.getElementById("forecast-nav-tabs");
+    if (forecastTabs) {
+      if (tabId === "forecast-leadlag") {
+        forecastTabs.style.setProperty("display", "flex", "important");
+        forecastTabs.classList.remove("hidden");
+      } else {
+        forecastTabs.style.setProperty("display", "none", "important");
+        forecastTabs.classList.add("hidden");
       }
     }
 
@@ -1312,27 +1427,30 @@ const App = {
    */
   
 
-  switchForecastTab(subtab) {
-    this.state.forecastSubtab = subtab;
+  /**
+   * Switch Forecast Performance Sub-Sheets (Overview vs Lead/Lag)
+   */
+  switchForecastSheet(sheetId) {
+    this.state.forecastSheet = sheetId;
+    this.state.forecastSubtab = sheetId;
 
-    // Toggle button styles
-    document.querySelectorAll(".forecast-subtab-btn").forEach(btn => {
-      const isTarget = btn.getAttribute("data-subtab") === subtab;
-      if (isTarget) {
-        btn.classList.add("bg-slate-900", "text-white", "shadow-sm");
+    // Toggle header button styles (Capacity Overview theme)
+    document.querySelectorAll(".fsheet-toggle-btn").forEach(btn => {
+      if (btn.getAttribute("data-fsheet") === sheetId) {
+        btn.classList.add("bg-blue-700", "text-white", "shadow-sm");
         btn.classList.remove("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
       } else {
-        btn.classList.remove("bg-slate-900", "text-white", "shadow-sm");
+        btn.classList.remove("bg-blue-700", "text-white", "shadow-sm");
         btn.classList.add("bg-slate-100", "text-slate-700", "hover:bg-slate-200");
       }
     });
 
-    // Toggle pane visibility
-    document.querySelectorAll(".forecast-subtab-pane").forEach(pane => {
-      if (pane.id === `forecast-subtab-${subtab}`) {
-        pane.classList.remove("hidden");
+    // Toggle sub-sheet visibility
+    document.querySelectorAll(".forecast-sheet-content").forEach(content => {
+      if (content.id === `forecast-fsheet-${sheetId}`) {
+        content.classList.remove("hidden");
       } else {
-        pane.classList.add("hidden");
+        content.classList.add("hidden");
       }
     });
 
@@ -1341,14 +1459,22 @@ const App = {
     }, 50);
   },
 
+  switchForecastTab(subtab) {
+    this.switchForecastSheet(subtab);
+  },
+
   renderForecastViews() {
-    if (this.state.forecastSubtab === "overview") {
+    const activeSheet = this.state.forecastSheet || this.state.forecastSubtab || "overview";
+    if (activeSheet === "overview") {
       this.renderForecastOverview();
     } else {
       this.renderForecastLeadLag();
     }
   },
 
+  /**
+   * Sub-Sheet 1: Forecast Performance Overview
+   */
   renderForecastOverview() {
     const mults = this.getGlobalMultipliers();
     const mult = mults.base * (mults.plan || 1.0);
@@ -1365,12 +1491,14 @@ const App = {
     };
     const cg = cgMults[this.state.selectedCallGroup] || 1.0;
     const finalMult = mult * cg;
+    const mapeScale = (1 + (cg - 1) * 0.15) * (1 / (mults.week || 1.0));
 
-    // Update 5 KPIs
+    // 1. Update 5 KPIs
     const fcVol = Math.round(1246312 * finalMult);
-    const actVol = Math.round(1211904 * finalMult);
+    const actVol = Math.round(1211904 * mults.base * cg);
     const varUnits = Math.round(fcVol - actVol);
     const varPct = ((varUnits / actVol) * 100).toFixed(2);
+    const bestMape = (8.7 * mapeScale).toFixed(1);
 
     const fcVolEl = document.getElementById("fo-kpi-fc-vol");
     if (fcVolEl) fcVolEl.textContent = fcVol.toLocaleString();
@@ -1384,7 +1512,59 @@ const App = {
     const varUnitsEl = document.getElementById("fo-kpi-var-units");
     if (varUnitsEl) varUnitsEl.textContent = `(${Math.abs(varUnits).toLocaleString()})`;
 
-    // Render / Update Chart.js Combo Chart
+    const bestMapeEl = document.getElementById("fo-kpi-best-mape");
+    if (bestMapeEl) bestMapeEl.textContent = bestMape + "%";
+
+    // 2. Model Accuracy Ranking List
+    const rankedModels = [
+      { rank: 1, name: "Best Model w temp", mape: (8.7 * mapeScale).toFixed(1), width: 41, col: "bg-emerald-600", textCol: "text-emerald-700" },
+      { rank: 2, name: "Best Model w/o temp", mape: (10.2 * mapeScale).toFixed(1), width: 48, col: "bg-emerald-500", textCol: "text-emerald-600" },
+      { rank: 3, name: "Baseline", mape: (12.6 * mapeScale).toFixed(1), width: 59, col: "bg-amber-500", textCol: "text-amber-700" },
+      { rank: 4, name: "Prophet w temp", mape: (14.8 * mapeScale).toFixed(1), width: 69, col: "bg-orange-500", textCol: "text-orange-700" },
+      { rank: 5, name: "Sarimax w temp", mape: (17.6 * mapeScale).toFixed(1), width: 83, col: "bg-rose-500", textCol: "text-rose-600" },
+      { rank: 6, name: "ARIMA w temp", mape: (21.3 * mapeScale).toFixed(1), width: 100, col: "bg-red-700", textCol: "text-red-700" }
+    ];
+
+    const rankListEl = document.getElementById("fo-ranking-list");
+    if (rankListEl) {
+      rankListEl.innerHTML = rankedModels.map(m => `
+        <div class="flex items-center text-xs">
+          <span class="w-6 h-6 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-[11px] mr-2">${m.rank}</span>
+          <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="${m.name}">${m.name}</span>
+          <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+            <div class="h-full ${m.col} rounded transition-all duration-300" style="width: ${m.width}%;"></div>
+          </div>
+          <span class="w-12 text-right font-bold ${m.textCol} text-xs ml-2">${m.mape}%</span>
+        </div>
+      `).join('');
+    }
+
+    // 3. Model Performance Detail Table
+    const detailTbody = document.getElementById("fo-detail-tbody");
+    if (detailTbody) {
+      const act23 = Math.round(412830 * mults.base * cg);
+      const act24 = Math.round(518402 * mults.base * cg);
+      const act25 = Math.round(280672 * mults.base * cg);
+      const modelVols = [1246312, 1189450, 1142890, 1265400, 1118920, 1095300];
+
+      detailTbody.innerHTML = rankedModels.map((m, idx) => {
+        const fc = Math.round(modelVols[idx] * finalMult);
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-2.5 px-3 text-center font-bold text-slate-700">${m.rank}</td>
+            <td class="py-2.5 px-3 font-semibold text-slate-900">${m.name}</td>
+            <td class="py-2.5 px-3 text-center font-bold ${m.textCol}">${m.mape}%</td>
+            <td class="py-2.5 px-3 text-right font-bold text-slate-900">${fc.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right text-slate-700">${act23.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right text-slate-700">${act24.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right text-slate-700">${act25.toLocaleString()}</td>
+            <td class="py-2.5 px-3 text-right text-slate-400 font-medium">-</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 4. Render / Update Chart.js Combo Chart
     if (window.Chart) {
       const canvas = document.getElementById("forecast-overview-chart");
       if (canvas) {
@@ -1399,80 +1579,95 @@ const App = {
           '30 Mar 25', '25 May 25'
         ];
 
-        const actData = [24, 28, 32, 29, 46, 34, 25, 20, 26, 36, 42, 35, 47, 36, 26, 22, 29, 39, 45, 38].map(v => Math.round(v * 1000 * finalMult));
+        const actData = [24, 28, 32, 29, 46, 34, 25, 20, 26, 36, 42, 35, 47, 36, 26, 22, 29, 39, 45, 38].map(v => Math.round(v * 1000 * mults.base * cg));
         const bestTempData = [27, 31, 35, 32, 49, 36, 27, 22, 29, 38, 44, 37, 49, 38, 28, 24, 31, 41, 47, 40].map(v => Math.round(v * 1000 * finalMult));
-        const bestNoTempData = [25, 29, 33, 30, 43, 33, 24, 21, 27, 35, 41, 34, 44, 35, 25, 22, 28, 38, 43, 36].map(v => Math.round(v * 1000 * finalMult));
-        const baselineData = [23, 27, 30, 27, 41, 31, 23, 19, 25, 33, 39, 32, 42, 33, 24, 20, 26, 35, 41, 34].map(v => Math.round(v * 1000 * finalMult));
-        const prophetData = [26, 30, 34, 31, 47, 35, 26, 21, 28, 37, 43, 36, 47, 37, 27, 23, 30, 40, 46, 39].map(v => Math.round(v * 1000 * finalMult));
-        const sarimaxData = [24, 28, 31, 28, 44, 33, 25, 20, 26, 34, 40, 33, 44, 34, 25, 21, 27, 36, 42, 35].map(v => Math.round(v * 1000 * finalMult));
+        const bestNoTempData = [25, 29, 33, 30, 43, 33, 24, 21, 27, 35, 41, 34, 44, 35, 25, 22, 28, 38, 43, 36].map(v => Math.round(v * 1000 * finalMult * 0.96));
+        const baselineData = [23, 27, 30, 27, 41, 31, 23, 19, 25, 33, 39, 32, 42, 33, 24, 20, 26, 35, 41, 34].map(v => Math.round(v * 1000 * finalMult * 0.92));
+        const prophetData = [26, 30, 34, 31, 47, 35, 26, 21, 28, 37, 43, 36, 47, 37, 27, 23, 30, 40, 46, 39].map(v => Math.round(v * 1000 * finalMult * 1.02));
+        const sarimaxData = [24, 28, 31, 28, 44, 33, 25, 20, 26, 34, 40, 33, 44, 34, 25, 21, 27, 36, 42, 35].map(v => Math.round(v * 1000 * finalMult * 0.90));
+
+        const modelFilter = this.state.selectedForecastModel || "all";
+
+        const datasets = [
+          {
+            type: 'bar',
+            label: 'Actuals',
+            data: actData,
+            backgroundColor: '#2563eb',
+            borderRadius: 2,
+            barPercentage: 0.6,
+            order: 3
+          }
+        ];
+
+        if (modelFilter === "all" || modelFilter === "best-temp") {
+          datasets.push({
+            type: 'line',
+            label: 'Best Model w temp',
+            data: bestTempData,
+            borderColor: '#9333ea',
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0.3,
+            order: 1
+          });
+        }
+        if (modelFilter === "all" || modelFilter === "best-notemp") {
+          datasets.push({
+            type: 'line',
+            label: 'Best Model w/o temp',
+            data: bestNoTempData,
+            borderColor: '#06b6d4',
+            borderWidth: 1.5,
+            pointRadius: 0,
+            tension: 0.3,
+            order: 2
+          });
+        }
+        if (modelFilter === "all" || modelFilter === "baseline") {
+          datasets.push({
+            type: 'line',
+            label: 'Baseline',
+            data: baselineData,
+            borderColor: '#1e3a8a',
+            borderWidth: 1.5,
+            borderDash: [4, 4],
+            pointRadius: 0,
+            tension: 0.3,
+            order: 2
+          });
+        }
+        if (modelFilter === "all") {
+          datasets.push(
+            {
+              type: 'line',
+              label: 'Prophet w temp',
+              data: prophetData,
+              borderColor: '#f97316',
+              borderWidth: 1.5,
+              pointRadius: 0,
+              tension: 0.3,
+              order: 2
+            },
+            {
+              type: 'line',
+              label: 'Sarimax w temp',
+              data: sarimaxData,
+              borderColor: '#94a3b8',
+              borderWidth: 1.5,
+              pointRadius: 0,
+              tension: 0.3,
+              order: 2
+            }
+          );
+        }
 
         const ctx = canvas.getContext('2d');
         this.state.forecastCharts.overview = new Chart(ctx, {
           type: 'bar',
           data: {
             labels: labels,
-            datasets: [
-              {
-                type: 'bar',
-                label: 'Actuals',
-                data: actData,
-                backgroundColor: '#2563eb',
-                borderRadius: 2,
-                barPercentage: 0.6,
-                order: 3
-              },
-              {
-                type: 'line',
-                label: 'Best Model w temp',
-                data: bestTempData,
-                borderColor: '#9333ea',
-                borderWidth: 2,
-                pointRadius: 0,
-                tension: 0.3,
-                order: 1
-              },
-              {
-                type: 'line',
-                label: 'Best Model w/o temp',
-                data: bestNoTempData,
-                borderColor: '#06b6d4',
-                borderWidth: 1.5,
-                pointRadius: 0,
-                tension: 0.3,
-                order: 2
-              },
-              {
-                type: 'line',
-                label: 'Baseline',
-                data: baselineData,
-                borderColor: '#1e3a8a',
-                borderWidth: 1.5,
-                borderDash: [4, 4],
-                pointRadius: 0,
-                tension: 0.3,
-                order: 2
-              },
-              {
-                type: 'line',
-                label: 'Prophet w temp',
-                data: prophetData,
-                borderColor: '#f97316',
-                borderWidth: 1.5,
-                pointRadius: 0,
-                tension: 0.3,
-                order: 2
-              },
-              {
-                type: 'line',
-                label: 'Sarimax w temp',
-                data: sarimaxData,
-                borderColor: '#94a3b8',
-                borderWidth: 1.5,
-                pointRadius: 0,
-                tension: 0.3,
-                order: 2
-              }
-            ]
+            datasets: datasets
           },
           options: {
             responsive: true,
@@ -1507,31 +1702,59 @@ const App = {
     }
   },
 
+  /**
+   * Sub-Sheet 2: Lead / Lag Forecast Performance
+   */
   renderForecastLeadLag() {
     const mults = this.getGlobalMultipliers();
     const mult = mults.base * (mults.plan || 1.0);
 
+    const llCgMults = {
+      all: 1.0,
+      residential: 0.86,
+      smallci: 0.94,
+      largeci: 1.18,
+      streetlighting: 0.76
+    };
+    const llCg = llCgMults[this.state.selectedLeadLagCallGroup] || 1.0;
+    const llMult = mult * llCg;
+
     const lag = this.state.selectedLag || "Current";
 
-    // Update KPI 1
-    const lagKpi = document.getElementById("fll-kpi-lag");
-    if (lagKpi) lagKpi.textContent = lag;
+    // Lag mappings for KPI & table highlight
+    const lagKeys = ['Current', '1W', '2W', '3W', '4W', '5W', '6W', '7W', '8W', '9W', '10W', '11W', '12W'];
+    let lagIdx = lagKeys.findIndex(k => lag.startsWith(k));
+    if (lagIdx === -1) lagIdx = 0;
 
-    // Table data for Lead/Lag
+    const baseMapes = [5.7, 6.1, 6.6, 7.0, 7.5, 7.9, 8.4, 8.9, 9.3, 9.8, 10.2, 10.6, 11.1];
+    const lagMapeVal = (baseMapes[lagIdx] * (1 + (llCg - 1) * 0.15) * (1 / (mults.week || 1.0))).toFixed(1);
+
+    // Update 3 KPIs
+    const lagKpi = document.getElementById("fll-kpi-lag");
+    if (lagKpi) lagKpi.textContent = lag.includes('Before') ? lag : `${lag}${lag === 'Current' ? '' : ' Before'}`;
+
+    const bestModelKpi = document.getElementById("fll-kpi-best-model");
+    if (bestModelKpi) bestModelKpi.textContent = "Best Model w temp";
+
+    const mapeKpi = document.getElementById("fll-kpi-mape");
+    if (mapeKpi) mapeKpi.textContent = lagMapeVal + "%";
+
+    // 1. MAPE by Lag and Model (Heatmap)
+    const mapeFactor = (1 + (llCg - 1) * 0.15) * (1 / (mults.week || 1.0));
     const mapeRows = [
-      { lag: 'Current', base: '9.8%', baseVal: 9.8, bestTemp: '5.7%', bestTempVal: 5.7, bestNoTemp: '7.2%', bestNoTempVal: 7.2 },
-      { lag: '1W Before', base: '10.5%', baseVal: 10.5, bestTemp: '6.1%', bestTempVal: 6.1, bestNoTemp: '7.7%', bestNoTempVal: 7.7 },
-      { lag: '2W Before', base: '11.3%', baseVal: 11.3, bestTemp: '6.6%', bestTempVal: 6.6, bestNoTemp: '8.2%', bestNoTempVal: 8.2 },
-      { lag: '3W Before', base: '12.1%', baseVal: 12.1, bestTemp: '7.0%', bestTempVal: 7.0, bestNoTemp: '8.7%', bestNoTempVal: 8.7 },
-      { lag: '4W Before', base: '12.9%', baseVal: 12.9, bestTemp: '7.5%', bestTempVal: 7.5, bestNoTemp: '9.3%', bestNoTempVal: 9.3 },
-      { lag: '5W Before', base: '13.6%', baseVal: 13.6, bestTemp: '7.9%', bestTempVal: 7.9, bestNoTemp: '9.8%', bestNoTempVal: 9.8 },
-      { lag: '6W Before', base: '14.4%', baseVal: 14.4, bestTemp: '8.4%', bestTempVal: 8.4, bestNoTemp: '10.4%', bestNoTempVal: 10.4 },
-      { lag: '7W Before', base: '15.2%', baseVal: 15.2, bestTemp: '8.9%', bestTempVal: 8.9, bestNoTemp: '11.0%', bestNoTempVal: 11.0 },
-      { lag: '8W Before', base: '16.0%', baseVal: 16.0, bestTemp: '9.3%', bestTempVal: 9.3, bestNoTemp: '11.6%', bestNoTempVal: 11.6 },
-      { lag: '9W Before', base: '16.8%', baseVal: 16.8, bestTemp: '9.8%', bestTempVal: 9.8, bestNoTemp: '12.2%', bestNoTempVal: 12.2 },
-      { lag: '10W Before', base: '17.6%', baseVal: 17.6, bestTemp: '10.2%', bestTempVal: 10.2, bestNoTemp: '12.8%', bestNoTempVal: 12.8 },
-      { lag: '11W Before', base: '18.4%', baseVal: 18.4, bestTemp: '10.6%', bestTempVal: 10.6, bestNoTemp: '13.4%', bestNoTempVal: 13.4 },
-      { lag: '12W Before', base: '19.4%', baseVal: 19.4, bestTemp: '11.1%', bestTempVal: 11.1, bestNoTemp: '14.0%', bestNoTempVal: 14.0 }
+      { lag: 'Current', baseVal: 9.8 * mapeFactor, bestTempVal: 5.7 * mapeFactor, bestNoTempVal: 7.2 * mapeFactor },
+      { lag: '1W Before', baseVal: 10.5 * mapeFactor, bestTempVal: 6.1 * mapeFactor, bestNoTempVal: 7.7 * mapeFactor },
+      { lag: '2W Before', baseVal: 11.3 * mapeFactor, bestTempVal: 6.6 * mapeFactor, bestNoTempVal: 8.2 * mapeFactor },
+      { lag: '3W Before', baseVal: 12.1 * mapeFactor, bestTempVal: 7.0 * mapeFactor, bestNoTempVal: 8.7 * mapeFactor },
+      { lag: '4W Before', baseVal: 12.9 * mapeFactor, bestTempVal: 7.5 * mapeFactor, bestNoTempVal: 9.3 * mapeFactor },
+      { lag: '5W Before', baseVal: 13.6 * mapeFactor, bestTempVal: 7.9 * mapeFactor, bestNoTempVal: 9.8 * mapeFactor },
+      { lag: '6W Before', baseVal: 14.4 * mapeFactor, bestTempVal: 8.4 * mapeFactor, bestNoTempVal: 10.4 * mapeFactor },
+      { lag: '7W Before', baseVal: 15.2 * mapeFactor, bestTempVal: 8.9 * mapeFactor, bestNoTempVal: 11.0 * mapeFactor },
+      { lag: '8W Before', baseVal: 16.0 * mapeFactor, bestTempVal: 9.3 * mapeFactor, bestNoTempVal: 11.6 * mapeFactor },
+      { lag: '9W Before', baseVal: 16.8 * mapeFactor, bestTempVal: 9.8 * mapeFactor, bestNoTempVal: 12.2 * mapeFactor },
+      { lag: '10W Before', baseVal: 17.6 * mapeFactor, bestTempVal: 10.2 * mapeFactor, bestNoTempVal: 12.8 * mapeFactor },
+      { lag: '11W Before', baseVal: 18.4 * mapeFactor, bestTempVal: 10.6 * mapeFactor, bestNoTempVal: 13.4 * mapeFactor },
+      { lag: '12W Before', baseVal: 19.4 * mapeFactor, bestTempVal: 11.1 * mapeFactor, bestNoTempVal: 14.0 * mapeFactor }
     ];
 
     const getMapeColor = (val) => {
@@ -1547,16 +1770,21 @@ const App = {
 
     const mapeTbody = document.getElementById("fll-mape-tbody");
     if (mapeTbody) {
-      mapeTbody.innerHTML = mapeRows.map(r => `
-        <tr class="hover:opacity-90 transition-opacity">
-          <td class="py-1.5 px-3 font-semibold text-slate-800 bg-slate-50">${r.lag}</td>
-          <td class="py-1.5 px-3 text-center text-xs font-bold" style="${getMapeColor(r.baseVal)}">${r.base}</td>
-          <td class="py-1.5 px-3 text-center text-xs font-bold" style="${getMapeColor(r.bestTempVal)}">${r.bestTemp}</td>
-          <td class="py-1.5 px-3 text-center text-xs font-bold" style="${getMapeColor(r.bestNoTempVal)}">${r.bestNoTemp}</td>
-        </tr>
-      `).join('');
+      mapeTbody.innerHTML = mapeRows.map(r => {
+        const isCurrentSelected = r.lag.startsWith(lag.replace(' Before', ''));
+        const rowClass = isCurrentSelected ? 'ring-2 ring-blue-500 font-bold bg-blue-50/40' : 'hover:opacity-90';
+        return `
+          <tr class="${rowClass} transition-opacity">
+            <td class="py-1.5 px-3 font-semibold text-slate-800 bg-slate-50">${r.lag}</td>
+            <td class="py-1.5 px-3 text-center text-xs font-bold" style="${getMapeColor(r.baseVal)}">${r.baseVal.toFixed(1)}%</td>
+            <td class="py-1.5 px-3 text-center text-xs font-bold" style="${getMapeColor(r.bestTempVal)}">${r.bestTempVal.toFixed(1)}%</td>
+            <td class="py-1.5 px-3 text-center text-xs font-bold" style="${getMapeColor(r.bestNoTempVal)}">${r.bestNoTempVal.toFixed(1)}%</td>
+          </tr>
+        `;
+      }).join('');
     }
 
+    // 2. Forecast Volume by Lag and Model (Data bars)
     const volRows = [
       { lag: 'Current', base: 1049512, bestTemp: 1049512, bestNoTemp: 1049284 },
       { lag: '1W Before', base: 1050487, bestTemp: 1050487, bestNoTemp: 1050196 },
@@ -1576,11 +1804,13 @@ const App = {
     const volTbody = document.getElementById("fll-vol-tbody");
     if (volTbody) {
       volTbody.innerHTML = volRows.map(r => {
-        const b = Math.round(r.base * mult);
-        const bt = Math.round(r.bestTemp * mult);
-        const bnt = Math.round(r.bestNoTemp * mult);
+        const b = Math.round(r.base * llMult);
+        const bt = Math.round(r.bestTemp * llMult);
+        const bnt = Math.round(r.bestNoTemp * llMult);
+        const isCurrentSelected = r.lag.startsWith(lag.replace(' Before', ''));
+        const rowClass = isCurrentSelected ? 'ring-2 ring-blue-500 font-bold bg-blue-50/40' : 'hover:bg-slate-50';
         return `
-          <tr class="hover:bg-slate-50 transition-colors">
+          <tr class="${rowClass} transition-colors">
             <td class="py-1.5 px-3 font-semibold text-slate-800 bg-slate-50">${r.lag}</td>
             <td class="py-1.5 px-3 text-right text-xs font-bold text-slate-800" style="background: linear-gradient(to right, #e0f2fe 75%, transparent 75%);">${b.toLocaleString()}</td>
             <td class="py-1.5 px-3 text-right text-xs font-bold text-indigo-900" style="background: linear-gradient(to right, #ede9fe 75%, transparent 75%);">${bt.toLocaleString()}</td>
@@ -1590,8 +1820,9 @@ const App = {
       }).join('');
     }
 
-    // Render Charts for Lead/Lag
+    // 3. Render Lead/Lag Charts
     if (window.Chart) {
+      // Left Chart: Actuals vs Selected Lag Forecast
       const c1 = document.getElementById("leadlag-actuals-chart");
       if (c1) {
         if (this.state.forecastCharts.leadlagActuals) {
@@ -1599,60 +1830,74 @@ const App = {
         }
 
         const weeks = ['03 Mar', '10 Mar', '17 Mar', '24 Mar', '31 Mar', '07 Apr', '14 Apr', '21 Apr', '28 Apr', '05 May', '12 May', '19 May', '26 May'];
-        const actVals = [120000, 148000, 172000, 160000, 155000, 185000, 165000, 142000, 140000, 128000, 115000, 95000, 122000].map(v => Math.round(v * mult));
-        const baseVals = [142000, 172000, 195000, 182000, 180000, 218000, 198000, 185000, 205000, 175000, 142000, 130000, 165000].map(v => Math.round(v * mult));
-        const btVals = [122000, 150000, 175000, 162000, 156000, 188000, 168000, 145000, 142000, 130000, 118000, 98000, 125000].map(v => Math.round(v * mult));
-        const bntVals = [130000, 158000, 182000, 168000, 162000, 196000, 175000, 152000, 150000, 138000, 125000, 105000, 132000].map(v => Math.round(v * mult));
+        const actVals = [120000, 148000, 172000, 160000, 155000, 185000, 165000, 142000, 140000, 128000, 115000, 95000, 122000].map(v => Math.round(v * mults.base * llCg));
+        
+        // Offset forecast curves slightly according to lag horizon
+        const lagShift = 1 + (lagIdx * 0.012);
+        const baseVals = [142000, 172000, 195000, 182000, 180000, 218000, 198000, 185000, 205000, 175000, 142000, 130000, 165000].map(v => Math.round(v * llMult * lagShift));
+        const btVals = [122000, 150000, 175000, 162000, 156000, 188000, 168000, 145000, 142000, 130000, 118000, 98000, 125000].map(v => Math.round(v * llMult * (1 + (lagIdx * 0.005))));
+        const bntVals = [130000, 158000, 182000, 168000, 162000, 196000, 175000, 152000, 150000, 138000, 125000, 105000, 132000].map(v => Math.round(v * llMult * (1 + (lagIdx * 0.008))));
+
+        const selModel = this.state.selectedLeadLagModel || "all";
+
+        const datasets = [
+          {
+            type: 'bar',
+            label: 'Actuals',
+            data: actVals,
+            backgroundColor: '#2563eb',
+            borderRadius: 2,
+            barPercentage: 0.55,
+            order: 4
+          }
+        ];
+
+        if (selModel === "all" || selModel === "baseline") {
+          datasets.push({
+            type: 'line',
+            label: 'Baseline',
+            data: baseVals,
+            borderColor: '#f97316',
+            pointBackgroundColor: '#f97316',
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.25,
+            order: 3
+          });
+        }
+        if (selModel === "all" || selModel === "best-temp") {
+          datasets.push({
+            type: 'line',
+            label: 'Best Model w temp',
+            data: btVals,
+            borderColor: '#9333ea',
+            pointBackgroundColor: '#9333ea',
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.25,
+            order: 1
+          });
+        }
+        if (selModel === "all" || selModel === "best-notemp") {
+          datasets.push({
+            type: 'line',
+            label: 'Best Model w/o temp',
+            data: bntVals,
+            borderColor: '#16a34a',
+            pointBackgroundColor: '#16a34a',
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.25,
+            order: 2
+          });
+        }
 
         const ctx1 = c1.getContext('2d');
         this.state.forecastCharts.leadlagActuals = new Chart(ctx1, {
           type: 'bar',
           data: {
             labels: weeks,
-            datasets: [
-              {
-                type: 'bar',
-                label: 'Actuals',
-                data: actVals,
-                backgroundColor: '#2563eb',
-                borderRadius: 2,
-                barPercentage: 0.55,
-                order: 4
-              },
-              {
-                type: 'line',
-                label: 'Baseline',
-                data: baseVals,
-                borderColor: '#f97316',
-                pointBackgroundColor: '#f97316',
-                borderWidth: 2,
-                pointRadius: 3,
-                tension: 0.25,
-                order: 3
-              },
-              {
-                type: 'line',
-                label: 'Best Model w temp',
-                data: btVals,
-                borderColor: '#9333ea',
-                pointBackgroundColor: '#9333ea',
-                borderWidth: 2,
-                pointRadius: 3,
-                tension: 0.25,
-                order: 1
-              },
-              {
-                type: 'line',
-                label: 'Best Model w/o temp',
-                data: bntVals,
-                borderColor: '#16a34a',
-                pointBackgroundColor: '#16a34a',
-                borderWidth: 2,
-                pointRadius: 3,
-                tension: 0.25,
-                order: 2
-              }
-            ]
+            datasets: datasets
           },
           options: {
             responsive: true,
@@ -1661,7 +1906,7 @@ const App = {
               legend: { display: false },
               tooltip: {
                 callbacks: {
-                  label: (c) => `${c.dataset.label}: ${c.raw.toLocaleString()} MWh`
+                  label: (c) => `${c.dataset.label}: ${c.raw.toLocaleString()}`
                 }
               }
             },
@@ -1672,7 +1917,7 @@ const App = {
               },
               y: {
                 beginAtZero: true,
-                max: Math.round(250000 * mult),
+                max: Math.round(250000 * llMult),
                 grid: { color: '#f1f5f9' },
                 ticks: {
                   font: { size: 9 },
@@ -1685,6 +1930,7 @@ const App = {
         });
       }
 
+      // Right Chart: MAPE by Lag
       const c2 = document.getElementById("leadlag-mape-chart");
       if (c2) {
         if (this.state.forecastCharts.leadlagMape) {
@@ -1692,9 +1938,11 @@ const App = {
         }
 
         const lags = ['Current', '1W', '2W', '3W', '4W', '5W', '6W', '7W', '8W', '9W', '10W', '11W', '12W'];
-        const baseMape = [9.8, 10.5, 11.3, 12.1, 12.9, 13.6, 14.4, 15.2, 16.0, 16.8, 17.6, 18.4, 19.4];
-        const btMape = [5.7, 6.1, 6.6, 7.0, 7.5, 7.9, 8.4, 8.9, 9.3, 9.8, 10.2, 10.6, 11.1];
-        const bntMape = [7.2, 7.7, 8.2, 8.7, 9.3, 9.8, 10.4, 11.0, 11.6, 12.2, 12.8, 13.4, 14.0];
+        const baseMape = [9.8, 10.5, 11.3, 12.1, 12.9, 13.6, 14.4, 15.2, 16.0, 16.8, 17.6, 18.4, 19.4].map(v => parseFloat((v * mapeFactor).toFixed(1)));
+        const btMape = [5.7, 6.1, 6.6, 7.0, 7.5, 7.9, 8.4, 8.9, 9.3, 9.8, 10.2, 10.6, 11.1].map(v => parseFloat((v * mapeFactor).toFixed(1)));
+        const bntMape = [7.2, 7.7, 8.2, 8.7, 9.3, 9.8, 10.4, 11.0, 11.6, 12.2, 12.8, 13.4, 14.0].map(v => parseFloat((v * mapeFactor).toFixed(1)));
+
+        const pointRadii = lags.map((l, i) => i === lagIdx ? 6 : 2.5);
 
         const ctx2 = c2.getContext('2d');
         this.state.forecastCharts.leadlagMape = new Chart(ctx2, {
@@ -1708,7 +1956,7 @@ const App = {
                 borderColor: '#f97316',
                 backgroundColor: '#f97316',
                 borderWidth: 2,
-                pointRadius: 2.5,
+                pointRadius: pointRadii,
                 tension: 0.2
               },
               {
@@ -1717,7 +1965,7 @@ const App = {
                 borderColor: '#9333ea',
                 backgroundColor: '#9333ea',
                 borderWidth: 2,
-                pointRadius: 2.5,
+                pointRadius: pointRadii,
                 tension: 0.2
               },
               {
@@ -1726,7 +1974,7 @@ const App = {
                 borderColor: '#16a34a',
                 backgroundColor: '#16a34a',
                 borderWidth: 2,
-                pointRadius: 2.5,
+                pointRadius: pointRadii,
                 tension: 0.2
               }
             ]
@@ -1749,7 +1997,7 @@ const App = {
               },
               y: {
                 beginAtZero: true,
-                max: 25,
+                max: Math.round(25 * (mapeFactor > 1 ? mapeFactor : 1)),
                 grid: { color: '#f8fafc' },
                 ticks: {
                   font: { size: 8 },
@@ -1763,7 +2011,6 @@ const App = {
       }
     }
   },
-
   renderSheet5() {
     const data = DASHBOARD_DATA.capacitySheet5;
     if (!data) return;
