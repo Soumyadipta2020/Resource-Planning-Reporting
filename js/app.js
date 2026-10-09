@@ -436,6 +436,8 @@ const App = {
       this.renderCapacitySheet3();
     } else if (this.state.capacitySheet === "sheet-4") {
       this.renderCapacitySheet4();
+    } else if (this.state.capacitySheet === "sheet-5") {
+      this.renderSheet5();
     }
   },
 
@@ -623,7 +625,6 @@ const App = {
   renderCapacitySheet4() {
     this.renderSheet4Chart();
     this.renderSheet4Table();
-    this.renderSheet5();
   },
 
   renderSheet4Chart() {
@@ -898,8 +899,8 @@ const App = {
   renderSheet5() {
     const data = DASHBOARD_DATA.capacitySheet5;
     if (!data) return;
-    if (window.ChartManager && typeof window.ChartManager.renderWaterfallChart === 'function') {
-      window.ChartManager.renderWaterfallChart('sheet5-waterfall-chart', data.waterfallData);
+    if (window.ChartManager && typeof window.ChartManager.renderCapacityWaterfallChart === 'function') {
+      window.ChartManager.renderCapacityWaterfallChart('sheet5-waterfall-chart', data.waterfallData);
     }
     const tableContainer = document.getElementById('sheet5-waterfall-table-container');
     if (!tableContainer) return;
@@ -923,7 +924,7 @@ const App = {
       html += `<td class="py-1.5 px-2 text-left sticky left-0 ${bgClass} z-10 font-bold text-slate-700 border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)]">${row.rowLabel}</td>`;
       if (isVariance) {
         row.values.forEach(valObj => {
-          const arrowIcon = valObj.dir === 'up' ? '?' : '?';
+          const arrowIcon = valObj.dir === 'up' ? '\u2191' : '\u2193';
           html += `<td class="py-1 px-2 text-right border-r border-slate-200 ${valObj.color} font-semibold">
             <span class="inline-flex items-center gap-0.5 justify-end">
               ${valObj.val} <span>${arrowIcon}</span>
