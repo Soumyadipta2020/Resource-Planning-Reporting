@@ -396,7 +396,7 @@ const DASHBOARD_DATA = {
       { label: "DL Sickness", value: -241, type: "down" },
       { label: "DL Downtime", value: -246, type: "down" },
       { label: "Prod Impact", value: -661, type: "down" },
-      { label: "Final", value: 15303, type: "total" }
+      { label: "Actuals", value: 15303, type: "total" }
     ],
     tableColumns: [
       "Gross Hrs", "Holiday", "Holiday %", "Sickness", "Sickness %", "Training", "Training %", "Meeting", "Meeting %", "Other", "Other %", "Total Downtime", "Total Downtime %", "Available Hours", "Prod", "Productive Hrs"
