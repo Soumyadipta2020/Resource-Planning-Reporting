@@ -700,8 +700,8 @@ const App = {
             <tr class="text-white text-center font-bold">
               <th class="py-1 px-1 text-left bg-slate-600 sticky left-0 z-20 w-32">Metric</th>
               <th colspan="5" class="py-1 px-1 bg-slate-500 border-l border-r border-slate-400">Actuals</th>
-              <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Forecast</th>
               <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Actual</th>
+                <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Forecast</th>
               <th class="py-1 px-1 bg-cyan-700 border-r border-cyan-600">Variance</th>
               <th colspan="5" class="py-1 px-1 bg-slate-500 border-l border-slate-400">Forecast - ${this.state.selectedPlan === 'gff2_2026' ? 'GFF2 2026' : 'GFF1 2026'}</th>
             </tr>
@@ -720,7 +720,7 @@ const App = {
 
     data.tableRows.forEach((row, idx) => {
       const isAlt = idx % 2 === 1 ? "bg-slate-50/60" : "bg-white";
-      const isBold = ["FTE", "Gross Hrs", "Total Downtime", "Available Hrs", "Productive Hours", "Utilisation"].includes(row.metric);
+      const isBold = ["DL Headcount", "DL Gross Hours", "Total DL Downtime", "DL Available Hours", "DL Productive Hrs", "DL Utilisation %"].includes(row.metric);
       const textWeight = isBold ? "font-bold text-slate-900" : "text-slate-700 font-medium";
 
       html += `<tr class="${isAlt} hover:bg-blue-50/50 transition-colors">`;
@@ -755,8 +755,8 @@ const App = {
           variance = "-";
       }
 
-      html += `<td class="py-1 px-1 text-right bg-cyan-50/40 text-slate-800 ${textWeight}">${curForecast}</td>`;
       html += `<td class="py-1 px-1 text-right bg-cyan-50/40 text-slate-900 ${textWeight}">${curActual}</td>`;
+      html += `<td class="py-1 px-1 text-right bg-cyan-50/40 text-slate-800 ${textWeight}">${curForecast}</td>`;
 
       // Variance arrow and color
       const isUp = row.varDir === "up";

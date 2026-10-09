@@ -355,303 +355,35 @@ const DASHBOARD_DATA = {
 
     // Master 11-Week Table Layout and Data Rows
     tableColumns: {
-      actualsHeaders: ["31 Aug", "7 Sep", "14 Sep", "21 Sep", "28 Sep"],
-      currentWeek: {
-        weekLabel: "5 Oct",
-        subHeaders: ["Forecast", "Actual", "Variance"]
+        actualsHeaders: ["17 Aug", "24 Aug", "31 Aug", "07 Sep", "14 Sep"],
+        currentWeek: {
+          weekLabel: "21 Sep",
+          subHeaders: ["Actual", "Forecast", "Variance"]
+        },
+        forecastHeaders: ["28 Sep", "05 Oct", "12 Oct", "19 Oct", "26 Oct"]
       },
-      forecastHeaders: ["12 Oct", "19 Oct", "26 Oct", "2 Nov", "9 Nov"]
-    },
-
-    // Complete exact rows as captured from the operational presentation snip
-    tableRows: [
-      {
-        metric: "FTE",
-        actuals: ["675", "688", "685", "684", "680"],
-        currentForecast: "621",
-        currentActual: "683",
-        variance: "61",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["620", "619", "617", "616", "622"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Gross Hrs",
-        actuals: ["27,057", "22,056", "27,387", "27,346", "27,227"],
-        currentForecast: "24,859",
-        currentActual: "27,329",
-        variance: "2,469",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["24,805", "24,752", "24,698", "24,643", "24,869"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Core Hrs",
-        actuals: ["27,016", "22,031", "27,385", "27,346", "27,211"],
-        currentForecast: "24,859",
-        currentActual: "27,311",
-        variance: "2,451",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["24,805", "24,752", "24,698", "24,643", "24,869"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Overtime",
-        actuals: ["41", "25", "3", "0", "16"],
-        currentForecast: "0",
-        currentActual: "18",
-        variance: "18",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["0", "0", "0", "0", "0"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Holiday",
-        actuals: ["-2,501", "-4,167", "-2,677", "-2,181", "-2,637"],
-        currentForecast: "-3,118",
-        currentActual: "-3,302",
-        variance: "-184",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-3,185", "-3,237", "-3,360", "-4,057", "-5,087"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Holiday %",
-        actuals: ["-9.3%", "-18.9%", "-9.8%", "-8.0%", "-9.7%"],
-        currentForecast: "-12.5%",
-        currentActual: "-12.1%",
-        variance: "0.5%",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["-12.8%", "-13.1%", "-13.6%", "-16.5%", "-20.5%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Sickness",
-        actuals: ["-2,006", "-1,509", "-1,829", "-1,721", "-1,697"],
-        currentForecast: "-1,180",
-        currentActual: "-1,704",
-        variance: "-524",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-1,177", "-1,175", "-1,172", "-1,170", "-1,178"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Sickness %",
-        actuals: ["-7.4%", "-6.8%", "-6.7%", "-6.3%", "-6.2%"],
-        currentForecast: "-4.7%",
-        currentActual: "-6.2%",
-        variance: "-1.5%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-4.7%", "-4.7%", "-4.7%", "-4.7%", "-4.7%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Training",
-        actuals: ["-1,927", "-852", "-1,284", "-1,356", "-1,451"],
-        currentForecast: "-1,415",
-        currentActual: "-1,540",
-        variance: "-125",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-1,414", "-1,392", "-1,389", "-1,382", "-1,323"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Training %",
-        actuals: ["-7.1%", "-3.9%", "-4.7%", "-5.0%", "-5.3%"],
-        currentForecast: "-5.7%",
-        currentActual: "-5.6%",
-        variance: "0.1%",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["-5.7%", "-5.6%", "-5.6%", "-5.6%", "-5.3%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Meeting",
-        actuals: ["-426", "-329", "-947", "-804", "-968"],
-        currentForecast: "-649",
-        currentActual: "-1,434",
-        variance: "-785",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-488", "-383", "-382", "-381", "-380"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Meeting %",
-        actuals: ["-1.6%", "-1.5%", "-3.5%", "-2.9%", "-3.6%"],
-        currentForecast: "-2.6%",
-        currentActual: "-5.3%",
-        variance: "-2.6%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-2.0%", "-1.5%", "-1.5%", "-1.5%", "-1.5%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Other",
-        actuals: ["-2,549", "-1,799", "-2,801", "-2,835", "-2,807"],
-        currentForecast: "-2,351",
-        currentActual: "-2,648",
-        variance: "-297",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-2,357", "-2,343", "-2,330", "-2,313", "-2,295"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Other %",
-        actuals: ["-9.4%", "-8.2%", "-10.6%", "-10.4%", "-10.3%"],
-        currentForecast: "-9.5%",
-        currentActual: "-9.7%",
-        variance: "-0.2%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-9.1%", "-9.5%", "-9.4%", "-9.4%", "-9.2%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Total Downtime",
-        actuals: ["-9,410", "-8,655", "-9,537", "-8,896", "-9,560"],
-        currentForecast: "-8,722",
-        currentActual: "-10,627",
-        variance: "-1,905",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-8,601", "-8,530", "-8,634", "-9,303", "-10,262"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Total Downtime %",
-        actuals: ["-34.8%", "-39.3%", "-35.2%", "-32.5%", "-35.1%"],
-        currentForecast: "-35.1%",
-        currentActual: "-38.9%",
-        variance: "-3.8%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-34.7%", "-34.5%", "-35.0%", "-37.7%", "-41.3%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "TD excl. Hol. & Sick.",
-        actuals: ["-4,903", "-2,979", "-5,131", "-4,995", "-5,226"],
-        currentForecast: "-4,424",
-        currentActual: "-5,622",
-        variance: "-1,198",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-4,259", "-4,118", "-4,101", "-4,075", "-3,997"],
-        hasSparkbar: false
-      },
-      {
-        metric: "TD excl Hol & Sick %",
-        actuals: ["-18.1%", "-13.5%", "-18.7%", "-18.3%", "-19.2%"],
-        currentForecast: "-17.8%",
-        currentActual: "-20.6%",
-        variance: "-2.8%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["-17.2%", "-16.6%", "-16.6%", "-16.5%", "-16.1%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Available Hrs",
-        actuals: ["17,647", "13,401", "17,750", "18,450", "17,667"],
-        currentForecast: "16,137",
-        currentActual: "16,701",
-        variance: "564",
-        varDir: "up",
-        varType: "positive",
-        futureForecast: ["16,204", "16,222", "16,064", "15,341", "14,607"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Available Hrs %",
-        actuals: ["65.3%", "60.8%", "64.8%", "67.5%", "64.9%"],
-        currentForecast: "64.9%",
-        currentActual: "61.2%",
-        variance: "-3.8%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["65.3%", "65.5%", "65.0%", "62.3%", "58.7%"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Workload Forecast",
-        actuals: ["8,826", "6,937", "8,782", "9,061", "8,283"],
-        currentForecast: "9,930",
-        currentActual: "7,923",
-        variance: "-1,007",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["8,872", "8,894", "8,782", "8,880", "8,529"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Productivity",
-        actuals: ["4.0", "4.1", "4.0", "3.9", "3.8"],
-        currentForecast: "4.8",
-        currentActual: "3.8",
-        variance: "-0.97",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["4.8", "4.8", "4.7", "4.7", "4.8"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Productive Hours",
-        actuals: ["8,826", "6,937", "8,783", "9,061", "8,283"],
-        currentForecast: "9,621",
-        currentActual: "7,923",
-        variance: "-1,698",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["9,661", "9,674", "9,516", "9,087", "8,689"],
-        hasSparkbar: false
-      },
-      {
-        metric: "SPs",
-        actuals: ["46", "65", "56", "87", "74"],
-        currentForecast: "375",
-        currentActual: "99",
-        variance: "-276",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["375", "375", "375", "375", "375"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Prod Hours inc SPs",
-        actuals: ["8,872", "7,001", "8,838", "9,149", "8,356"],
-        currentForecast: "9,996",
-        currentActual: "8,023",
-        variance: "-1,974",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["10,036", "10,048", "9,890", "9,461", "9,064"],
-        hasSparkbar: false
-      },
-      {
-        metric: "Utilisation",
-        actuals: ["32.8%", "31.7%", "32.3%", "33.5%", "30.7%"],
-        currentForecast: "40.2%",
-        currentActual: "29.4%",
-        variance: "-10.9%",
-        varDir: "down",
-        varType: "negative",
-        futureForecast: ["40.5%", "40.6%", "40.0%", "38.4%", "36.4%"],
-        hasSparkbar: false
-      }
-    ]
+      tableRows: [
+        { metric: "DL Headcount", actuals: ["691", "692", "692", "691", "689"], currentActual: "690", currentForecast: "698", variance: "8", varDir: "down", varType: "negative", futureForecast: ["697", "708", "708", "708", "708"], hasSparkbar: false },
+        { metric: "DL Gross Hours", actuals: ["25,696", "25,820", "26,110", "25,390", "25,689"], currentActual: "25,762", currentForecast: "26,927", variance: "-1,165", varDir: "down", varType: "negative", futureForecast: ["27,271", "27,326", "27,326", "27,326", "27,326"], hasSparkbar: false },
+        { metric: "DL Holiday", actuals: ["5,740", "6,723", "3,178", "2,776", "3,399"], currentActual: "3,220", currentForecast: "3,150", variance: "70", varDir: "down", varType: "negative", futureForecast: ["2,616", "2,444", "2,444", "2,444", "2,444"], hasSparkbar: false },
+        { metric: "DL Holiday %", actuals: ["22.3%", "26.0%", "12.2%", "10.9%", "13.2%"], currentActual: "12.5%", currentForecast: "11.7%", variance: "0.8%", varDir: "down", varType: "negative", futureForecast: ["9.6%", "8.9%", "8.9%", "8.9%", "8.9%"], hasSparkbar: false },
+        { metric: "DL Sickness", actuals: ["1,539", "1,663", "1,225", "1,547", "1,338"], currentActual: "1,382", currentForecast: "1,141", variance: "241", varDir: "down", varType: "negative", futureForecast: ["1,254", "1,258", "1,258", "1,258", "1,258"], hasSparkbar: false },
+        { metric: "DL Sickness %", actuals: ["6.0%", "6.4%", "4.7%", "6.1%", "5.2%"], currentActual: "5.4%", currentForecast: "4.2%", variance: "1.1%", varDir: "down", varType: "negative", futureForecast: ["4.6%", "4.6%", "4.6%", "4.6%", "4.6%"], hasSparkbar: false },
+        { metric: "DL Downtime excl. Hol & Sick", actuals: ["2,932", "2,568", "7,246", "2,927", "2,586"], currentActual: "4,005", currentForecast: "3,759", variance: "246", varDir: "down", varType: "negative", futureForecast: ["5,009", "3,814", "3,814", "3,814", "3,814"], hasSparkbar: false },
+        { metric: "DL Downtime % excl. Hol & Sick", actuals: ["11.4%", "9.9%", "27.8%", "11.5%", "10.1%"], currentActual: "15.5%", currentForecast: "14.0%", variance: "1.5%", varDir: "down", varType: "negative", futureForecast: ["18.4%", "14.0%", "14.0%", "14.0%", "14.0%"], hasSparkbar: false },
+        { metric: "Total DL Downtime", actuals: ["10,211", "10,954", "11,650", "7,250", "7,324"], currentActual: "8,607", currentForecast: "8,051", variance: "556", varDir: "down", varType: "negative", futureForecast: ["8,879", "7,515", "7,515", "7,515", "7,515"], hasSparkbar: false },
+        { metric: "Total DL Downtime %", actuals: ["39.7%", "42.4%", "44.6%", "28.6%", "28.5%"], currentActual: "33.4%", currentForecast: "29.9%", variance: "3.5%", varDir: "down", varType: "negative", futureForecast: ["32.6%", "27.5%", "27.5%", "27.5%", "27.5%"], hasSparkbar: false },
+        { metric: "DL Available Hours", actuals: ["15,485", "14,866", "14,460", "18,140", "18,365"], currentActual: "17,155", currentForecast: "18,877", variance: "-1,722", varDir: "down", varType: "negative", futureForecast: ["18,392", "19,810", "19,810", "19,810", "19,810"], hasSparkbar: false },
+        { metric: "DL Availability %", actuals: ["60.3%", "57.6%", "55.4%", "71.4%", "71.5%"], currentActual: "66.6%", currentForecast: "70.1%", variance: "-3.5%", varDir: "down", varType: "negative", futureForecast: ["67.4%", "72.5%", "72.5%", "72.5%", "72.5%"], hasSparkbar: false },
+        { metric: "DL Utilisation %", actuals: ["53.7%", "51.4%", "46.0%", "63.0%", "63.0%"], currentActual: "59.4%", currentForecast: "65.7%", variance: "-6.3%", varDir: "down", varType: "negative", futureForecast: ["63.2%", "68.0%", "68.0%", "68.0%", "68.0%"], hasSparkbar: false },
+        { metric: "DL Gaps", actuals: ["1,691", "1,607", "2,450", "2,141", "2,194"], currentActual: "1,852", currentForecast: "1,191", variance: "661", varDir: "down", varType: "negative", futureForecast: ["1,147", "1,231", "1,231", "1,231", "1,231"], hasSparkbar: false },
+        { metric: "DL Gaps %", actuals: ["6.6%", "6.2%", "9.4%", "8.4%", "8.5%"], currentActual: "7.2%", currentForecast: "4.4%", variance: "2.8%", varDir: "down", varType: "negative", futureForecast: ["4.2%", "4.5%", "4.5%", "4.5%", "4.5%"], hasSparkbar: false },
+        { metric: "DL Productivity", actuals: ["1.9", "1.9", "1.9", "1.9", "1.9"], currentActual: "2.0", currentForecast: "2.2", variance: "-0.2", varDir: "down", varType: "negative", futureForecast: ["2.3", "2.4", "2.4", "2.4", "2.4"], hasSparkbar: false },
+        { metric: "DL Productive Hrs", actuals: ["13,794", "13,259", "12,010", "15,999", "16,171"], currentActual: "15,303", currentForecast: "17,686", variance: "-2,383", varDir: "down", varType: "negative", futureForecast: ["17,245", "18,579", "18,579", "18,579", "18,579"], hasSparkbar: false },
+        { metric: "DL Installs", actuals: ["781", "775", "726", "920", "944"], currentActual: "897", currentForecast: "1,073", variance: "-176", varDir: "down", varType: "negative", futureForecast: ["1,101", "1,217", "1,217", "1,217", "1,217"], hasSparkbar: false },
+        { metric: "Total Installs", actuals: ["1,450", "1,460", "1,247", "1,696", "1,734"], currentActual: "1,689", currentForecast: "1,988", variance: "-299", varDir: "down", varType: "negative", futureForecast: ["2,160", "2,276", "2,276", "2,276", "2,276"], hasSparkbar: false },
+        { metric: "DL Planning Efficeincy %", actuals: ["89.1%", "89.2%", "83.1%", "88.2%", "88.1%"], currentActual: "89.2%", currentForecast: "93.7%", variance: "-4.5%", varDir: "down", varType: "negative", futureForecast: ["93.8%", "93.8%", "93.8%", "93.8%", "93.8%"], hasSparkbar: true }
+      ]
   },
 
   // 5. Regional Breakdown Data (Used for dynamic filtering across all views)
