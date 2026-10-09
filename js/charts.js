@@ -751,8 +751,35 @@ const ChartManager = {
     const topData = [];
     const backgroundColors = [];
     
+    // Dynamically calculate Y_MIN and Y_MAX
+    let minDataVal = waterfallData[0].value;
+    let maxDataVal = waterfallData[0].value;
+    let tempSum = minDataVal;
+    
+    for (let i = 1; i < waterfallData.length - 1; i++) {
+        tempSum += waterfallData[i].value;
+        if (tempSum < minDataVal) minDataVal = tempSum;
+        if (tempSum > maxDataVal) maxDataVal = tempSum;
+    }
+    if (waterfallData[waterfallData.length - 1].value < minDataVal) {
+        minDataVal = waterfallData[waterfallData.length - 1].value;
+    }
+    if (waterfallData[waterfallData.length - 1].value > maxDataVal) {
+        maxDataVal = waterfallData[waterfallData.length - 1].value;
+    }
+    
+    let Y_MIN = Math.max(0, Math.floor((minDataVal * 0.8) / 1000) * 1000);
+    // If minDataVal is small (e.g. < 1000), let's ensure Y_MIN makes sense
+    if (minDataVal < 1000) {
+        Y_MIN = 0;
+    }
+    
+    let Y_MAX = Math.ceil((maxDataVal * 1.1) / 1000) * 1000;
+    if (maxDataVal < 1000) {
+        Y_MAX = Math.ceil((maxDataVal * 1.2) / 100) * 100;
+    }
+
     let currentVal = 0;
-    const Y_MIN = 12000;
     
     waterfallData.forEach((item) => {
       if (item.type === 'total') {
@@ -765,7 +792,7 @@ const ChartManager = {
         const lowest = Math.min(currentVal, endVal);
         const diff = Math.abs(item.value);
         
-        bottomData.push(lowest);
+        bottomData.push(Math.max(Y_MIN, lowest));
         topData.push(diff);
         backgroundColors.push(item.value < 0 ? '#ef4444' : '#10b981');
         
@@ -826,12 +853,15 @@ const ChartManager = {
             y: {
               stacked: true,
               min: Y_MIN,
-              max: 18000,
+              max: Y_MAX,
               grid: { color: '#f1f5f9' },
               ticks: {
                 font: { size: 10 },
                 color: '#64748b',
-                callback: function(value) { return (value/1000) + 'K'; }
+                callback: function(value) { 
+                  if (value >= 1000) return (value/1000) + 'K'; 
+                  return value;
+                }
               }
             }
           }

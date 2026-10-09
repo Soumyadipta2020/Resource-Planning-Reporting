@@ -899,43 +899,162 @@ const App = {
   renderSheet5() {
     const data = DASHBOARD_DATA.capacitySheet5;
     if (!data) return;
-    ChartManager.renderCapacityWaterfallChart('sheet5-waterfall-chart', data.waterfallData);
+
+    const mults = this.getGlobalMultipliers();
+    
+    // Get selected plan name from metadata
+    const planObj = DASHBOARD_DATA.metadata.plans.find(p => p.id === this.state.selectedPlan);
+    const planName = planObj ? planObj.name : 'GFF1 2026';
+
+    // If GFF2 is selected but not active for this week, we should show empty or zero out plan
+    let activePlanMult = mults.isPlanActive ? mults.plan : 0;
+
+    let baseVal = Math.round(data.waterfallData[0].value * activePlanMult);
+    let actVal = Math.round(data.waterfallData[data.waterfallData.length - 1].value * mults.base);
+    let totalVar = actVal - baseVal;
+    
+    // sum of old drivers
+    let oldVarTotal = 0;
+    for (let i = 1; i < data.waterfallData.length - 1; i++) {
+        oldVarTotal += data.waterfallData[i].value;
+    }
+    
+    let runningVar = 0;
+
+    // Clone waterfallData and replace "Base" label with the plan name
+    const chartData = data.waterfallData.map((item, idx) => {
+      if (idx === 0) {
+        return { ...item, label: planName, value: baseVal };
+      }
+      if (idx === data.waterfallData.length - 1) {
+        return { ...item, value: actVal };
+      }
+      
+      let driverVal = 0;
+      if (oldVarTotal !== 0) {
+         driverVal = Math.round(item.value * (totalVar / oldVarTotal));
+      }
+      
+      // Handle rounding error on the last driver to ensure exact match
+      if (idx === data.waterfallData.length - 2) {
+          driverVal = totalVar - runningVar;
+      }
+      runningVar += driverVal;
+      
+      return { ...item, value: driverVal, type: driverVal >= 0 ? "up" : "down" };
+    });
+
+    ChartManager.renderCapacityWaterfallChart('sheet5-waterfall-chart', chartData);
+    
     const tableContainer = document.getElementById('sheet5-waterfall-table-container');
     if (!tableContainer) return;
+
+    // Function to parse formatted number
+    const parseNum = (str) => {
+        if (typeof str !== "string") return 0;
+        return parseFloat(str.replace(/,/g, '').replace(/%/g, ''));
+    };
+    
+    const formatNum = (num, isPct, isDecimal) => {
+        if (isPct) return num.toFixed(1) + "%";
+        if (isDecimal) return num.toFixed(2);
+        return Math.round(num).toLocaleString();
+    };
+
+    // Calculate dynamic rows
+    const planRow = data.tableRows[0].values.map((v, i) => {
+        const isPct = v.includes("%");
+        const isProd = i === 14; 
+        const val = parseNum(v);
+        if (!mults.isPlanActive) return isPct || isProd ? "-" : "0";
+        if (isPct || isProd) return v;
+        return formatNum(val * mults.plan, false, false);
+    });
+    
+    const actRow = data.tableRows[1].values.map((v, i) => {
+        const isPct = v.includes("%");
+        const isProd = i === 14; 
+        const val = parseNum(v);
+        if (isPct || isProd) return v;
+        return formatNum(val * mults.base, false, false);
+    });
+    
+    const varRow = planRow.map((pv, i) => {
+        const av = actRow[i];
+        if (!mults.isPlanActive) return { val: "-", dir: "down", color: "text-slate-500" };
+        
+        const isPct = pv.includes("%");
+        const isProd = i === 14;
+        
+        let pVal = parseNum(pv);
+        let aVal = parseNum(av);
+        let diff = aVal - pVal;
+        
+        // Inverse logic for Downtime/Sickness/Holiday/Meeting/Other
+        const inverseCols = [1,2,3,4,7,8,9,10,11,12];
+        let color = diff > 0 ? "text-emerald-700" : "text-red-700";
+        let dir = diff > 0 ? "up" : "down";
+        if (inverseCols.includes(i)) {
+            color = diff < 0 ? "text-emerald-700" : "text-red-700";
+            dir = diff < 0 ? "up" : "down";
+        }
+        
+        let diffFmt = formatNum(Math.abs(diff), isPct, isProd);
+        diffFmt = (diff < 0 ? "-" : "") + diffFmt;
+        
+        if (diff === 0) color = "text-slate-600";
+
+        return { val: diffFmt, dir: dir, color: color };
+    });
+
     let html = `
       <div class="overflow-x-auto w-full shadow-sm rounded border border-slate-200">
-        <table class="w-full text-[10px] border-collapse whitespace-nowrap">
+        <table class="w-full text-[10px] border-collapse">
           <thead>
             <tr class="bg-cyan-600 text-white text-center font-semibold">
-              <th class="py-1.5 px-2 text-left sticky left-0 bg-cyan-700 z-10 w-24 border-r border-cyan-500"></th>
-              ${data.tableColumns.map(col => `<th class="py-1.5 px-2 border-r border-cyan-500">${col}</th>`).join('')}
+              <th class="py-1 px-1 text-left sticky left-0 bg-cyan-700 z-10 w-16 border-r border-cyan-500"></th>
+              ${data.tableColumns.map(col => `<th class="py-1 px-1 border-r border-cyan-500 leading-tight">${col}</th>`).join('')}
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
     `;
-    data.tableRows.forEach((row, idx) => {
+    
+    const dynamicRows = [
+      { rowLabel: planName, values: planRow, isVariance: false },
+      { rowLabel: "Actuals", values: actRow, isVariance: false },
+      { rowLabel: "Variance", values: varRow, isVariance: true }
+    ];
+
+    dynamicRows.forEach((row, idx) => {
       const isAlt = idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white';
-      const isVariance = row.rowLabel === 'Variance';
+      const isVariance = row.isVariance;
       const textWeight = isVariance ? 'font-bold text-slate-800' : 'text-slate-700 font-medium';
       const bgClass = isVariance ? 'bg-slate-100' : isAlt;
+
       html += `<tr class="${bgClass} hover:bg-blue-50/50 transition-colors">`;
-      html += `<td class="py-1.5 px-2 text-left sticky left-0 ${bgClass} z-10 font-bold text-slate-700 border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)]">${row.rowLabel}</td>`;
+      html += `<td class="py-1.5 px-1 text-left sticky left-0 ${bgClass} z-10 font-bold text-slate-700 border-r border-slate-200 shadow-[1px_0_0_rgba(0,0,0,0.05)] whitespace-nowrap">${row.rowLabel}</td>`;
+      
       if (isVariance) {
         row.values.forEach(valObj => {
-          const arrowIcon = valObj.dir === 'up' ? '\u2191' : '\u2193';
-          html += `<td class="py-1 px-2 text-right border-r border-slate-200 ${valObj.color} font-semibold">
-            <span class="inline-flex items-center gap-0.5 justify-end">
-              ${valObj.val} <span>${arrowIcon}</span>
-            </span>
-          </td>`;
+          if (valObj.val === "-") {
+             html += `<td class="py-1 px-1 text-right border-r border-slate-200 ${valObj.color} font-semibold whitespace-nowrap">-</td>`;
+          } else {
+             const arrowIcon = valObj.dir === 'up' ? '↑' : '↓';
+             html += `<td class="py-1 px-1 text-right border-r border-slate-200 ${valObj.color} font-semibold whitespace-nowrap">
+               <span class="inline-flex items-center gap-0.5 justify-end">
+                 ${valObj.val} <span>${arrowIcon}</span>
+               </span>
+             </td>`;
+          }
         });
       } else {
         row.values.forEach(val => {
-          html += `<td class="py-1.5 px-2 text-right border-r border-slate-200 ${textWeight}">${val}</td>`;
+          html += `<td class="py-1.5 px-1 text-right border-r border-slate-200 ${textWeight} whitespace-nowrap">${val}</td>`;
         });
       }
       html += `</tr>`;
     });
+    
     html += `</tbody></table></div>`;
     tableContainer.innerHTML = html;
   },

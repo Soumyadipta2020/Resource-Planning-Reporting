@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="height: 300px; width: 600px;">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+    const waterfallData = [
+      { label: "Base", value: 17686, type: "total" },
+      { label: "DL Gross Hours", value: -1166, type: "down" },
+      { label: "DL Holiday", value: -70, type: "down" },
+      { label: "DL Sickness", value: -241, type: "down" },
+      { label: "DL Downtime", value: -246, type: "down" },
+      { label: "Prod Impact", value: -661, type: "down" },
+      { label: "Final", value: 15303, type: "total" }
+    ];
+    const labels = waterfallData.map(d => d.label);
+    const data = [];
+    const backgroundColors = [];
+    let currentVal = 0;
+    waterfallData.forEach((item, idx) => {
+      if (item.type === 'total') {
+        data.push([0, item.value]);
+        backgroundColors.push('#1d4ed8');
+        currentVal = item.value;
+      } else {
+        const endVal = currentVal + item.value;
+        data.push([currentVal, endVal]);
+        backgroundColors.push(item.value < 0 ? '#ef4444' : '#10b981');
+        currentVal = endVal;
+      }
+    });
+
+    try {
+        new Chart(document.getElementById('myChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: backgroundColors,
+              borderWidth: 0,
+              barPercentage: 0.9,
+              categoryPercentage: 0.9
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                min: 12000,
+                max: 18000,
+                grid: { color: '#f1f5f9' },
+                ticks: {
+                  font: { size: 10 },
+                  color: '#64748b',
+                  callback: function(value) { return (value/1000) + 'K'; }
+                }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { font: { size: 10 }, color: '#64748b' }
+              }
+            }
+          }
+        });
+        document.body.innerHTML += '<p>Success!</p>';
+    } catch (e) {
+        document.body.innerHTML += '<p>Error: ' + e.message + '</p>';
+    }
+    </script>
+</body>
+</html>
