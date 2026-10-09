@@ -1236,7 +1236,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- Map Column -->
-            <div class="lg:col-span-3 flex flex-col">
+            <div class="lg:col-span-4 flex flex-col">
               <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Performance Map (By Productivity)</h3>
                 <div class="flex-1 bg-slate-50/70 rounded-lg flex flex-col items-center justify-center border border-slate-200 relative min-h-[380px] p-3 overflow-hidden shadow-inner">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="280 150 490 1030" class="w-full h-full max-h-[380px] object-contain drop-shadow-md select-none">
@@ -1269,44 +1269,54 @@
                 </div>
               </div>
 
-              <!-- Table Column -->
-            <div class="lg:col-span-6 flex flex-col">
-              <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Region Summary (This Week)</h3>
-              <div class="flex-1 rounded border border-slate-200 overflow-hidden text-[10px] bg-slate-50">
-                <table class="w-full text-left border-collapse">
-                  <thead class="bg-slate-100 border-b border-slate-200">
-                    <tr>
-                      <th class="py-2 px-2 font-bold text-slate-800">Region</th>
-                      <th class="py-2 px-2 font-bold text-slate-800 text-right">Installs</th>
-                      <th class="py-2 px-2 font-bold text-slate-800 text-right">vs Plan</th>
-                      <th class="py-2 px-2 font-bold text-slate-800 text-right">Productivity</th>
-                      <th class="py-2 px-2 font-bold text-slate-800 text-right">vs Plan</th>
-                      <th class="py-2 px-2 font-bold text-slate-800 text-right">Availability %</th>
-                      <th class="py-2 px-2 font-bold text-slate-800 text-right">vs Plan</th>
-                    </tr>
-                  </thead>
-                  <tbody id="geo-region-tbody" class="divide-y divide-slate-200">
+              <!-- Right Column: Region Summary (Top) & Top/Bottom Areas (Bottom) -->
+            <div class="lg:col-span-8 flex flex-col justify-between space-y-5">
+              
+              <!-- Region Summary Table (Spanning Left to Right) -->
+              <div>
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Region Summary (This Week)</h3>
+                <div class="rounded-lg border border-slate-200 overflow-hidden text-xs bg-white shadow-sm">
+                  <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-100/80 border-b border-slate-200 text-slate-700">
+                      <tr>
+                        <th class="py-2.5 px-3 font-bold">Region</th>
+                        <th class="py-2.5 px-3 font-bold text-right">Installs</th>
+                        <th class="py-2.5 px-3 font-bold text-right">vs Plan</th>
+                        <th class="py-2.5 px-3 font-bold text-right">Productivity</th>
+                        <th class="py-2.5 px-3 font-bold text-right">vs Plan</th>
+                        <th class="py-2.5 px-3 font-bold text-right">Availability %</th>
+                        <th class="py-2.5 px-3 font-bold text-right">vs Plan</th>
+                      </tr>
+                    </thead>
+                    <tbody id="geo-region-tbody" class="divide-y divide-slate-100">
+                       <!-- JS Populated -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Bottom Row: Top 5 and Bottom 5 Areas Bars Side-by-Side -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
+                <div class="bg-slate-50/60 p-3.5 rounded-lg border border-slate-200/80">
+                  <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-emerald-600 mr-1.5"></span>
+                    Top 5 Areas by Productivity
+                  </h3>
+                  <div id="geo-top-areas" class="space-y-2.5 text-xs">
                      <!-- JS Populated -->
-                  </tbody>
-                </table>
-              </div>
-
-            </div>
-
-            <!-- Top/Bottom Areas Column -->
-            <div class="lg:col-span-3 flex flex-col space-y-6 pl-0">
-              <div class="flex-1">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Top 5 Areas by Productivity</h3>
-                <div id="geo-top-areas" class="space-y-3">
-                   <!-- JS Populated -->
+                  </div>
+                </div>
+                <div class="bg-slate-50/60 p-3.5 rounded-lg border border-slate-200/80">
+                  <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-red-600 mr-1.5"></span>
+                    Bottom 5 Areas by Productivity
+                  </h3>
+                  <div id="geo-bottom-areas" class="space-y-2.5 text-xs">
+                     <!-- JS Populated -->
+                  </div>
                 </div>
               </div>
-              <div class="flex-1">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Bottom 5 Areas by Productivity</h3>
-                <div id="geo-bottom-areas" class="space-y-3">
-                   <!-- JS Populated -->
-                </div>
-              </div>
+
             </div>
 
           </div>

@@ -337,19 +337,19 @@ const App = {
           return `
              <tr class="hover:bg-slate-50 transition-colors">
                <td class="py-1.5 px-2 text-slate-800 font-medium">${row.cat}</td>
-               <td class="py-1.5 px-2 text-right text-slate-900 font-bold">${scaledVal.toLocaleString()}</td>
-               <td class="py-1.5 px-2 text-right text-slate-600">${row.pct.toFixed(1)}%</td>
-               <td class="py-1.5 px-2 text-right ${planCls} font-semibold">${planIcn} ${Math.abs(row.vsPlan)}%</td>
-               <td class="py-1.5 px-2 text-right ${lwCls} font-semibold">${lwIcn} ${Math.abs(row.vsLw)}%</td>
+               <td class="py-1.5 px-3 text-right text-slate-900 font-bold">${scaledVal.toLocaleString()}</td>
+               <td class="py-1.5 px-3 text-right text-slate-600">${row.pct.toFixed(1)}%</td>
+               <td class="py-1.5 px-3 text-right ${planCls} font-semibold">${planIcn} ${Math.abs(row.vsPlan)}%</td>
+               <td class="py-1.5 px-3 text-right ${lwCls} font-semibold">${lwIcn} ${Math.abs(row.vsLw)}%</td>
              </tr>
           `;
        }).join('') + `
              <tr class="bg-slate-100/80 font-bold border-t border-slate-300">
                <td class="py-1.5 px-2 text-slate-900">Total</td>
-               <td class="py-1.5 px-2 text-right text-slate-900">${Math.round(totalWorkload * mult).toLocaleString()}</td>
-               <td class="py-1.5 px-2 text-right text-slate-900">100%</td>
-               <td class="py-1.5 px-2 text-right text-emerald-600">↑ 3.6%</td>
-               <td class="py-1.5 px-2 text-right text-emerald-600">↑ 2.9%</td>
+               <td class="py-1.5 px-3 text-right text-slate-900">${Math.round(totalWorkload * mult).toLocaleString()}</td>
+               <td class="py-1.5 px-3 text-right text-slate-900">100%</td>
+               <td class="py-1.5 px-3 text-right text-emerald-600">↑ 3.6%</td>
+               <td class="py-1.5 px-3 text-right text-emerald-600">↑ 2.9%</td>
              </tr>
        `;
     }
@@ -642,26 +642,26 @@ const App = {
     if (tbody) {
        let html = regions.map(r => `
          <tr class="hover:bg-slate-100 transition-colors">
-           <td class="py-2.5 px-2 font-semibold text-slate-800">${r.name}</td>
-           <td class="py-2.5 px-2 text-right text-slate-900 font-bold">${r.ins.toLocaleString()}</td>
-           <td class="py-2.5 px-2 text-right">${formatVar(r.insV)}</td>
-           <td class="py-2.5 px-2 text-right font-semibold text-slate-700">${r.prod.toFixed(2)}</td>
-           <td class="py-2.5 px-2 text-right">${formatVar(r.prodV)}</td>
-           <td class="py-2.5 px-2 text-right font-semibold text-slate-700">${r.av.toFixed(1)}%</td>
-           <td class="py-2.5 px-2 text-right">${formatVar(r.avV)}</td>
+           <td class="py-2.5 px-3 font-semibold text-slate-800">${r.name}</td>
+           <td class="py-2.5 px-3 text-right text-slate-900 font-bold">${r.ins.toLocaleString()}</td>
+           <td class="py-2.5 px-3 text-right">${formatVar(r.insV)}</td>
+           <td class="py-2.5 px-3 text-right font-semibold text-slate-700">${r.prod.toFixed(2)}</td>
+           <td class="py-2.5 px-3 text-right">${formatVar(r.prodV)}</td>
+           <td class="py-2.5 px-3 text-right font-semibold text-slate-700">${r.av.toFixed(1)}%</td>
+           <td class="py-2.5 px-3 text-right">${formatVar(r.avV)}</td>
          </tr>
        `).join('');
        
        // Total row
        html += `
          <tr class="bg-slate-200/50 border-t border-slate-300">
-           <td class="py-3 px-2 font-bold text-slate-900">Total</td>
-           <td class="py-3 px-2 text-right text-slate-900 font-bold">${tIns.toLocaleString()}</td>
-           <td class="py-3 px-2 text-right">-</td>
-           <td class="py-3 px-2 text-right font-bold text-slate-900">${tProd.toFixed(2)}</td>
-           <td class="py-3 px-2 text-right">-</td>
-           <td class="py-3 px-2 text-right font-bold text-slate-900">${tAv.toFixed(1)}%</td>
-           <td class="py-3 px-2 text-right">-</td>
+           <td class="py-3 px-3 font-bold text-slate-900">Total</td>
+           <td class="py-3 px-3 text-right text-slate-900 font-bold">${tIns.toLocaleString()}</td>
+           <td class="py-3 px-3 text-right">-</td>
+           <td class="py-3 px-3 text-right font-bold text-slate-900">${tProd.toFixed(2)}</td>
+           <td class="py-3 px-3 text-right">-</td>
+           <td class="py-3 px-3 text-right font-bold text-slate-900">${tAv.toFixed(1)}%</td>
+           <td class="py-3 px-3 text-right">-</td>
          </tr>
        `;
        tbody.innerHTML = html;
@@ -676,9 +676,9 @@ const App = {
        topContainer.innerHTML = topAreas.map((area, i) => `
          <div class="flex items-center">
            <div class="w-4 text-slate-500">${i+1}.</div>
-           <div class="w-24 truncate" title="${area}">${area}</div>
-           <div class="flex-1 ml-2">
-             <div class="h-4 bg-emerald-600 rounded-sm" style="width: ${90 - i*15}%"></div>
+           <div class="w-28 font-medium text-slate-700 truncate" title="${area}">${area}</div>
+           <div class="flex-1 ml-3 bg-slate-100 rounded-sm overflow-hidden h-3.5">
+             <div class="h-full bg-emerald-600 rounded-sm" style="width: ${90 - i*15}%"></div>
            </div>
          </div>
        `).join('');
@@ -689,9 +689,9 @@ const App = {
        botContainer.innerHTML = botAreas.map((area, i) => `
          <div class="flex items-center">
            <div class="w-4 text-slate-500">${i+1}.</div>
-           <div class="w-24 truncate" title="${area}">${area}</div>
-           <div class="flex-1 ml-2">
-             <div class="h-4 bg-red-600 rounded-sm" style="width: ${30 + i*10}%"></div>
+           <div class="w-28 font-medium text-slate-700 truncate" title="${area}">${area}</div>
+           <div class="flex-1 ml-3 bg-slate-100 rounded-sm overflow-hidden h-3.5">
+             <div class="h-full bg-red-600 rounded-sm" style="width: ${30 + i*10}%"></div>
            </div>
          </div>
        `).join('');
