@@ -1397,36 +1397,650 @@
       <!-- TAB 6: FORECAST PERFORMANCE (LEAD/LAG)                         -->
       <!-- ============================================================== -->
       <section id="view-forecast-leadlag" class="tab-view-container hidden space-y-4">
-        <div class="dashboard-card p-5">
-          <div class="border-b border-slate-200 pb-3 mb-4">
-            <h2 class="text-base font-bold text-slate-900 tracking-tight">FORECAST PERFORMANCE (LEAD / LAG)</h2>
-            <p class="text-xs text-slate-500 font-medium">Evaluation of predictive lead indicators against operational lagging results</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-slate-50 rounded border border-slate-200 space-y-2">
-              <h4 class="font-bold text-slate-800 text-xs uppercase">Lead Indicators Analysis</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Lead indicators (incoming customer inquiries, quotation volume, and weather temperature projections) demonstrated a 3-week lead correlation with subsequent installation work order volumes.
-              </p>
-              <div class="p-2.5 bg-white rounded border border-slate-200 text-xs flex justify-between">
-                <span class="font-medium text-slate-700">Lead-to-Install Conversion Rate</span>
-                <span class="font-bold text-emerald-700">17.1% (Target: 16.5%)</span>
-              </div>
-            </div>
-
-            <div class="p-4 bg-slate-50 rounded border border-slate-200 space-y-2">
-              <h4 class="font-bold text-slate-800 text-xs uppercase">Lag Indicators Analysis</h4>
-              <p class="text-xs text-slate-600 leading-relaxed">
-                Lagging indicators (final productive hours, overtime hours logged, and completed job sign-offs) validated resource plan accuracy within a 2.4% standard deviation across central operational hubs.
-              </p>
-              <div class="p-2.5 bg-white rounded border border-slate-200 text-xs flex justify-between">
-                <span class="font-medium text-slate-700">Workforce Utilisation Index</span>
-                <span class="font-bold text-blue-700">88.1% (High Capacity)</span>
-              </div>
-            </div>
-          </div>
+        
+        <!-- Top Sub-Tab Navigation Bar -->
+        <div class="flex items-center space-x-2 border-b border-slate-200 pb-3 mb-2">
+          <button id="btn-subtab-forecast-overview" class="forecast-subtab-btn px-4 py-2 rounded-lg text-xs font-bold transition-all bg-slate-900 text-white shadow-sm flex items-center" data-subtab="overview">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            Forecast Performance Overview
+          </button>
+          <button id="btn-subtab-forecast-leadlag" class="forecast-subtab-btn px-4 py-2 rounded-lg text-xs font-bold transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center" data-subtab="leadlag">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Lead/Lag Forecast Performance
+          </button>
         </div>
+
+
+          <!-- ============================================================== -->
+          <!-- SUB-TAB 1: FORECAST PERFORMANCE OVERVIEW                      -->
+          <!-- ============================================================== -->
+          <div id="forecast-subtab-overview" class="forecast-subtab-pane space-y-4">
+            
+            <!-- Dark Banner Header with Call Groups & Date Filters -->
+            <div class="bg-[#0f172a] text-white p-4 rounded-xl shadow-md space-y-3">
+              <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b border-slate-700/60 pb-3">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                  </div>
+                  <div>
+                    <h2 class="text-base font-bold tracking-wide uppercase">Forecast Performance Overview</h2>
+                    <p class="text-[11px] text-slate-400">Weekly operational actuals evaluated against predictive forecast machine learning models</p>
+                  </div>
+                </div>
+
+                <!-- Right Filters -->
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                  <div class="flex items-center space-x-1.5 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700">
+                    <span class="text-[10px] text-slate-400 font-semibold uppercase">Combined Start Date:</span>
+                    <select class="bg-transparent text-white font-medium focus:outline-none cursor-pointer">
+                      <option class="bg-slate-800">01/01/2023</option>
+                      <option class="bg-slate-800">01/06/2023</option>
+                      <option class="bg-slate-800">01/01/2024</option>
+                    </select>
+                  </div>
+                  <div class="flex items-center space-x-1.5 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700">
+                    <span class="text-[10px] text-slate-400 font-semibold uppercase">Week Commencing:</span>
+                    <span class="font-medium text-slate-200">01/01/2023</span>
+                    <span class="text-slate-500">to</span>
+                    <span class="font-medium text-slate-200">25/05/2025</span>
+                  </div>
+                  <div class="flex items-center space-x-1.5 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700">
+                    <span class="text-[10px] text-slate-400 font-semibold uppercase">Model Type:</span>
+                    <select id="fo-model-select" class="bg-transparent text-white font-medium focus:outline-none cursor-pointer">
+                      <option class="bg-slate-800" value="all">All Models</option>
+                      <option class="bg-slate-800" value="best-temp">Best Model w temp</option>
+                      <option class="bg-slate-800" value="best-notemp">Best Model w/o temp</option>
+                      <option class="bg-slate-800" value="baseline">Baseline</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Call Group Pills Row -->
+              <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                <span class="text-[11px] font-bold text-slate-400 uppercase mr-1">Call Group:</span>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-blue-600 text-white shadow-sm" data-cg="webchat">Webchat</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="heating">Heating Installation</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="whatsapp">WhatsApp Actual</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="wadirect">WA Direct</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="hive">HIVE</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="homeimprovement">Home Improvement</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="services">Services Sales</button>
+                <button class="fo-cg-btn px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all bg-slate-800/90 text-slate-300 hover:bg-slate-700" data-cg="homecare">Homecare</button>
+              </div>
+            </div>
+
+            <!-- 5 Summary KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <!-- KPI 1: Best Performing Model -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Best Performing Model</span>
+                  <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-700 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                  </div>
+                </div>
+                <div id="fo-kpi-best-model" class="kpi-value text-lg font-bold text-purple-700 my-1 truncate">Best Model w temp</div>
+                <div class="text-[11px] text-purple-600 font-semibold pt-1 border-t border-slate-100 flex items-center">
+                  <span class="w-2 h-2 rounded-full bg-purple-600 mr-1.5"></span> Top Ranked ML Model
+                </div>
+              </div>
+
+              <!-- KPI 2: Best MAPE -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Best MAPE</span>
+                  <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-700 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                  </div>
+                </div>
+                <div id="fo-kpi-best-mape" class="kpi-value text-2xl font-bold text-slate-900 my-1">8.7%</div>
+                <div class="text-[11px] text-emerald-600 font-semibold pt-1 border-t border-slate-100 flex items-center">
+                  <span>&#8595; 1.2% Lower Error</span>
+                </div>
+              </div>
+
+              <!-- KPI 3: Forecast Volume -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Forecast Volume</span>
+                  <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                  </div>
+                </div>
+                <div id="fo-kpi-fc-vol" class="kpi-value text-2xl font-bold text-blue-700 my-1">1,246,312</div>
+                <div class="text-[11px] text-slate-500 font-medium pt-1 border-t border-slate-100">
+                  Total Expected Demand
+                </div>
+              </div>
+
+              <!-- KPI 4: Actuals Volume -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Actuals Volume</span>
+                  <div class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                  </div>
+                </div>
+                <div id="fo-kpi-act-vol" class="kpi-value text-2xl font-bold text-teal-700 my-1">1,211,904</div>
+                <div class="text-[11px] text-slate-500 font-medium pt-1 border-t border-slate-100">
+                  Delivered Workload
+                </div>
+              </div>
+
+              <!-- KPI 5: Forecast Variance -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Forecast Variance</span>
+                  <div class="w-8 h-8 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                  </div>
+                </div>
+                <div class="my-1 flex items-baseline space-x-2">
+                  <span id="fo-kpi-var-pct" class="kpi-value text-2xl font-bold text-rose-600">2.84%</span>
+                  <span id="fo-kpi-var-units" class="text-xs font-bold text-rose-500">(34,408)</span>
+                </div>
+                <div class="text-[11px] text-slate-500 font-medium pt-1 border-t border-slate-100">
+                  Model Over-prediction
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle Section: Combo Chart (Weekly Actuals vs Forecast) + Model Accuracy Ranking -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              
+              <!-- Left: Weekly Actuals vs Forecast Models Chart (8 cols) -->
+              <div class="lg:col-span-8 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+                <div class="bg-[#0f172a] text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+                  <h3 class="text-xs font-bold tracking-wider uppercase">Weekly Actuals vs Forecast Models</h3>
+                  <!-- Custom Legend -->
+                  <div class="flex flex-wrap items-center gap-3 text-[10px]">
+                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-blue-600 mr-1.5"></span>Actuals</span>
+                    <span class="flex items-center"><span class="w-2.5 h-1 bg-purple-600 mr-1.5"></span>Best Model w temp</span>
+                    <span class="flex items-center"><span class="w-2.5 h-1 bg-cyan-500 mr-1.5"></span>Best Model w/o temp</span>
+                    <span class="flex items-center"><span class="w-2.5 h-1 bg-slate-400 border-dashed border-b border-white mr-1.5"></span>Baseline</span>
+                    <span class="flex items-center"><span class="w-2.5 h-1 bg-orange-500 mr-1.5"></span>Prophet w temp</span>
+                    <span class="flex items-center"><span class="w-2.5 h-1 bg-slate-400 mr-1.5"></span>Sarimax w temp</span>
+                  </div>
+                </div>
+                <div class="p-4 flex-1 flex flex-col justify-center min-h-[300px]">
+                  <div class="relative w-full h-[280px]">
+                    <canvas id="forecast-overview-chart"></canvas>
+                  </div>
+                  <div class="text-center text-[10px] text-slate-400 font-semibold mt-1">Week Commencing (Jan 2023 - May 2025)</div>
+                </div>
+              </div>
+
+              <!-- Right: Model Accuracy Ranking (4 cols) -->
+              <div class="lg:col-span-4 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+                <div class="bg-[#0f172a] text-white px-4 py-2.5">
+                  <h3 class="text-xs font-bold tracking-wider uppercase">Model Accuracy Ranking</h3>
+                </div>
+                <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                  <div class="space-y-3 pt-1">
+                    <!-- Rank 1 -->
+                    <div class="flex items-center text-xs">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[11px] mr-2">1</span>
+                      <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="Best Model w temp">Best Model w temp</span>
+                      <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+                        <div class="h-full bg-emerald-600 rounded" style="width: 41%;"></div>
+                      </div>
+                      <span class="w-12 text-right font-bold text-emerald-700 text-xs ml-2">8.7%</span>
+                    </div>
+
+                    <!-- Rank 2 -->
+                    <div class="flex items-center text-xs">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[11px] mr-2">2</span>
+                      <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="Best Model w/o temp">Best Model w/o temp</span>
+                      <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+                        <div class="h-full bg-emerald-500 rounded" style="width: 48%;"></div>
+                      </div>
+                      <span class="w-12 text-right font-bold text-emerald-600 text-xs ml-2">10.2%</span>
+                    </div>
+
+                    <!-- Rank 3 -->
+                    <div class="flex items-center text-xs">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[11px] mr-2">3</span>
+                      <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="Baseline">Baseline</span>
+                      <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+                        <div class="h-full bg-amber-500 rounded" style="width: 59%;"></div>
+                      </div>
+                      <span class="w-12 text-right font-bold text-amber-700 text-xs ml-2">12.6%</span>
+                    </div>
+
+                    <!-- Rank 4 -->
+                    <div class="flex items-center text-xs">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[11px] mr-2">4</span>
+                      <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="Prophet w temp">Prophet w temp</span>
+                      <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+                        <div class="h-full bg-orange-500 rounded" style="width: 69%;"></div>
+                      </div>
+                      <span class="w-12 text-right font-bold text-orange-700 text-xs ml-2">14.8%</span>
+                    </div>
+
+                    <!-- Rank 5 -->
+                    <div class="flex items-center text-xs">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[11px] mr-2">5</span>
+                      <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="Sarimax w temp">Sarimax w temp</span>
+                      <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+                        <div class="h-full bg-rose-500 rounded" style="width: 83%;"></div>
+                      </div>
+                      <span class="w-12 text-right font-bold text-rose-600 text-xs ml-2">17.6%</span>
+                    </div>
+
+                    <!-- Rank 6 -->
+                    <div class="flex items-center text-xs">
+                      <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[11px] mr-2">6</span>
+                      <span class="w-36 font-semibold text-slate-800 text-[11px] truncate" title="ARIMA w temp">ARIMA w temp</span>
+                      <div class="flex-1 ml-2 bg-slate-100 rounded overflow-hidden h-4 flex items-center">
+                        <div class="h-full bg-red-700 rounded" style="width: 100%;"></div>
+                      </div>
+                      <span class="w-12 text-right font-bold text-red-700 text-xs ml-2">21.3%</span>
+                    </div>
+                  </div>
+
+                  <div class="border-t border-slate-100 pt-3 flex items-center justify-between">
+                    <span class="text-[10px] text-slate-400 font-semibold uppercase">MAPE (%) Axis</span>
+                    <span class="px-2.5 py-1 rounded-full border border-slate-300 text-[10px] font-bold text-slate-700 bg-slate-50 shadow-sm">
+                      Lower MAPE = Better
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Section: Model Performance Detail Table -->
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+              <div class="bg-[#0f172a] text-white px-4 py-2.5 flex items-center justify-between">
+                <h3 class="text-xs font-bold tracking-wider uppercase">Model Performance Detail</h3>
+                <span class="text-[10px] text-slate-400">Historical performance breakdown across model types</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                    <tr>
+                      <th class="py-2.5 px-3 font-bold w-14 text-center">Rank</th>
+                      <th class="py-2.5 px-3 font-bold">Model Type</th>
+                      <th class="py-2.5 px-3 font-bold text-center">MAPE</th>
+                      <th class="py-2.5 px-3 font-bold text-right">Forecast Volume</th>
+                      <th class="py-2.5 px-3 font-bold text-right">Actuals 2023</th>
+                      <th class="py-2.5 px-3 font-bold text-right">Actuals 2024</th>
+                      <th class="py-2.5 px-3 font-bold text-right">Actuals 2025</th>
+                      <th class="py-2.5 px-3 font-bold text-right text-slate-400">Actuals 2026</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fo-detail-tbody" class="divide-y divide-slate-100">
+                    <!-- Populated via JS / static fallback -->
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">1</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">Best Model w temp</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">8.7%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,246,312</td>
+                      <td class="py-2 px-3 text-right text-slate-700">392,176</td>
+                      <td class="py-2 px-3 text-right text-slate-700">408,521</td>
+                      <td class="py-2 px-3 text-right text-slate-700">411,207</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">2</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">Best Model w/o temp</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-700">10.2%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,219,845</td>
+                      <td class="py-2 px-3 text-right text-slate-700">383,955</td>
+                      <td class="py-2 px-3 text-right text-slate-700">401,027</td>
+                      <td class="py-2 px-3 text-right text-slate-700">434,863</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">3</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">Baseline</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">12.6%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,268,194</td>
+                      <td class="py-2 px-3 text-right text-slate-700">396,843</td>
+                      <td class="py-2 px-3 text-right text-slate-700">416,690</td>
+                      <td class="py-2 px-3 text-right text-slate-700">454,661</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">4</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">Prophet w temp</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-orange-100 text-orange-800">14.8%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,230,578</td>
+                      <td class="py-2 px-3 text-right text-slate-700">388,112</td>
+                      <td class="py-2 px-3 text-right text-slate-700">402,153</td>
+                      <td class="py-2 px-3 text-right text-slate-700">440,313</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">5</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">Sarimax w temp</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800">17.6%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,233,410</td>
+                      <td class="py-2 px-3 text-right text-slate-700">386,793</td>
+                      <td class="py-2 px-3 text-right text-slate-700">405,299</td>
+                      <td class="py-2 px-3 text-right text-slate-700">441,318</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">6</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">ARIMA w temp</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-800">21.3%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,204,889</td>
+                      <td class="py-2 px-3 text-right text-slate-700">379,504</td>
+                      <td class="py-2 px-3 text-right text-slate-700">394,882</td>
+                      <td class="py-2 px-3 text-right text-slate-700">430,503</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="py-2 px-3 text-center font-bold text-slate-900">7</td>
+                      <td class="py-2 px-3 font-semibold text-slate-800">Regression w temp</td>
+                      <td class="py-2 px-3 text-center"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-200 text-red-900">24.9%</span></td>
+                      <td class="py-2 px-3 text-right font-bold text-slate-900">1,198,775</td>
+                      <td class="py-2 px-3 text-right text-slate-700">376,402</td>
+                      <td class="py-2 px-3 text-right text-slate-700">392,140</td>
+                      <td class="py-2 px-3 text-right text-slate-700">430,233</td>
+                      <td class="py-2 px-3 text-right text-slate-400">-</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+
+
+          <!-- ============================================================== -->
+          <!-- SUB-TAB 2: LEAD / LAG FORECAST PERFORMANCE                    -->
+          <!-- ============================================================== -->
+          <div id="forecast-subtab-leadlag" class="forecast-subtab-pane hidden space-y-4">
+            
+            <!-- Dark Banner Header with Centrica Header & Interactive Lag Selectors -->
+            <div class="bg-[#0f172a] text-white p-4 rounded-xl shadow-md space-y-3">
+              <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-700/60 pb-3 gap-2">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                  <div>
+                    <h2 class="text-base font-bold tracking-wide uppercase">Lead/Lag Forecast Performance</h2>
+                    <p class="text-[11px] text-slate-400">Analysis of forecast degradation and accuracy decay across forward lag horizons</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold text-slate-300 tracking-wider">centrica</span>
+                </div>
+              </div>
+
+              <!-- Controls Row: Call Group, Date Range, Lag Selector, Models -->
+              <div class="space-y-2 text-xs">
+                <!-- Top Row: Call Group & Date Range & Models -->
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <!-- Call Groups -->
+                  <div class="flex flex-wrap items-center gap-1">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Call Group:</span>
+                    <button class="fll-cg-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-600 text-white" data-cg="all">All</button>
+                    <button class="fll-cg-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-cg="residential">Residential</button>
+                    <button class="fll-cg-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-cg="smallci">Small C&I</button>
+                    <button class="fll-cg-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-cg="largeci">Large C&I</button>
+                    <button class="fll-cg-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-cg="streetlighting">Street Lighting</button>
+                  </div>
+
+                  <!-- Date Range -->
+                  <div class="flex items-center space-x-2 bg-slate-800/80 px-2.5 py-1 rounded border border-slate-700 text-[11px]">
+                    <span class="text-slate-400 font-semibold uppercase text-[10px]">Actuals Date Range:</span>
+                    <span class="font-medium text-slate-200">01 Mar 2024 – 31 May 2025</span>
+                  </div>
+
+                  <!-- Models -->
+                  <div class="flex items-center gap-1">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Models:</span>
+                    <button class="fll-model-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-600 text-white" data-model="baseline">Baseline</button>
+                    <button class="fll-model-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-model="best-temp">Best Model w temp</button>
+                    <button class="fll-model-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-model="best-notemp">Best Model w/o temp</button>
+                  </div>
+                </div>
+
+                <!-- Bottom Row: Lag Pills (Current down to 12W Before) -->
+                <div class="flex flex-wrap items-center gap-1 pt-1 border-t border-slate-800">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase mr-1">Lag:</span>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-600 text-white shadow-sm" data-lag="Current">Current</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="1W">1W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="2W">2W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="3W">3W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="4W">4W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="5W">5W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="6W">6W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="7W">7W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="8W">8W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="9W">9W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="10W">10W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="11W">11W Before</button>
+                  <button class="fll-lag-btn px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700" data-lag="12W">12W Before</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3 Top KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- KPI 1: Selected Lag -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Selected Lag</span>
+                  <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                </div>
+                <div id="fll-kpi-lag" class="kpi-value text-2xl font-bold text-slate-900 my-1">Current</div>
+                <div class="text-[11px] text-slate-500 font-medium pt-1 border-t border-slate-100">
+                  Forecast Evaluation Horizon
+                </div>
+              </div>
+
+              <!-- KPI 2: Best Performing Model -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">Best Performing Model</span>
+                  <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                  </div>
+                </div>
+                <div id="fll-kpi-best-model" class="kpi-value text-xl font-bold text-indigo-700 my-1">Best Model w temp</div>
+                <div class="text-[10px] text-slate-500 font-medium pt-1 border-t border-slate-100 truncate">
+                  evaluated for Current lag and All Call Groups across all models
+                </div>
+              </div>
+
+              <!-- KPI 3: MAPE for Selected Lag -->
+              <div class="kpi-card flex flex-col justify-between p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-500">MAPE for Selected Lag</span>
+                  <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                  </div>
+                </div>
+                <div id="fll-kpi-mape" class="kpi-value text-2xl font-bold text-emerald-600 my-1">5.7%</div>
+                <div class="text-[10px] text-slate-500 font-medium pt-1 border-t border-slate-100 truncate">
+                  evaluated for Current lag and All Call Groups across all models
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle Section: Actuals vs Selected Lag Chart (Left) & MAPE / Best Model by Lag (Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              
+              <!-- Left Chart: Actuals vs Selected Lag Forecast -->
+              <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+                <div class="bg-slate-100/90 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+                  <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Actuals vs Selected Lag Forecast</h3>
+                  <div class="flex items-center space-x-3 text-[10px] font-semibold text-slate-600">
+                    <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-blue-600 mr-1"></span>Actuals</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-orange-500 mr-1"></span>Baseline</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-purple-600 mr-1"></span>Best Model w temp</span>
+                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-600 mr-1"></span>Best Model w/o temp</span>
+                  </div>
+                </div>
+                <div class="p-4 flex-1 flex flex-col justify-center min-h-[300px]">
+                  <div class="relative w-full h-[270px]">
+                    <canvas id="leadlag-actuals-chart"></canvas>
+                  </div>
+                  <div class="text-center text-[10px] text-slate-400 font-semibold mt-1">Week Commencing (03 Mar - 26 May)</div>
+                </div>
+              </div>
+
+              <!-- Right Charts: MAPE by Lag + Best Model at Each Lag -->
+              <div class="space-y-4 flex flex-col">
+                <!-- Top: MAPE by Lag Chart -->
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden p-3.5">
+                  <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">MAPE by Lag</h3>
+                    <span class="text-[10px] text-slate-500">Common Actuals Evaluation Window</span>
+                  </div>
+                  <div class="relative w-full h-36">
+                    <canvas id="leadlag-mape-chart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Bottom: Best Model at Each Lag Visual Ladder -->
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden p-3.5 flex-1 flex flex-col justify-between">
+                  <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Best Model at Each Lag</h3>
+                    <div class="flex items-center space-x-2 text-[10px] text-slate-500 font-medium">
+                      <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-purple-600 mr-1"></span>Best w temp</span>
+                      <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-600 mr-1"></span>Best w/o temp</span>
+                      <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-orange-500 mr-1"></span>Baseline</span>
+                    </div>
+                  </div>
+                  <div class="space-y-1.5 text-[10px] font-semibold text-slate-600 py-1">
+                    <div class="flex items-center">
+                      <span class="w-20 text-slate-500 font-bold">Rank 1 (Best)</span>
+                      <div class="flex-1 flex justify-between px-2">
+                        <!-- Dots across Current to 12W -->
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="Current: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="1W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="2W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="3W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="4W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="5W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="6W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="7W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="8W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm" title="9W: Best w/o temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="10W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="11W: Best w temp"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm" title="12W: Best w temp"></span>
+                      </div>
+                    </div>
+                    <div class="flex items-center">
+                      <span class="w-20 text-slate-500 font-bold">Rank 2</span>
+                      <div class="flex-1 flex justify-between px-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-sm"></span>
+                      </div>
+                    </div>
+                    <div class="flex items-center">
+                      <span class="w-20 text-slate-500 font-bold">Rank 3 (Worst)</span>
+                      <div class="flex-1 flex justify-between px-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm"></span>
+                      </div>
+                    </div>
+                    <!-- Axis Lags Label -->
+                    <div class="flex items-center text-[9px] text-slate-400 font-medium pt-1">
+                      <span class="w-20"></span>
+                      <div class="flex-1 flex justify-between px-1">
+                        <span>Curr</span><span>1W</span><span>2W</span><span>3W</span><span>4W</span><span>5W</span><span>6W</span><span>7W</span><span>8W</span><span>9W</span><span>10W</span><span>11W</span><span>12W</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Section: 2 Side-by-Side Tables -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              
+              <!-- Left Table: MAPE by Lag and Model (Heatmap cells) -->
+              <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+                <div class="bg-slate-100/90 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+                  <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">MAPE by Lag and Model</h3>
+                  <span class="text-[10px] text-slate-500">Error distribution across lead-time lags</span>
+                </div>
+                <div class="overflow-x-auto flex-1">
+                  <table class="w-full text-left border-collapse text-xs">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-700">
+                      <tr>
+                        <th class="py-2 px-3 font-bold">Lag</th>
+                        <th class="py-2 px-3 font-bold text-center">Baseline</th>
+                        <th class="py-2 px-3 font-bold text-center">Best Model w temp</th>
+                        <th class="py-2 px-3 font-bold text-center">Best Model w/o temp</th>
+                      </tr>
+                    </thead>
+                    <tbody id="fll-mape-tbody" class="divide-y divide-slate-100 font-medium">
+                      <!-- 13 Rows injected via JS or fallback -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Right Table: Forecast Volume by Lag and Model (Data bars) -->
+              <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+                <div class="bg-slate-100/90 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+                  <div>
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Forecast Volume by Lag and Model</h3>
+                    <span class="text-[10px] text-slate-500">Comparable Week Commencing Window</span>
+                  </div>
+                </div>
+                <div class="overflow-x-auto flex-1">
+                  <table class="w-full text-left border-collapse text-xs">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-700">
+                      <tr>
+                        <th class="py-2 px-3 font-bold">Lag</th>
+                        <th class="py-2 px-3 font-bold text-right">Baseline</th>
+                        <th class="py-2 px-3 font-bold text-right">Best Model w temp</th>
+                        <th class="py-2 px-3 font-bold text-right">Best Model w/o temp</th>
+                      </tr>
+                    </thead>
+                    <tbody id="fll-vol-tbody" class="divide-y divide-slate-100 font-medium">
+                      <!-- 13 Rows injected via JS or fallback -->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="bg-slate-50 px-4 py-2 border-t border-slate-200 text-[10px] text-slate-500 italic">
+                  * Lag comparisons use only eligible week_commencing dates with both Actuals and forecast values.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
       </section>
 
     </div>
